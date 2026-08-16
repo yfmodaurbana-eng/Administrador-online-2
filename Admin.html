@@ -1,0 +1,2905 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Strangis · Administrador</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #101010,
+            #202020 45%,
+            #303030
+        );
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+
+/* =========================================================
+   CABECERA
+========================================================= */
+
+header{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:18px 5%;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background:
+        rgba(15,15,15,.94);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+.logo{
+
+    font-size:20px;
+
+    font-weight:900;
+
+    letter-spacing:4px;
+}
+
+.header-status{
+
+    color:#aaa;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:1.5px;
+
+    text-transform:uppercase;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.container{
+
+    width:min(1450px,92%);
+
+    margin:auto;
+
+    padding:
+        45px
+        0
+        100px;
+}
+
+
+/* =========================================================
+   TITULO
+========================================================= */
+
+.page-title{
+
+    margin-bottom:35px;
+}
+
+.page-title small{
+
+    color:#888;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:4px;
+}
+
+.page-title h1{
+
+    margin-top:12px;
+
+    font-size:
+        clamp(
+            42px,
+            6vw,
+            78px
+        );
+
+    letter-spacing:-4px;
+}
+
+.page-title p{
+
+    max-width:650px;
+
+    margin-top:15px;
+
+    color:#999;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   GRID PRINCIPAL
+========================================================= */
+
+.admin-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(400px,520px);
+
+    gap:25px;
+
+    align-items:start;
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.panel{
+
+    padding:25px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:14px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.20);
+}
+
+.panel-title{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+    padding-bottom:15px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.10);
+}
+
+.panel-title h2{
+
+    font-size:15px;
+
+    letter-spacing:1px;
+}
+
+.panel-title span{
+
+    color:#777;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1.5px;
+}
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:14px;
+}
+
+.field{
+
+    margin-bottom:14px;
+}
+
+.field.full{
+
+    grid-column:
+        1 / -1;
+}
+
+.field label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#aaa;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1.2px;
+
+    text-transform:uppercase;
+}
+
+.field input,
+.field textarea,
+.field select{
+
+    width:100%;
+
+    min-height:46px;
+
+    padding:12px 13px;
+
+    outline:none;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius:6px;
+
+    background:
+        rgba(0,0,0,.35);
+
+    color:#fff;
+
+    transition:.2s;
+}
+
+.field textarea{
+
+    min-height:100px;
+
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+
+    border-color:#fff;
+
+    background:
+        rgba(0,0,0,.5);
+}
+
+.field input::placeholder,
+.field textarea::placeholder{
+
+    color:#666;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn{
+
+    min-height:44px;
+
+    padding:
+        11px 16px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:6px;
+
+    background:#202020;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    transition:.2s;
+}
+
+.btn:hover{
+
+    background:#333;
+
+    border-color:#fff;
+}
+
+.btn-primary{
+
+    border-color:#fff;
+
+    background:#fff;
+
+    color:#111;
+}
+
+.btn-primary:hover{
+
+    background:#ddd;
+}
+
+.btn-danger{
+
+    color:#ff9a9a;
+}
+
+.btn-small{
+
+    min-height:34px;
+
+    padding:
+        7px 11px;
+
+    font-size:9px;
+}
+
+
+/* =========================================================
+   VARIANTES
+========================================================= */
+
+.variants-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+}
+
+.variant{
+
+    padding:15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.11);
+
+    border-radius:9px;
+
+    background:
+        rgba(0,0,0,.20);
+}
+
+.variant-top{
+
+    display:grid;
+
+    grid-template-columns:
+        55px
+        1fr
+        auto;
+
+    gap:12px;
+
+    align-items:center;
+}
+
+.color-picker{
+
+    width:48px;
+
+    height:48px;
+
+    padding:0;
+
+    border:
+        2px solid
+        rgba(255,255,255,.25);
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    background:#fff;
+
+    cursor:pointer;
+}
+
+.color-picker input{
+
+    width:100%;
+
+    height:100%;
+
+    padding:0;
+
+    border:0;
+
+    cursor:pointer;
+}
+
+.variant-name{
+
+    min-width:0;
+}
+
+.variant-image{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        90px;
+
+    gap:10px;
+
+    margin-top:12px;
+}
+
+.variant-preview{
+
+    width:90px;
+
+    height:90px;
+
+    overflow:hidden;
+
+    border-radius:7px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background:#111;
+}
+
+.variant-preview img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+/* =========================================================
+   TALLAS
+========================================================= */
+
+.sizes-list{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.size-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    padding:
+        7px 9px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:5px;
+
+    background:#181818;
+}
+
+.size-item input{
+
+    width:70px;
+
+    padding:4px;
+
+    border:0;
+
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:11px;
+}
+
+.remove-size{
+
+    border:0;
+
+    background:none;
+
+    color:#777;
+
+    cursor:pointer;
+
+    font-size:14px;
+}
+
+.remove-size:hover{
+
+    color:#fff;
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview-wrap{
+
+    position:sticky;
+
+    top:90px;
+}
+
+.preview-label{
+
+    margin-bottom:12px;
+
+    color:#777;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+}
+
+.product-card{
+
+    overflow:hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    border-radius:14px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.3);
+}
+
+.preview-image{
+
+    position:relative;
+
+    height:440px;
+
+    overflow:hidden;
+
+    background:#121212;
+
+    cursor:zoom-in;
+}
+
+.preview-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:
+        transform .45s ease;
+}
+
+.preview-image:hover img{
+
+    transform:scale(1.10);
+}
+
+.zoom-hint{
+
+    position:absolute;
+
+    right:15px;
+
+    bottom:15px;
+
+    padding:
+        8px 10px;
+
+    border-radius:5px;
+
+    background:
+        rgba(0,0,0,.65);
+
+    color:#ddd;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    pointer-events:none;
+}
+
+.preview-content{
+
+    padding:18px;
+}
+
+.preview-name{
+
+    font-size:17px;
+
+    font-weight:900;
+}
+
+.preview-ref{
+
+    margin-top:5px;
+
+    color:#777;
+
+    font-size:9px;
+
+    letter-spacing:1px;
+}
+
+.preview-description{
+
+    margin-top:12px;
+
+    color:#999;
+
+    font-size:11px;
+
+    line-height:1.6;
+}
+
+.preview-price{
+
+    margin-top:13px;
+
+    font-size:18px;
+
+    font-weight:900;
+}
+
+
+/* =========================================================
+   COLORES PREVIEW
+========================================================= */
+
+.preview-label-row{
+
+    margin-top:18px;
+
+    color:#aaa;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+.preview-label-row span{
+
+    color:#fff;
+}
+
+.preview-colors{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:9px;
+
+    margin-top:10px;
+}
+
+.preview-color{
+
+    width:35px;
+
+    height:35px;
+
+    overflow:hidden;
+
+    border:
+        2px solid
+        rgba(255,255,255,.25);
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    background-size:cover;
+
+    background-position:center;
+
+    transition:.2s;
+}
+
+.preview-color.active{
+
+    outline:
+        2px solid
+        #fff;
+
+    outline-offset:3px;
+}
+
+
+/* =========================================================
+   TALLAS PREVIEW
+========================================================= */
+
+.preview-sizes{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:6px;
+
+    margin-top:10px;
+}
+
+.preview-size{
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:5px;
+
+    color:#aaa;
+
+    background:transparent;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.preview-size.active{
+
+    background:#fff;
+
+    color:#111;
+
+    border-color:#fff;
+}
+
+
+/* =========================================================
+   ENVÍO ESTIMADO
+========================================================= */
+
+.shipping-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:18px;
+
+    padding:
+        14px 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.28);
+
+    border-radius:8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.13),
+            rgba(255,255,255,.055)
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.16);
+
+    transition:.2s;
+}
+
+.shipping-box:hover{
+
+    border-color:
+        rgba(255,255,255,.42);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.16),
+            rgba(255,255,255,.07)
+        );
+}
+
+.shipping-icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:38px;
+
+    height:38px;
+
+    flex:0 0 38px;
+
+    border-radius:7px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    font-size:17px;
+}
+
+.shipping-text{
+
+    color:#c2c2c2;
+
+    font-size:9px;
+
+    line-height:1.5;
+
+    letter-spacing:.5px;
+}
+
+.shipping-text strong{
+
+    display:block;
+
+    margin-top:2px;
+
+    color:#fff;
+
+    font-size:12px;
+
+    font-weight:900;
+
+    letter-spacing:.3px;
+}
+
+
+/* =========================================================
+   CANTIDAD / COMPRA
+========================================================= */
+
+.preview-quantity{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:16px;
+}
+
+.preview-quantity button{
+
+    width:32px;
+
+    height:32px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:5px;
+
+    background:#181818;
+
+    color:#fff;
+
+    cursor:pointer;
+}
+
+.preview-quantity span{
+
+    min-width:20px;
+
+    text-align:center;
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+.preview-buy{
+
+    width:100%;
+
+    margin-top:15px;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:6px;
+
+    background:#fff;
+
+    color:#111;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    letter-spacing:1.5px;
+}
+
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.actions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.actions .btn{
+
+    width:100%;
+}
+
+
+/* =========================================================
+   CODIGO GENERADO
+========================================================= */
+
+.code-panel{
+
+    margin-top:25px;
+}
+
+.code-output{
+
+    width:100%;
+
+    min-height:400px;
+
+    padding:15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:8px;
+
+    outline:none;
+
+    background:#080808;
+
+    color:#ddd;
+
+    font-family:
+        Consolas,
+        Monaco,
+        monospace;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    resize:vertical;
+}
+
+
+/* =========================================================
+   MODAL ZOOM
+========================================================= */
+
+.zoom-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:5000;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:25px;
+
+    background:
+        rgba(0,0,0,.90);
+
+    backdrop-filter:
+        blur(10px);
+}
+
+.zoom-modal.show{
+
+    display:flex;
+}
+
+.zoom-modal img{
+
+    max-width:95vw;
+
+    max-height:90vh;
+
+    object-fit:contain;
+
+    border-radius:8px;
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.7);
+}
+
+.zoom-close{
+
+    position:absolute;
+
+    top:20px;
+
+    right:25px;
+
+    width:42px;
+
+    height:42px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
+
+    border-radius:6px;
+
+    background:#181818;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:20px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .admin-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .preview-wrap{
+
+        position:static;
+    }
+
+}
+
+@media(max-width:600px){
+
+    header{
+
+        padding:
+            15px;
+    }
+
+    .container{
+
+        width:94%;
+
+        padding-top:30px;
+    }
+
+    .panel{
+
+        padding:17px;
+    }
+
+    .form-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+
+        grid-column:auto;
+    }
+
+    .variant-top{
+
+        grid-template-columns:
+            48px
+            1fr;
+    }
+
+    .variant-top .btn{
+
+        grid-column:
+            1 / -1;
+    }
+
+    .variant-image{
+
+        grid-template-columns:1fr;
+    }
+
+    .variant-preview{
+
+        width:100%;
+
+        height:180px;
+    }
+
+    .preview-image{
+
+        height:360px;
+    }
+
+    .actions{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        STRANGIS
+    </div>
+
+    <div class="header-status">
+        PANEL DE ADMINISTRACIÓN
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <section class="page-title">
+
+        <small>
+            PRODUCT MANAGER
+        </small>
+
+        <h1>
+            Crear producto
+        </h1>
+
+        <p>
+            Configura el producto una sola vez.
+            El administrador generará el bloque listo
+            para pegarlo directamente en la categoría
+            correspondiente.
+        </p>
+
+    </section>
+
+
+    <div class="admin-grid">
+
+
+        <!-- =================================================
+             CONFIGURACIÓN
+        ================================================== -->
+
+        <section>
+
+
+            <div class="panel">
+
+                <div class="panel-title">
+
+                    <h2>
+                        Información del producto
+                    </h2>
+
+                    <span>
+                        DATOS PRINCIPALES
+                    </span>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <div class="field full">
+
+                        <label>
+                            Nombre del producto
+                        </label>
+
+                        <input
+                            id="productName"
+                            type="text"
+                            placeholder="Ej: Camiseta Oversize Premium"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Referencia / ID
+                        </label>
+
+                        <input
+                            id="productRef"
+                            type="text"
+                            placeholder="Ej: CAM-001"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Precio €
+                        </label>
+
+                        <input
+                            id="productPrice"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="35"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Stock
+                        </label>
+
+                        <input
+                            id="productStock"
+                            type="number"
+                            min="0"
+                            value="999"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            WhatsApp
+                        </label>
+
+                        <input
+                            id="productWhatsapp"
+                            type="text"
+                            value="34674559614"
+                            placeholder="34600000000"
+                        >
+
+                    </div>
+
+
+                    <div class="field full">
+
+                        <label>
+                            Descripción
+                        </label>
+
+                        <textarea
+                            id="productDescription"
+                            placeholder="Describe brevemente el producto..."
+                            oninput="updatePreview()"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Envío desde
+                        </label>
+
+                        <input
+                            id="shippingMin"
+                            type="text"
+                            placeholder="5 ago"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Envío hasta
+                        </label>
+
+                        <input
+                            id="shippingMax"
+                            type="text"
+                            placeholder="3 sep"
+                            oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TALLAS
+            ================================================== -->
+
+            <div class="panel" style="margin-top:25px">
+
+                <div class="panel-title">
+
+                    <h2>
+                        Tallas
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn btn-small"
+                        onclick="addSize()"
+                    >
+                        + AÑADIR TALLA
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="sizesList"
+                    class="sizes-list"
+                ></div>
+
+            </div>
+
+
+            <!-- =================================================
+                 VARIANTES
+            ================================================== -->
+
+            <div class="panel" style="margin-top:25px">
+
+                <div class="panel-title">
+
+                    <h2>
+                        Colores e imágenes
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn btn-small"
+                        onclick="addVariant()"
+                    >
+                        + AÑADIR COLOR
+                    </button>
+
+                </div>
+
+
+                <p
+                    style="
+                        color:#777;
+                        font-size:10px;
+                        line-height:1.6;
+                        margin-bottom:18px;
+                    "
+                >
+                    Cada color está vinculado directamente
+                    con su imagen. Cuando el cliente seleccione
+                    el color, se mostrará automáticamente
+                    su fotografía correspondiente.
+                </p>
+
+
+                <div
+                    id="variantsList"
+                    class="variants-list"
+                ></div>
+
+            </div>
+
+
+            <!-- =================================================
+                 GENERADOR
+            ================================================== -->
+
+            <div class="panel code-panel">
+
+                <div class="panel-title">
+
+                    <h2>
+                        Código generado
+                    </h2>
+
+                    <span>
+                        LISTO PARA COPIAR
+                    </span>
+
+                </div>
+
+
+                <textarea
+                    id="codeOutput"
+                    class="code-output"
+                    readonly
+                    placeholder="Pulsa GENERAR CÓDIGO para crear el producto..."
+                ></textarea>
+
+
+                <div class="actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="generateCode()"
+                    >
+                        GENERAR CÓDIGO
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn"
+                        onclick="copyCode()"
+                    >
+                        COPIAR CÓDIGO
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             PREVISUALIZACIÓN
+        ================================================== -->
+
+        <aside class="preview-wrap">
+
+            <div class="preview-label">
+                VISTA PREVIA DEL PRODUCTO
+            </div>
+
+
+            <article class="product-card">
+
+
+                <div
+                    class="preview-image"
+                    onclick="openZoom()"
+                >
+
+                    <img
+                        id="previewImage"
+                        src=""
+                        alt=""
+                    >
+
+                    <div class="zoom-hint">
+                        🔍 AMPLIAR
+                    </div>
+
+                </div>
+
+
+                <div class="preview-content">
+
+
+                    <div
+                        id="previewName"
+                        class="preview-name"
+                    >
+                        Nombre del producto
+                    </div>
+
+
+                    <div
+                        id="previewRef"
+                        class="preview-ref"
+                    >
+                        REF: —
+                    </div>
+
+
+                    <div
+                        id="previewDescription"
+                        class="preview-description"
+                    >
+                        Descripción del producto
+                    </div>
+
+
+                    <div
+                        id="previewPrice"
+                        class="preview-price"
+                    >
+                        35,00 €
+                    </div>
+
+
+                    <div class="preview-label-row">
+
+                        Color:
+
+                        <span id="previewColorName">
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="previewColors"
+                        class="preview-colors"
+                    ></div>
+
+
+                    <div
+                        id="previewSizeLabel"
+                        class="preview-label-row"
+                    >
+                        Talla
+                    </div>
+
+
+                    <div
+                        id="previewSizes"
+                        class="preview-sizes"
+                    ></div>
+
+
+                    <div class="preview-quantity">
+
+                        <button
+                            type="button"
+                            onclick="previewQuantity(-1)"
+                        >
+                            −
+                        </button>
+
+                        <span id="previewQuantity">
+                            1
+                        </span>
+
+                        <button
+                            type="button"
+                            onclick="previewQuantity(1)"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="shipping-box">
+
+                        <div class="shipping-icon">
+                            🚚
+                        </div>
+
+                        <div class="shipping-text">
+
+                            ENVÍO ESTIMADO
+
+                            <strong id="previewShipping">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="preview-buy"
+                    >
+                        COMPRAR
+                    </button>
+
+
+                </div>
+
+            </article>
+
+        </aside>
+
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================================
+     MODAL ZOOM
+========================================================= -->
+
+<div
+    id="zoomModal"
+    class="zoom-modal"
+    onclick="closeZoom(event)"
+>
+
+    <button
+        type="button"
+        class="zoom-close"
+        onclick="closeZoom()"
+    >
+        ×
+    </button>
+
+    <img
+        id="zoomImage"
+        src=""
+        alt=""
+    >
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   DATOS
+========================================================= */
+
+let variants = [
+    {
+        name:"Azul",
+        color:"#246BCE",
+        image:""
+    }
+];
+
+let sizes = [
+    "S",
+    "M",
+    "L",
+    "XL"
+];
+
+let activeVariant = 0;
+
+let previewQty = 1;
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJS(value){
+
+    return String(value ?? "")
+        .replace(/\\/g,"\\\\")
+        .replace(/"/g,'\\"')
+        .replace(/\n/g,"\\n")
+        .replace(/\r/g,"");
+
+}
+
+
+/* =========================================================
+   VARIANTES
+========================================================= */
+
+function renderVariants(){
+
+    const container =
+        document.getElementById(
+            "variantsList"
+        );
+
+    container.innerHTML =
+        variants.map(
+            (variant,index) => `
+
+                <div class="variant">
+
+                    <div class="variant-top">
+
+                        <div
+                            class="color-picker"
+                            style="
+                                background:
+                                ${escapeHTML(
+                                    variant.color
+                                )};
+                            "
+                        >
+
+                            <input
+                                type="color"
+                                value="${
+                                    variant.color
+                                    ||
+                                    "#ffffff"
+                                }"
+                                onchange="
+                                    changeVariantColor(
+                                        ${index},
+                                        this.value
+                                    )
+                                "
+                            >
+
+                        </div>
+
+
+                        <div class="variant-name">
+
+                            <div class="field">
+
+                                <label>
+                                    Nombre del color
+                                </label>
+
+                                <input
+                                    type="text"
+                                    value="${escapeHTML(
+                                        variant.name
+                                    )}"
+                                    placeholder="Ej: Negro"
+                                    oninput="
+                                        changeVariantName(
+                                            ${index},
+                                            this.value
+                                        )
+                                    "
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="
+                                btn
+                                btn-small
+                                btn-danger
+                            "
+                            onclick="
+                                removeVariant(
+                                    ${index}
+                                )
+                            "
+                        >
+                            ELIMINAR
+                        </button>
+
+                    </div>
+
+
+                    <div class="variant-image">
+
+                        <div class="field">
+
+                            <label>
+                                URL de imagen
+                            </label>
+
+                            <input
+                                type="url"
+                                value="${escapeHTML(
+                                    variant.image
+                                )}"
+                                placeholder="https://..."
+                                oninput="
+                                    changeVariantImage(
+                                        ${index},
+                                        this.value
+                                    )
+                                "
+                            >
+
+                        </div>
+
+
+                        <div class="variant-preview">
+
+                            ${
+                                variant.image
+                                ?
+                                `
+                                <img
+                                    src="${escapeHTML(
+                                        variant.image
+                                    )}"
+                                    alt="${escapeHTML(
+                                        variant.name
+                                    )}"
+                                    onerror="
+                                        this.style.display='none'
+                                    "
+                                >
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `
+        )
+        .join("");
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   AÑADIR VARIANTE
+========================================================= */
+
+function addVariant(){
+
+    variants.push({
+
+        name:
+            "Nuevo color",
+
+        color:
+            "#888888",
+
+        image:
+            ""
+
+    });
+
+    activeVariant =
+        variants.length - 1;
+
+    renderVariants();
+
+}
+
+
+/* =========================================================
+   ELIMINAR VARIANTE
+========================================================= */
+
+function removeVariant(index){
+
+    if(variants.length <= 1){
+
+        alert(
+            "Debe existir al menos un color."
+        );
+
+        return;
+    }
+
+    variants.splice(
+        index,
+        1
+    );
+
+    if(
+        activeVariant >=
+        variants.length
+    ){
+
+        activeVariant =
+            variants.length - 1;
+    }
+
+    renderVariants();
+
+}
+
+
+/* =========================================================
+   CAMBIAR COLOR
+========================================================= */
+
+function changeVariantColor(
+    index,
+    value
+){
+
+    variants[index].color =
+        value;
+
+    renderVariants();
+
+}
+
+
+/* =========================================================
+   CAMBIAR NOMBRE
+========================================================= */
+
+function changeVariantName(
+    index,
+    value
+){
+
+    variants[index].name =
+        value;
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   CAMBIAR IMAGEN
+========================================================= */
+
+function changeVariantImage(
+    index,
+    value
+){
+
+    variants[index].image =
+        value;
+
+    if(
+        index === activeVariant
+    ){
+
+        const image =
+            document.getElementById(
+                "previewImage"
+            );
+
+        if(value.trim()){
+
+            image.src =
+                value.trim();
+
+            image.style.display =
+                "block";
+
+        }
+        else{
+
+            image.removeAttribute(
+                "src"
+            );
+
+            image.style.display =
+                "none";
+
+        }
+
+    }
+
+    renderVariants();
+
+}
+
+
+/* =========================================================
+   TALLAS
+========================================================= */
+
+function renderSizes(){
+
+    const container =
+        document.getElementById(
+            "sizesList"
+        );
+
+    container.innerHTML =
+        sizes.map(
+            (size,index) => `
+
+                <div class="size-item">
+
+                    <input
+                        type="text"
+                        value="${escapeHTML(
+                            size
+                        )}"
+                        oninput="
+                            sizes[
+                                ${index}
+                            ] =
+                            this.value;
+                            updatePreview();
+                        "
+                    >
+
+                    <button
+                        type="button"
+                        class="remove-size"
+                        onclick="
+                            removeSize(
+                                ${index}
+                            )
+                        "
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            `
+        )
+        .join("");
+
+    updatePreview();
+
+}
+
+
+function addSize(){
+
+    sizes.push(
+        "Nueva"
+    );
+
+    renderSizes();
+
+}
+
+
+function removeSize(index){
+
+    sizes.splice(
+        index,
+        1
+    );
+
+    renderSizes();
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function updatePreview(){
+
+    const name =
+        document.getElementById(
+            "productName"
+        ).value.trim()
+        ||
+        "Nombre del producto";
+
+    const ref =
+        document.getElementById(
+            "productRef"
+        ).value.trim()
+        ||
+        "—";
+
+    const price =
+        Number(
+            document.getElementById(
+                "productPrice"
+            ).value
+        ) || 0;
+
+    const description =
+        document.getElementById(
+            "productDescription"
+        ).value.trim()
+        ||
+        "Descripción del producto";
+
+    const shippingMin =
+        document.getElementById(
+            "shippingMin"
+        ).value.trim();
+
+    const shippingMax =
+        document.getElementById(
+            "shippingMax"
+        ).value.trim();
+
+
+    document.getElementById(
+        "previewName"
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        "previewRef"
+    ).textContent =
+        "REF: " + ref;
+
+
+    document.getElementById(
+        "previewDescription"
+    ).textContent =
+        description;
+
+
+    document.getElementById(
+        "previewPrice"
+    ).textContent =
+        price.toLocaleString(
+            "es-ES",
+            {
+                style:"currency",
+                currency:"EUR"
+            }
+        );
+
+
+    document.getElementById(
+        "previewShipping"
+    ).textContent =
+        shippingMin &&
+        shippingMax
+        ?
+        `${shippingMin} – ${shippingMax}`
+        :
+        "Indica las fechas de envío";
+
+
+    renderPreviewVariants();
+
+    renderPreviewSizes();
+
+}
+
+
+/* =========================================================
+   PREVIEW VARIANTES
+========================================================= */
+
+function renderPreviewVariants(){
+
+    const container =
+        document.getElementById(
+            "previewColors"
+        );
+
+    container.innerHTML =
+        variants.map(
+            (variant,index) => `
+
+                <button
+                    type="button"
+                    class="preview-color ${
+                        index === activeVariant
+                        ?
+                        "active"
+                        :
+                        ""
+                    }"
+                    style="
+                        background-color:
+                        ${escapeHTML(
+                            variant.color
+                        )};
+
+                        ${
+                            variant.image
+                            ?
+                            `
+                            background-image:
+                            url('${escapeHTML(
+                                variant.image
+                            )}');
+                            `
+                            :
+                            ""
+                        }
+                    "
+                    title="${escapeHTML(
+                        variant.name
+                    )}"
+                    onclick="
+                        selectPreviewVariant(
+                            ${index}
+                        )
+                    "
+                ></button>
+
+            `
+        )
+        .join("");
+
+
+    const active =
+        variants[
+            activeVariant
+        ];
+
+
+    if(!active){
+
+        return;
+    }
+
+
+    document.getElementById(
+        "previewColorName"
+    ).textContent =
+        active.name ||
+        "—";
+
+
+    const image =
+        document.getElementById(
+            "previewImage"
+        );
+
+
+    if(active.image){
+
+        image.src =
+            active.image;
+
+        image.style.display =
+            "block";
+
+    }
+    else{
+
+        image.removeAttribute(
+            "src"
+        );
+
+        image.style.display =
+            "none";
+
+    }
+
+}
+
+
+function selectPreviewVariant(
+    index
+){
+
+    activeVariant =
+        index;
+
+    renderPreviewVariants();
+
+}
+
+
+/* =========================================================
+   PREVIEW TALLAS
+========================================================= */
+
+function renderPreviewSizes(){
+
+    const container =
+        document.getElementById(
+            "previewSizes"
+        );
+
+
+    container.innerHTML =
+        sizes
+        .filter(
+            size =>
+                String(size).trim()
+        )
+        .map(
+            (size,index) => `
+
+                <button
+                    type="button"
+                    class="preview-size ${
+                        index === 0
+                        ?
+                        "active"
+                        :
+                        ""
+                    }"
+                >
+                    ${escapeHTML(
+                        size
+                    )}
+                </button>
+
+            `
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   CANTIDAD PREVIEW
+========================================================= */
+
+function previewQuantity(
+    change
+){
+
+    previewQty +=
+        change;
+
+    if(
+        previewQty < 1
+    ){
+
+        previewQty = 1;
+    }
+
+    const stock =
+        Number(
+            document.getElementById(
+                "productStock"
+            ).value
+        );
+
+
+    if(
+        stock > 0 &&
+        previewQty > stock
+    ){
+
+        previewQty =
+            stock;
+    }
+
+
+    document.getElementById(
+        "previewQuantity"
+    ).textContent =
+        previewQty;
+
+}
+
+
+/* =========================================================
+   ZOOM
+========================================================= */
+
+function openZoom(){
+
+    const image =
+        document.getElementById(
+            "previewImage"
+        );
+
+
+    if(
+        !image.src ||
+        image.style.display === "none"
+    ){
+
+        return;
+    }
+
+
+    document.getElementById(
+        "zoomImage"
+    ).src =
+        image.src;
+
+
+    document.getElementById(
+        "zoomModal"
+    ).classList.add(
+        "show"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function closeZoom(event){
+
+    if(
+        event &&
+        event.target &&
+        event.target.id !==
+        "zoomModal"
+    ){
+
+        return;
+    }
+
+
+    document.getElementById(
+        "zoomModal"
+    ).classList.remove(
+        "show"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   GENERAR CÓDIGO
+========================================================= */
+
+function generateCode(){
+
+    const name =
+        document.getElementById(
+            "productName"
+        ).value.trim();
+
+    const ref =
+        document.getElementById(
+            "productRef"
+        ).value.trim();
+
+    const price =
+        Number(
+            document.getElementById(
+                "productPrice"
+            ).value
+        ) || 0;
+
+    const stock =
+        Number(
+            document.getElementById(
+                "productStock"
+            ).value
+        ) || 0;
+
+    const description =
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
+
+    const whatsapp =
+        document.getElementById(
+            "productWhatsapp"
+        ).value
+        .replace(
+            /\D/g,
+            ""
+        );
+
+    const shippingMin =
+        document.getElementById(
+            "shippingMin"
+        ).value.trim();
+
+    const shippingMax =
+        document.getElementById(
+            "shippingMax"
+        ).value.trim();
+
+
+    if(!name){
+
+        alert(
+            "Introduce el nombre del producto."
+        );
+
+        return;
+    }
+
+
+    if(!ref){
+
+        alert(
+            "Introduce la referencia / ID."
+        );
+
+        return;
+    }
+
+
+    if(price < 0){
+
+        alert(
+            "El precio no puede ser negativo."
+        );
+
+        return;
+    }
+
+
+    if(stock < 0){
+
+        alert(
+            "El stock no puede ser negativo."
+        );
+
+        return;
+    }
+
+
+    if(!whatsapp){
+
+        alert(
+            "Introduce el número de WhatsApp."
+        );
+
+        return;
+    }
+
+
+    const validVariants =
+        variants
+        .filter(
+            variant =>
+                variant.name.trim() ||
+                variant.image.trim()
+        );
+
+
+    if(!validVariants.length){
+
+        alert(
+            "Añade al menos un color."
+        );
+
+        return;
+    }
+
+
+    for(
+        const variant
+        of validVariants
+    ){
+
+        if(!variant.name.trim()){
+
+            alert(
+                "Todos los colores deben tener nombre."
+            );
+
+            return;
+        }
+
+
+        if(!variant.image.trim()){
+
+            alert(
+                "Todos los colores deben tener una URL de imagen."
+            );
+
+            return;
+        }
+
+    }
+
+
+    const validSizes =
+        sizes
+        .map(
+            size =>
+                String(size).trim()
+        )
+        .filter(Boolean);
+
+
+    const variantCode =
+        validVariants
+        .map(
+            variant => `        {
+            name: "${escapeJS(
+                variant.name
+            )}",
+            image: "${escapeJS(
+                variant.image
+            )}",
+            color: "${escapeJS(
+                variant.color
+            )}"
+        }`
+        )
+        .join(",\n");
+
+
+    const sizeCode =
+        validSizes.length
+        ?
+        validSizes
+        .map(
+            size =>
+                `        "${escapeJS(
+                    size
+                )}"`
+        )
+        .join(",\n")
+        :
+        "";
+
+
+    const code = `{
+    name: "${escapeJS(name)}",
+    ref: "${escapeJS(ref)}",
+
+    price: ${price},
+
+    stock: ${stock},
+
+    description: "${escapeJS(
+        description
+    )}",
+
+    whatsapp: "${escapeJS(
+        whatsapp
+    )}",
+
+    variants: [
+${variantCode}
+    ],
+
+    sizes: [
+${sizeCode}
+    ],
+
+    shipping: {
+        min: "${escapeJS(
+            shippingMin
+        )}",
+        max: "${escapeJS(
+            shippingMax
+        )}"
+    }
+},`;
+
+
+    document.getElementById(
+        "codeOutput"
+    ).value =
+        code;
+
+}
+
+
+/* =========================================================
+   COPIAR
+========================================================= */
+
+async function copyCode(){
+
+    const output =
+        document.getElementById(
+            "codeOutput"
+        );
+
+
+    if(!output.value.trim()){
+
+        generateCode();
+
+    }
+
+
+    if(!output.value.trim()){
+
+        return;
+    }
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            output.value
+        );
+
+        alert(
+            "Código copiado correctamente."
+        );
+
+    }
+
+    catch(error){
+
+        output.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        alert(
+            "Código copiado."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeZoom();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+renderVariants();
+
+renderSizes();
+
+updatePreview();
+
+</script>
+
+
+</body>
+
+</html>
