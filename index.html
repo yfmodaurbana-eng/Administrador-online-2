@@ -57,6 +57,184 @@ select{
 
 
 /* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #101010,
+            #202020 45%,
+            #303030
+        );
+}
+
+.login-box{
+
+    width:min(400px,100%);
+
+    padding:30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:14px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.5);
+}
+
+.login-brand{
+
+    color:#888;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:4px;
+
+    margin-bottom:10px;
+}
+
+.login-box h2{
+
+    margin-bottom:25px;
+
+    font-size:28px;
+
+    letter-spacing:-1px;
+}
+
+.login-field{
+
+    width:100%;
+
+    margin-bottom:12px;
+
+    padding:13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius:6px;
+
+    outline:none;
+
+    background:#0f0f0f;
+
+    color:#fff;
+
+    transition:.2s;
+}
+
+.login-field:focus{
+
+    border-color:#fff;
+
+    background:#151515;
+}
+
+.login-field::placeholder{
+
+    color:#666;
+}
+
+.login-button{
+
+    width:100%;
+
+    min-height:46px;
+
+    margin-top:3px;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:6px;
+
+    background:#fff;
+
+    color:#111;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    transition:.2s;
+}
+
+.login-button:hover{
+
+    background:#ddd;
+}
+
+.login-button:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+}
+
+.login-message{
+
+    min-height:18px;
+
+    margin-top:15px;
+
+    color:#999;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+.login-security{
+
+    margin-top:20px;
+
+    padding-top:15px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    color:#666;
+
+    font-size:9px;
+
+    line-height:1.6;
+}
+
+
+/* =========================================================
    CABECERA
 ========================================================= */
 
@@ -98,6 +276,15 @@ header{
     letter-spacing:4px;
 }
 
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
 .header-status{
 
     color:#aaa;
@@ -109,6 +296,40 @@ header{
     letter-spacing:1.5px;
 
     text-transform:uppercase;
+}
+
+.logout-button{
+
+    min-height:32px;
+
+    padding:7px 11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:5px;
+
+    background:#202020;
+
+    color:#aaa;
+
+    cursor:pointer;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    transition:.2s;
+}
+
+.logout-button:hover{
+
+    border-color:#fff;
+
+    color:#fff;
 }
 
 
@@ -1201,6 +1422,16 @@ header{
             15px;
     }
 
+    .header-right{
+
+        gap:8px;
+    }
+
+    .header-status{
+
+        display:none;
+    }
+
     .container{
 
         width:94%;
@@ -1268,14 +1499,81 @@ header{
 <body>
 
 
+<!-- =========================================================
+     LOGIN ADMINISTRADOR
+========================================================= -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-brand">
+            STRANGIS
+        </div>
+
+        <h2>
+            Acceso administrador
+        </h2>
+
+        <input
+            id="adminEmail"
+            class="login-field"
+            type="email"
+            autocomplete="email"
+            placeholder="Correo electrónico"
+        >
+
+        <input
+            id="adminPassword"
+            class="login-field"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Contraseña"
+        >
+
+        <button
+            id="loginButton"
+            type="button"
+            class="login-button"
+            onclick="loginAdmin()"
+        >
+            ENTRAR
+        </button>
+
+        <div
+            id="loginMessage"
+            class="login-message"
+        ></div>
+
+        <div class="login-security">
+            Acceso protegido mediante Supabase Auth.
+        </div>
+
+    </div>
+
+</div>
+
+
 <header>
 
     <div class="logo">
         STRANGIS
     </div>
 
-    <div class="header-status">
-        PANEL DE ADMINISTRACIÓN · SUPABASE
+    <div class="header-right">
+
+        <div class="header-status">
+            PANEL DE ADMINISTRACIÓN · SUPABASE
+        </div>
+
+        <button
+            type="button"
+            class="logout-button"
+            onclick="logoutAdmin()"
+        >
+            CERRAR SESIÓN
+        </button>
+
     </div>
 
 </header>
@@ -1829,15 +2127,6 @@ const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_M7ETdIWvj4nCQZ55i24Vpw_5Yc5Islk";
 
 
-/*
-   IMPORTANTE:
-
-   Se utiliza el cliente oficial de Supabase.
-
-   NO se comprueba contra "TU_PUBLISHABLE_KEY"
-   porque la clave real ya está definida arriba.
-*/
-
 if(
     !window.supabase ||
     typeof window.supabase.createClient !== "function"
@@ -1866,6 +2155,267 @@ const supabaseClient =
             }
         }
     );
+
+
+/* =========================================================
+   LOGIN ADMINISTRADOR
+========================================================= */
+
+async function loginAdmin(){
+
+    const email =
+        document.getElementById(
+            "adminEmail"
+        ).value.trim();
+
+    const password =
+        document.getElementById(
+            "adminPassword"
+        ).value;
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    if(!email || !password){
+
+        message.textContent =
+            "Introduce tu correo y contraseña.";
+
+        return;
+    }
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "ENTRANDO...";
+
+    message.textContent =
+        "";
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+
+        if(error){
+
+            console.error(
+                "Error de login:",
+                error
+            );
+
+            message.textContent =
+                "❌ " + error.message;
+
+            return;
+        }
+
+
+        if(!data.session){
+
+            message.textContent =
+                "❌ Supabase no devolvió una sesión.";
+
+            return;
+        }
+
+
+        console.log(
+            "✅ Usuario autenticado:",
+            data.user?.email
+        );
+
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "adminEmail"
+        ).value = "";
+
+        document.getElementById(
+            "adminPassword"
+        ).value = "";
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Error de login:",
+            error
+        );
+
+        message.textContent =
+            "❌ " +
+            (
+                error?.message ||
+                String(error)
+            );
+
+    }
+    finally{
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "ENTRAR";
+
+    }
+
+}
+
+
+/* =========================================================
+   COMPROBAR SESIÓN
+========================================================= */
+
+async function checkAdminSession(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .getSession();
+
+
+        if(error){
+
+            console.error(
+                "Error comprobando sesión:",
+                error
+            );
+
+            return false;
+        }
+
+
+        if(data.session){
+
+            console.log(
+                "✅ Sesión existente:",
+                data.session.user?.email
+            );
+
+
+            document.getElementById(
+                "loginScreen"
+            ).style.display =
+                "none";
+
+
+            return true;
+
+        }
+
+
+        console.log(
+            "🔐 No hay sesión iniciada."
+        );
+
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display =
+            "flex";
+
+
+        return false;
+
+    }
+    catch(error){
+
+        console.error(
+            "Error comprobando sesión:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   CERRAR SESIÓN
+========================================================= */
+
+async function logoutAdmin(){
+
+    try{
+
+        const {
+            error
+        } =
+            await supabaseClient.auth
+                .signOut();
+
+
+        if(error){
+
+            console.error(
+                "Error cerrando sesión:",
+                error
+            );
+
+            alert(
+                "No se pudo cerrar la sesión.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display =
+            "flex";
+
+
+        console.log(
+            "🔐 Sesión cerrada."
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Error cerrando sesión:",
+            error
+        );
+
+    }
+
+}
 
 
 /* =========================================================
@@ -3008,6 +3558,55 @@ async function testSupabaseConnection(){
 
 async function saveProductToSupabase(){
 
+    /*
+     * PRIMERO comprobamos que realmente existe
+     * una sesión autenticada.
+     */
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if(sessionError){
+
+        console.error(
+            "Error obteniendo sesión:",
+            sessionError
+        );
+
+        alert(
+            "❌ No se pudo comprobar la sesión.\n\n" +
+            sessionError.message
+        );
+
+        return;
+    }
+
+
+    if(!sessionData.session){
+
+        alert(
+            "❌ Debes iniciar sesión como administrador antes de guardar."
+        );
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display =
+            "flex";
+
+        return;
+    }
+
+
+    console.log(
+        "✅ Guardando como:",
+        sessionData.session.user.email
+    );
+
+
     const product =
         getProductData();
 
@@ -3042,17 +3641,6 @@ async function saveProductToSupabase(){
         }
 
 
-        /*
-         * IMPORTANTE:
-         *
-         * No comprobamos una clave ficticia.
-         * El cliente ya está creado con la Publishable Key real.
-         *
-         * Si tu tabla Products tiene RLS y exige autenticación,
-         * la propia respuesta de Supabase indicará el problema.
-         */
-
-
         const {
             data,
             error
@@ -3082,8 +3670,7 @@ async function saveProductToSupabase(){
             ){
 
                 message +=
-                    "\n\nSupabase está rechazando el INSERT por permisos/RLS. " +
-                    "Revisa las políticas de la tabla Products.";
+                    "\n\nSupabase está rechazando el INSERT por permisos/RLS.";
 
             }
 
@@ -3332,11 +3919,11 @@ renderSizes();
 
 updatePreview();
 
+checkAdminSession();
+
 
 /*
  * Dejamos constancia de que el cliente está inicializado.
- * No hacemos una consulta automática que pueda mostrar un error
- * de RLS nada más abrir el administrador.
  */
 
 console.log(
