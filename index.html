@@ -1275,7 +1275,7 @@ header{
     </div>
 
     <div class="header-status">
-        PANEL DE ADMINISTRACIÓN
+        PANEL DE ADMINISTRACIÓN · SUPABASE
     </div>
 
 </header>
@@ -1296,9 +1296,8 @@ header{
 
         <p>
             Configura el producto una sola vez.
-            El administrador generará el bloque listo
-            para pegarlo directamente en la categoría
-            correspondiente.
+            Puedes generar el código para copiarlo o guardarlo
+            directamente en Supabase.
         </p>
 
     </section>
@@ -1343,6 +1342,21 @@ header{
                             type="text"
                             placeholder="Ej: Camiseta Oversize Premium"
                             oninput="updatePreview()"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Categoría
+                        </label>
+
+                        <input
+                            id="productCategory"
+                            type="text"
+                            placeholder="Ej: camisetas"
                         >
 
                     </div>
@@ -1433,13 +1447,15 @@ header{
                     <div class="field">
 
                         <label>
-                            Envío desde
+                            Envío mínimo (días)
                         </label>
 
                         <input
                             id="shippingMin"
-                            type="text"
-                            placeholder="5 ago"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="5"
                             oninput="updatePreview()"
                         >
 
@@ -1449,13 +1465,15 @@ header{
                     <div class="field">
 
                         <label>
-                            Envío hasta
+                            Envío máximo (días)
                         </label>
 
                         <input
                             id="shippingMax"
-                            type="text"
-                            placeholder="3 sep"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="7"
                             oninput="updatePreview()"
                         >
 
@@ -1579,6 +1597,14 @@ header{
                         onclick="generateCode()"
                     >
                         GENERAR CÓDIGO
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn"
+                        onclick="saveProductToSupabase()"
+                    >
+                        GUARDAR EN SUPABASE
                     </button>
 
                     <button
@@ -1785,7 +1811,23 @@ header{
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL = "https://xbbjfatmdbxbuoqdrgoj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "TU_PUBLISHABLE_KEY";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
 
 /* =========================================================
    DATOS
@@ -2294,9 +2336,9 @@ function updatePreview(){
         shippingMin &&
         shippingMax
         ?
-        `${shippingMin} – ${shippingMax}`
+        `${shippingMin} – ${shippingMax} días`
         :
-        "Indica las fechas de envío";
+        "Indica los días de envío";
 
 
     renderPreviewVariants();
@@ -2578,237 +2620,225 @@ function closeZoom(event){
 
 
 /* =========================================================
-   GENERAR CÓDIGO
+   DATOS PARA SUPABASE
 ========================================================= */
 
-function generateCode(){
+function getProductData(){
 
     const name =
-        document.getElementById(
-            "productName"
-        ).value.trim();
+        document.getElementById("productName").value.trim();
+
+    const category =
+        document.getElementById("productCategory").value.trim();
 
     const ref =
-        document.getElementById(
-            "productRef"
-        ).value.trim();
+        document.getElementById("productRef").value.trim();
 
     const price =
-        Number(
-            document.getElementById(
-                "productPrice"
-            ).value
-        ) || 0;
+        Number(document.getElementById("productPrice").value) || 0;
 
     const stock =
-        Number(
-            document.getElementById(
-                "productStock"
-            ).value
-        ) || 0;
+        Number(document.getElementById("productStock").value) || 0;
 
     const description =
-        document.getElementById(
-            "productDescription"
-        ).value.trim();
+        document.getElementById("productDescription").value.trim();
 
     const whatsapp =
-        document.getElementById(
-            "productWhatsapp"
-        ).value
-        .replace(
-            /\D/g,
-            ""
-        );
+        document.getElementById("productWhatsapp").value.replace(/\D/g, "");
 
     const shippingMin =
-        document.getElementById(
-            "shippingMin"
-        ).value.trim();
+        Number(document.getElementById("shippingMin").value) || 0;
 
     const shippingMax =
-        document.getElementById(
-            "shippingMax"
-        ).value.trim();
-
-
-    if(!name){
-
-        alert(
-            "Introduce el nombre del producto."
-        );
-
-        return;
-    }
-
-
-    if(!ref){
-
-        alert(
-            "Introduce la referencia / ID."
-        );
-
-        return;
-    }
-
-
-    if(price < 0){
-
-        alert(
-            "El precio no puede ser negativo."
-        );
-
-        return;
-    }
-
-
-    if(stock < 0){
-
-        alert(
-            "El stock no puede ser negativo."
-        );
-
-        return;
-    }
-
-
-    if(!whatsapp){
-
-        alert(
-            "Introduce el número de WhatsApp."
-        );
-
-        return;
-    }
-
+        Number(document.getElementById("shippingMax").value) || 0;
 
     const validVariants =
-        variants
-        .filter(
+        variants.filter(
             variant =>
                 variant.name.trim() ||
                 variant.image.trim()
         );
 
+    const validSizes =
+        sizes
+            .map(size => String(size).trim())
+            .filter(Boolean);
+
+    if(!name){
+        alert("Introduce el nombre del producto.");
+        return null;
+    }
+
+    if(!ref){
+        alert("Introduce la referencia / ID.");
+        return null;
+    }
+
+    if(!category){
+        alert("Introduce la categoría del producto.");
+        return null;
+    }
+
+    if(price < 0 || stock < 0){
+        alert("El precio y el stock no pueden ser negativos.");
+        return null;
+    }
+
+    if(!whatsapp){
+        alert("Introduce el número de WhatsApp.");
+        return null;
+    }
 
     if(!validVariants.length){
+        alert("Añade al menos un color.");
+        return null;
+    }
 
-        alert(
-            "Añade al menos un color."
-        );
+    for(const variant of validVariants){
+        if(!variant.name.trim()){
+            alert("Todos los colores deben tener nombre.");
+            return null;
+        }
+        if(!variant.image.trim()){
+            alert("Todos los colores deben tener una URL de imagen.");
+            return null;
+        }
+    }
 
+    if(shippingMin < 0 || shippingMax < 0 || shippingMax < shippingMin){
+        alert("Revisa los días de envío.");
+        return null;
+    }
+
+    return {
+        name,
+        category,
+        ref,
+        price,
+        stock,
+        description,
+        whatsapp,
+        images: validVariants,
+        sizes: validSizes,
+        shipping_min: shippingMin,
+        shipping_max: shippingMax,
+        active: true
+    };
+}
+
+
+/* =========================================================
+   GUARDAR EN SUPABASE
+========================================================= */
+
+async function saveProductToSupabase(){
+
+    if(SUPABASE_PUBLISHABLE_KEY === "TU_PUBLISHABLE_KEY"){
+        alert("Primero añade la Publishable Key de tu proyecto de Supabase en SUPABASE_PUBLISHABLE_KEY.");
         return;
     }
 
+    const product = getProductData();
 
-    for(
-        const variant
-        of validVariants
-    ){
+    if(!product){
+        return;
+    }
 
-        if(!variant.name.trim()){
+    try{
 
-            alert(
-                "Todos los colores deben tener nombre."
-            );
+        const { data: sessionData, error: sessionError } =
+            await supabaseClient.auth.getSession();
 
+        if(sessionError){
+            throw sessionError;
+        }
+
+        if(!sessionData.session){
+            alert("Debes iniciar sesión como administrador en Supabase Auth antes de guardar.");
             return;
         }
 
+        const { data, error } =
+            await supabaseClient
+                .from("Products")
+                .insert(product)
+                .select()
+                .single();
 
-        if(!variant.image.trim()){
-
-            alert(
-                "Todos los colores deben tener una URL de imagen."
-            );
-
+        if(error){
+            console.error("Supabase INSERT error:", error);
+            alert("No se pudo guardar el producto en Supabase.\n\n" + error.message);
             return;
         }
+
+        generateCode();
+
+        alert("✅ Producto guardado correctamente en Supabase." +
+            (data?.id ? "\nID: " + data.id : ""));
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert("Error al conectar con Supabase.\n\n" +
+            (error.message || error));
 
     }
 
+}
 
-    const validSizes =
-        sizes
-        .map(
-            size =>
-                String(size).trim()
-        )
-        .filter(Boolean);
 
+/* =========================================================
+   GENERAR CÓDIGO
+========================================================= */
+
+function generateCode(){
+
+    const product = getProductData();
+
+    if(!product){
+        return;
+    }
 
     const variantCode =
-        validVariants
-        .map(
-            variant => `        {
-            name: "${escapeJS(
-                variant.name
-            )}",
-            image: "${escapeJS(
-                variant.image
-            )}",
-            color: "${escapeJS(
-                variant.color
-            )}"
+        product.images
+            .map(
+                variant => `        {
+            name: "${escapeJS(variant.name)}",
+            image: "${escapeJS(variant.image)}",
+            color: "${escapeJS(variant.color)}"
         }`
-        )
-        .join(",\n");
-
+            )
+            .join(",\n");
 
     const sizeCode =
-        validSizes.length
-        ?
-        validSizes
-        .map(
-            size =>
-                `        "${escapeJS(
-                    size
-                )}"`
-        )
-        .join(",\n")
-        :
-        "";
-
+        product.sizes.length
+        ? product.sizes
+            .map(size => `        "${escapeJS(size)}"`)
+            .join(",\n")
+        : "";
 
     const code = `{
-    name: "${escapeJS(name)}",
-    ref: "${escapeJS(ref)}",
-
-    price: ${price},
-
-    stock: ${stock},
-
-    description: "${escapeJS(
-        description
-    )}",
-
-    whatsapp: "${escapeJS(
-        whatsapp
-    )}",
-
-    variants: [
+    name: "${escapeJS(product.name)}",
+    category: "${escapeJS(product.category)}",
+    ref: "${escapeJS(product.ref)}",
+    price: ${product.price},
+    stock: ${product.stock},
+    description: "${escapeJS(product.description)}",
+    whatsapp: "${escapeJS(product.whatsapp)}",
+    images: [
 ${variantCode}
     ],
-
     sizes: [
 ${sizeCode}
     ],
+    shipping_min: ${product.shipping_min},
+    shipping_max: ${product.shipping_max},
+    active: true
+}`;
 
-    shipping: {
-        min: "${escapeJS(
-            shippingMin
-        )}",
-        max: "${escapeJS(
-            shippingMax
-        )}"
-    }
-},`;
-
-
-    document.getElementById(
-        "codeOutput"
-    ).value =
-        code;
+    document.getElementById("codeOutput").value = code;
 
 }
 
