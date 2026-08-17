@@ -1101,6 +1101,75 @@ header{
 
 
 /* =========================================================
+   ESTADO SUPABASE
+========================================================= */
+
+.supabase-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-top:15px;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    border-radius:6px;
+
+    background:
+        rgba(0,0,0,.22);
+
+    color:#aaa;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:.8px;
+
+    text-transform:uppercase;
+}
+
+.supabase-dot{
+
+    width:8px;
+
+    height:8px;
+
+    flex:0 0 8px;
+
+    border-radius:50%;
+
+    background:#777;
+}
+
+.supabase-dot.ok{
+
+    background:#7dff9a;
+
+    box-shadow:
+        0 0 12px
+        rgba(125,255,154,.5);
+}
+
+.supabase-dot.error{
+
+    background:#ff7777;
+
+    box-shadow:
+        0 0 12px
+        rgba(255,119,119,.5);
+}
+
+
+/* =========================================================
    MODAL ZOOM
 ========================================================= */
 
@@ -1306,10 +1375,6 @@ header{
     <div class="admin-grid">
 
 
-        <!-- =================================================
-             CONFIGURACIÓN
-        ================================================== -->
-
         <section>
 
 
@@ -1353,11 +1418,36 @@ header{
                             Categoría
                         </label>
 
-                        <input
+                        <select
                             id="productCategory"
-                            type="text"
-                            placeholder="Ej: camisetas"
+                            onchange="updatePreview()"
                         >
+
+                            <option value="camisetas">
+                                Camisetas
+                            </option>
+
+                            <option value="pantalones">
+                                Pantalones
+                            </option>
+
+                            <option value="conjuntos">
+                                Conjuntos
+                            </option>
+
+                            <option value="gorras">
+                                Gorras
+                            </option>
+
+                            <option value="gafas">
+                                Gafas
+                            </option>
+
+                            <option value="bisuteria">
+                                Bisutería
+                            </option>
+
+                        </select>
 
                     </div>
 
@@ -1455,7 +1545,7 @@ header{
                             type="number"
                             min="0"
                             step="1"
-                            placeholder="5"
+                            value="3"
                             oninput="updatePreview()"
                         >
 
@@ -1473,7 +1563,7 @@ header{
                             type="number"
                             min="0"
                             step="1"
-                            placeholder="7"
+                            value="9"
                             oninput="updatePreview()"
                         >
 
@@ -1485,11 +1575,10 @@ header{
             </div>
 
 
-            <!-- =================================================
-                 TALLAS
-            ================================================== -->
-
-            <div class="panel" style="margin-top:25px">
+            <div
+                class="panel"
+                style="margin-top:25px"
+            >
 
                 <div class="panel-title">
 
@@ -1516,11 +1605,10 @@ header{
             </div>
 
 
-            <!-- =================================================
-                 VARIANTES
-            ================================================== -->
-
-            <div class="panel" style="margin-top:25px">
+            <div
+                class="panel"
+                style="margin-top:25px"
+            >
 
                 <div class="panel-title">
 
@@ -1561,10 +1649,6 @@ header{
 
             </div>
 
-
-            <!-- =================================================
-                 GENERADOR
-            ================================================== -->
 
             <div class="panel code-panel">
 
@@ -1617,15 +1701,26 @@ header{
 
                 </div>
 
+
+                <div class="supabase-status">
+
+                    <span
+                        id="supabaseDot"
+                        class="supabase-dot"
+                    ></span>
+
+                    <span id="supabaseStatusText">
+                        Comprobando conexión con Supabase...
+                    </span>
+
+                </div>
+
+
             </div>
 
 
         </section>
 
-
-        <!-- =================================================
-             PREVISUALIZACIÓN
-        ================================================== -->
 
         <aside class="preview-wrap">
 
@@ -1646,6 +1741,7 @@ header{
                         id="previewImage"
                         src=""
                         alt=""
+                        style="display:none"
                     >
 
                     <div class="zoom-hint">
@@ -1784,10 +1880,6 @@ header{
 </main>
 
 
-<!-- =========================================================
-     MODAL ZOOM
-========================================================= -->
-
 <div
     id="zoomModal"
     class="zoom-modal"
@@ -1819,13 +1911,26 @@ header{
    SUPABASE
 ========================================================= */
 
-const SUPABASE_URL = "https://xbbjfatmdbxbuoqdrgoj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "TU_PUBLISHABLE_KEY";
+const SUPABASE_URL =
+    "https://xbbjfatmdbxbuoqdrgoj.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_M7ETdIWvj4nCQZ55i24Vpw_5Yc5Islk";
+
+const PRODUCTS_TABLE =
+    "Products";
 
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth:{
+                persistSession:true,
+                autoRefreshToken:true,
+                detectSessionInUrl:true
+            }
+        }
     );
 
 
@@ -1834,11 +1939,13 @@ const supabaseClient =
 ========================================================= */
 
 let variants = [
+
     {
         name:"Azul",
         color:"#246BCE",
         image:""
     }
+
 ];
 
 let sizes = [
@@ -1880,6 +1987,34 @@ function escapeJS(value){
 }
 
 
+function setSupabaseStatus(
+    type,
+    text
+){
+
+    const dot =
+        document.getElementById(
+            "supabaseDot"
+        );
+
+    const status =
+        document.getElementById(
+            "supabaseStatusText"
+        );
+
+    dot.className =
+        "supabase-dot " +
+        (
+            type ||
+            ""
+        );
+
+    status.textContent =
+        text;
+
+}
+
+
 /* =========================================================
    VARIANTES
 ========================================================= */
@@ -1902,9 +2037,9 @@ function renderVariants(){
                         <div
                             class="color-picker"
                             style="
-                                background:
-                                ${escapeHTML(
-                                    variant.color
+                                background:${escapeHTML(
+                                    variant.color ||
+                                    "#ffffff"
                                 )};
                             "
                         >
@@ -1912,9 +2047,10 @@ function renderVariants(){
                             <input
                                 type="color"
                                 value="${
-                                    variant.color
-                                    ||
-                                    "#ffffff"
+                                    escapeHTML(
+                                        variant.color ||
+                                        "#ffffff"
+                                    )
                                 }"
                                 onchange="
                                     changeVariantColor(
@@ -2108,6 +2244,8 @@ function changeVariantColor(
     variants[index].color =
         value;
 
+    updatePreview();
+
     renderVariants();
 
 }
@@ -2142,36 +2280,7 @@ function changeVariantImage(
     variants[index].image =
         value;
 
-    if(
-        index === activeVariant
-    ){
-
-        const image =
-            document.getElementById(
-                "previewImage"
-            );
-
-        if(value.trim()){
-
-            image.src =
-                value.trim();
-
-            image.style.display =
-                "block";
-
-        }
-        else{
-
-            image.removeAttribute(
-                "src"
-            );
-
-            image.style.display =
-                "none";
-
-        }
-
-    }
+    updatePreview();
 
     renderVariants();
 
@@ -2261,61 +2370,90 @@ function removeSize(index){
 
 function updatePreview(){
 
-    const name =
+    const nameElement =
         document.getElementById(
             "productName"
-        ).value.trim()
-        ||
-        "Nombre del producto";
+        );
 
-    const ref =
+    const refElement =
         document.getElementById(
             "productRef"
-        ).value.trim()
-        ||
-        "—";
+        );
 
-    const price =
-        Number(
-            document.getElementById(
-                "productPrice"
-            ).value
-        ) || 0;
+    const priceElement =
+        document.getElementById(
+            "productPrice"
+        );
 
-    const description =
+    const descriptionElement =
         document.getElementById(
             "productDescription"
-        ).value.trim()
-        ||
-        "Descripción del producto";
+        );
 
-    const shippingMin =
+    const shippingMinElement =
         document.getElementById(
             "shippingMin"
-        ).value.trim();
+        );
 
-    const shippingMax =
+    const shippingMaxElement =
         document.getElementById(
             "shippingMax"
-        ).value.trim();
+        );
+
+
+    const name =
+        nameElement
+        ? nameElement.value.trim()
+        : "";
+
+    const ref =
+        refElement
+        ? refElement.value.trim()
+        : "";
+
+    const price =
+        priceElement
+        ? Number(priceElement.value) || 0
+        : 0;
+
+    const description =
+        descriptionElement
+        ? descriptionElement.value.trim()
+        : "";
+
+    const shippingMin =
+        shippingMinElement
+        ? shippingMinElement.value.trim()
+        : "";
+
+    const shippingMax =
+        shippingMaxElement
+        ? shippingMaxElement.value.trim()
+        : "";
 
 
     document.getElementById(
         "previewName"
     ).textContent =
-        name;
+        name ||
+        "Nombre del producto";
 
 
     document.getElementById(
         "previewRef"
     ).textContent =
-        "REF: " + ref;
+        "REF: " +
+        (
+            ref ||
+            "—"
+        );
 
 
     document.getElementById(
         "previewDescription"
     ).textContent =
-        description;
+        description ||
+        "Descripción del producto";
 
 
     document.getElementById(
@@ -2361,47 +2499,57 @@ function renderPreviewVariants(){
 
     container.innerHTML =
         variants.map(
-            (variant,index) => `
+            (variant,index) => {
 
-                <button
-                    type="button"
-                    class="preview-color ${
-                        index === activeVariant
-                        ?
-                        "active"
-                        :
+                const color =
+                    variant.color ||
+                    "#888888";
+
+                const image =
+                    String(
+                        variant.image ||
                         ""
-                    }"
-                    style="
-                        background-color:
-                        ${escapeHTML(
-                            variant.color
-                        )};
+                    ).trim();
 
-                        ${
-                            variant.image
+                const backgroundImage =
+                    image
+                    ?
+                    `background-image:url("${escapeHTML(
+                        image
+                    )}");`
+                    :
+                    "";
+
+                return `
+
+                    <button
+                        type="button"
+                        class="preview-color ${
+                            index === activeVariant
                             ?
-                            `
-                            background-image:
-                            url('${escapeHTML(
-                                variant.image
-                            )}');
-                            `
+                            "active"
                             :
                             ""
-                        }
-                    "
-                    title="${escapeHTML(
-                        variant.name
-                    )}"
-                    onclick="
-                        selectPreviewVariant(
-                            ${index}
-                        )
-                    "
-                ></button>
+                        }"
+                        style="
+                            background-color:${escapeHTML(
+                                color
+                            )};
+                            ${backgroundImage}
+                        "
+                        title="${escapeHTML(
+                            variant.name
+                        )}"
+                        onclick="
+                            selectPreviewVariant(
+                                ${index}
+                            )
+                        "
+                    ></button>
 
-            `
+                `;
+
+            }
         )
         .join("");
 
@@ -2431,10 +2579,21 @@ function renderPreviewVariants(){
         );
 
 
-    if(active.image){
+    if(
+        active.image &&
+        String(
+            active.image
+        ).trim()
+    ){
 
         image.src =
-            active.image;
+            String(
+                active.image
+            ).trim();
+
+        image.alt =
+            active.name ||
+            "Producto";
 
         image.style.display =
             "block";
@@ -2445,6 +2604,9 @@ function renderPreviewVariants(){
         image.removeAttribute(
             "src"
         );
+
+        image.alt =
+            "";
 
         image.style.display =
             "none";
@@ -2457,6 +2619,14 @@ function renderPreviewVariants(){
 function selectPreviewVariant(
     index
 ){
+
+    if(
+        index < 0 ||
+        index >= variants.length
+    ){
+
+        return;
+    }
 
     activeVariant =
         index;
@@ -2477,13 +2647,17 @@ function renderPreviewSizes(){
             "previewSizes"
         );
 
+    const validSizes =
+        sizes
+            .map(
+                size =>
+                    String(size).trim()
+            )
+            .filter(Boolean);
+
 
     container.innerHTML =
-        sizes
-        .filter(
-            size =>
-                String(size).trim()
-        )
+        validSizes
         .map(
             (size,index) => `
 
@@ -2620,110 +2794,357 @@ function closeZoom(event){
 
 
 /* =========================================================
-   DATOS PARA SUPABASE
+   OBTENER PRODUCTO
 ========================================================= */
 
 function getProductData(){
 
     const name =
-        document.getElementById("productName").value.trim();
+        document.getElementById(
+            "productName"
+        ).value.trim();
 
     const category =
-        document.getElementById("productCategory").value.trim();
+        document.getElementById(
+            "productCategory"
+        ).value.trim().toLowerCase();
 
     const ref =
-        document.getElementById("productRef").value.trim();
+        document.getElementById(
+            "productRef"
+        ).value.trim();
 
     const price =
-        Number(document.getElementById("productPrice").value) || 0;
+        Number(
+            document.getElementById(
+                "productPrice"
+            ).value
+        );
 
     const stock =
-        Number(document.getElementById("productStock").value) || 0;
+        Number(
+            document.getElementById(
+                "productStock"
+            ).value
+        );
 
     const description =
-        document.getElementById("productDescription").value.trim();
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
 
     const whatsapp =
-        document.getElementById("productWhatsapp").value.replace(/\D/g, "");
+        document.getElementById(
+            "productWhatsapp"
+        ).value
+        .replace(
+            /\D/g,
+            ""
+        );
 
     const shippingMin =
-        Number(document.getElementById("shippingMin").value) || 0;
+        Number(
+            document.getElementById(
+                "shippingMin"
+            ).value
+        );
 
     const shippingMax =
-        Number(document.getElementById("shippingMax").value) || 0;
+        Number(
+            document.getElementById(
+                "shippingMax"
+            ).value
+        );
+
+
+    const allowedCategories = [
+
+        "camisetas",
+        "pantalones",
+        "conjuntos",
+        "gorras",
+        "gafas",
+        "bisuteria"
+
+    ];
+
 
     const validVariants =
-        variants.filter(
-            variant =>
-                variant.name.trim() ||
-                variant.image.trim()
-        );
+        variants
+            .map(
+                variant => ({
+
+                    name:
+                        String(
+                            variant.name ||
+                            ""
+                        ).trim(),
+
+                    image:
+                        String(
+                            variant.image ||
+                            ""
+                        ).trim(),
+
+                    color:
+                        String(
+                            variant.color ||
+                            ""
+                        ).trim()
+
+                })
+            )
+            .filter(
+                variant =>
+                    variant.name ||
+                    variant.image
+            );
+
 
     const validSizes =
         sizes
-            .map(size => String(size).trim())
+            .map(
+                size =>
+                    String(
+                        size
+                    ).trim()
+            )
             .filter(Boolean);
 
+
     if(!name){
-        alert("Introduce el nombre del producto.");
+
+        alert(
+            "Introduce el nombre del producto."
+        );
+
         return null;
     }
+
 
     if(!ref){
-        alert("Introduce la referencia / ID.");
+
+        alert(
+            "Introduce la referencia / ID."
+        );
+
         return null;
     }
 
-    if(!category){
-        alert("Introduce la categoría del producto.");
+
+    if(
+        !allowedCategories.includes(
+            category
+        )
+    ){
+
+        alert(
+            "Selecciona una categoría válida."
+        );
+
         return null;
     }
 
-    if(price < 0 || stock < 0){
-        alert("El precio y el stock no pueden ser negativos.");
+
+    if(
+        !Number.isFinite(price) ||
+        price < 0
+    ){
+
+        alert(
+            "El precio no es válido."
+        );
+
         return null;
     }
+
+
+    if(
+        !Number.isFinite(stock) ||
+        stock < 0
+    ){
+
+        alert(
+            "El stock no es válido."
+        );
+
+        return null;
+    }
+
 
     if(!whatsapp){
-        alert("Introduce el número de WhatsApp.");
+
+        alert(
+            "Introduce el número de WhatsApp."
+        );
+
         return null;
     }
+
 
     if(!validVariants.length){
-        alert("Añade al menos un color.");
+
+        alert(
+            "Añade al menos un color."
+        );
+
         return null;
     }
 
-    for(const variant of validVariants){
-        if(!variant.name.trim()){
-            alert("Todos los colores deben tener nombre.");
+
+    for(
+        const variant
+        of validVariants
+    ){
+
+        if(!variant.name){
+
+            alert(
+                "Todos los colores deben tener nombre."
+            );
+
             return null;
         }
-        if(!variant.image.trim()){
-            alert("Todos los colores deben tener una URL de imagen.");
+
+
+        if(!variant.image){
+
+            alert(
+                "Todos los colores deben tener una URL de imagen."
+            );
+
             return null;
         }
+
     }
 
-    if(shippingMin < 0 || shippingMax < 0 || shippingMax < shippingMin){
-        alert("Revisa los días de envío.");
+
+    if(
+        !Number.isFinite(
+            shippingMin
+        ) ||
+        !Number.isFinite(
+            shippingMax
+        ) ||
+        shippingMin < 0 ||
+        shippingMax < 0 ||
+        shippingMax < shippingMin
+    ){
+
+        alert(
+            "Revisa los días de envío."
+        );
+
         return null;
     }
+
 
     return {
+
         name,
+
         category,
+
         ref,
+
         price,
+
         stock,
+
         description,
+
         whatsapp,
-        images: validVariants,
-        sizes: validSizes,
-        shipping_min: shippingMin,
-        shipping_max: shippingMax,
-        active: true
+
+        images:
+            validVariants,
+
+        sizes:
+            validSizes,
+
+        shipping_min:
+            shippingMin,
+
+        shipping_max:
+            shippingMax,
+
+        active:
+            true
+
     };
+
+}
+
+
+/* =========================================================
+   COMPROBAR CONEXIÓN
+========================================================= */
+
+async function checkSupabaseConnection(){
+
+    try{
+
+        setSupabaseStatus(
+            "",
+            "Comprobando conexión..."
+        );
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from(
+                    PRODUCTS_TABLE
+                )
+                .select(
+                    "id",
+                    {
+                        count:"exact",
+                        head:true
+                    }
+                );
+
+
+        if(error){
+
+            console.error(
+                "Supabase connection error:",
+                error
+            );
+
+            setSupabaseStatus(
+                "error",
+                "Supabase conectado, pero Products no permite lectura"
+            );
+
+            return false;
+        }
+
+
+        setSupabaseStatus(
+            "ok",
+            "Conectado · Products disponible"
+        );
+
+        return true;
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+        setSupabaseStatus(
+            "error",
+            "Error de conexión con Supabase"
+        );
+
+        return false;
+
+    }
+
 }
 
 
@@ -2733,56 +3154,161 @@ function getProductData(){
 
 async function saveProductToSupabase(){
 
-    if(SUPABASE_PUBLISHABLE_KEY === "TU_PUBLISHABLE_KEY"){
-        alert("Primero añade la Publishable Key de tu proyecto de Supabase en SUPABASE_PUBLISHABLE_KEY.");
-        return;
-    }
+    const product =
+        getProductData();
 
-    const product = getProductData();
 
     if(!product){
+
         return;
     }
+
+
+    const button =
+        document.querySelector(
+            'button[onclick="saveProductToSupabase()"]'
+        );
+
+
+    const originalText =
+        button
+        ?
+        button.textContent
+        :
+        "";
+
 
     try{
 
-        const { data: sessionData, error: sessionError } =
-            await supabaseClient.auth.getSession();
+        if(button){
 
-        if(sessionError){
-            throw sessionError;
+            button.disabled =
+                true;
+
+            button.textContent =
+                "GUARDANDO...";
         }
 
-        if(!sessionData.session){
-            alert("Debes iniciar sesión como administrador en Supabase Auth antes de guardar.");
-            return;
-        }
 
-        const { data, error } =
+        setSupabaseStatus(
+            "",
+            "Guardando producto..."
+        );
+
+
+        /*
+         * INSERT DIRECTO EN PRODUCTS.
+         *
+         * No se exige una sesión de Auth aquí.
+         * Supabase RLS decidirá si el cliente tiene
+         * permiso para realizar el INSERT.
+         */
+
+        const {
+            data,
+            error
+        } =
             await supabaseClient
-                .from("Products")
-                .insert(product)
+                .from(
+                    PRODUCTS_TABLE
+                )
+                .insert(
+                    product
+                )
                 .select()
                 .single();
 
+
         if(error){
-            console.error("Supabase INSERT error:", error);
-            alert("No se pudo guardar el producto en Supabase.\n\n" + error.message);
+
+            console.error(
+                "Supabase INSERT error:",
+                error
+            );
+
+
+            setSupabaseStatus(
+                "error",
+                "No se pudo guardar el producto"
+            );
+
+
+            alert(
+                "❌ No se pudo guardar el producto en Supabase.\n\n" +
+                error.message +
+                (
+                    error.details
+                    ?
+                    "\n\n" +
+                    error.details
+                    :
+                    ""
+                )
+            );
+
             return;
         }
 
+
         generateCode();
 
-        alert("✅ Producto guardado correctamente en Supabase." +
-            (data?.id ? "\nID: " + data.id : ""));
+
+        setSupabaseStatus(
+            "ok",
+            "Producto guardado correctamente"
+        );
+
+
+        alert(
+            "✅ Producto guardado correctamente en Supabase." +
+            (
+                data?.id
+                ?
+                "\nID: " +
+                data.id
+                :
+                ""
+            )
+        );
+
 
     }
+
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Error guardando producto:",
+            error
+        );
 
-        alert("Error al conectar con Supabase.\n\n" +
-            (error.message || error));
+
+        setSupabaseStatus(
+            "error",
+            "Error al guardar"
+        );
+
+
+        alert(
+            "❌ Error al conectar con Supabase.\n\n" +
+            (
+                error?.message ||
+                error
+            )
+        );
+
+    }
+
+    finally{
+
+        if(button){
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                originalText ||
+                "GUARDAR EN SUPABASE";
+        }
 
     }
 
@@ -2795,11 +3321,15 @@ async function saveProductToSupabase(){
 
 function generateCode(){
 
-    const product = getProductData();
+    const product =
+        getProductData();
+
 
     if(!product){
+
         return;
     }
+
 
     const variantCode =
         product.images
@@ -2810,14 +3340,27 @@ function generateCode(){
             color: "${escapeJS(variant.color)}"
         }`
             )
-            .join(",\n");
+            .join(
+                ",\n"
+            );
+
 
     const sizeCode =
         product.sizes.length
-        ? product.sizes
-            .map(size => `        "${escapeJS(size)}"`)
-            .join(",\n")
-        : "";
+        ?
+        product.sizes
+            .map(
+                size =>
+                    `        "${escapeJS(
+                        size
+                    )}"`
+            )
+            .join(
+                ",\n"
+            )
+        :
+        "";
+
 
     const code = `{
     name: "${escapeJS(product.name)}",
@@ -2838,7 +3381,11 @@ ${sizeCode}
     active: true
 }`;
 
-    document.getElementById("codeOutput").value = code;
+
+    document.getElementById(
+        "codeOutput"
+    ).value =
+        code;
 
 }
 
@@ -2874,6 +3421,7 @@ async function copyCode(){
             output.value
         );
 
+
         alert(
             "Código copiado correctamente."
         );
@@ -2888,6 +3436,7 @@ async function copyCode(){
             "copy"
         );
 
+
         alert(
             "Código copiado."
         );
@@ -2898,7 +3447,7 @@ async function copyCode(){
 
 
 /* =========================================================
-   ESCAPE
+   TECLA ESCAPE
 ========================================================= */
 
 document.addEventListener(
@@ -2926,6 +3475,8 @@ renderVariants();
 renderSizes();
 
 updatePreview();
+
+checkSupabaseConnection();
 
 </script>
 
