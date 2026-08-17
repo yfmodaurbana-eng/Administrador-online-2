@@ -1101,75 +1101,6 @@ header{
 
 
 /* =========================================================
-   ESTADO SUPABASE
-========================================================= */
-
-.supabase-status{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:9px;
-
-    margin-top:15px;
-
-    padding:
-        10px 12px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    border-radius:6px;
-
-    background:
-        rgba(0,0,0,.22);
-
-    color:#aaa;
-
-    font-size:9px;
-
-    font-weight:bold;
-
-    letter-spacing:.8px;
-
-    text-transform:uppercase;
-}
-
-.supabase-dot{
-
-    width:8px;
-
-    height:8px;
-
-    flex:0 0 8px;
-
-    border-radius:50%;
-
-    background:#777;
-}
-
-.supabase-dot.ok{
-
-    background:#7dff9a;
-
-    box-shadow:
-        0 0 12px
-        rgba(125,255,154,.5);
-}
-
-.supabase-dot.error{
-
-    background:#ff7777;
-
-    box-shadow:
-        0 0 12px
-        rgba(255,119,119,.5);
-}
-
-
-/* =========================================================
    MODAL ZOOM
 ========================================================= */
 
@@ -1375,6 +1306,10 @@ header{
     <div class="admin-grid">
 
 
+        <!-- =================================================
+             CONFIGURACIÓN
+        ================================================== -->
+
         <section>
 
 
@@ -1418,36 +1353,13 @@ header{
                             Categoría
                         </label>
 
-                        <select
+                        <input
                             id="productCategory"
-                            onchange="updatePreview()"
+                            type="text"
+                            value="camisetas"
+                            placeholder="Ej: camisetas"
+                            oninput="updatePreview()"
                         >
-
-                            <option value="camisetas">
-                                Camisetas
-                            </option>
-
-                            <option value="pantalones">
-                                Pantalones
-                            </option>
-
-                            <option value="conjuntos">
-                                Conjuntos
-                            </option>
-
-                            <option value="gorras">
-                                Gorras
-                            </option>
-
-                            <option value="gafas">
-                                Gafas
-                            </option>
-
-                            <option value="bisuteria">
-                                Bisutería
-                            </option>
-
-                        </select>
 
                     </div>
 
@@ -1575,10 +1487,11 @@ header{
             </div>
 
 
-            <div
-                class="panel"
-                style="margin-top:25px"
-            >
+            <!-- =================================================
+                 TALLAS
+            ================================================== -->
+
+            <div class="panel" style="margin-top:25px">
 
                 <div class="panel-title">
 
@@ -1605,10 +1518,11 @@ header{
             </div>
 
 
-            <div
-                class="panel"
-                style="margin-top:25px"
-            >
+            <!-- =================================================
+                 VARIANTES
+            ================================================== -->
+
+            <div class="panel" style="margin-top:25px">
 
                 <div class="panel-title">
 
@@ -1649,6 +1563,10 @@ header{
 
             </div>
 
+
+            <!-- =================================================
+                 GENERADOR
+            ================================================== -->
 
             <div class="panel code-panel">
 
@@ -1701,26 +1619,15 @@ header{
 
                 </div>
 
-
-                <div class="supabase-status">
-
-                    <span
-                        id="supabaseDot"
-                        class="supabase-dot"
-                    ></span>
-
-                    <span id="supabaseStatusText">
-                        Comprobando conexión con Supabase...
-                    </span>
-
-                </div>
-
-
             </div>
 
 
         </section>
 
+
+        <!-- =================================================
+             PREVISUALIZACIÓN
+        ================================================== -->
 
         <aside class="preview-wrap">
 
@@ -1880,6 +1787,10 @@ header{
 </main>
 
 
+<!-- =========================================================
+     MODAL ZOOM
+========================================================= -->
+
 <div
     id="zoomModal"
     class="zoom-modal"
@@ -1917,8 +1828,31 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_M7ETdIWvj4nCQZ55i24Vpw_5Yc5Islk";
 
-const PRODUCTS_TABLE =
-    "Products";
+
+/*
+   IMPORTANTE:
+
+   Se utiliza el cliente oficial de Supabase.
+
+   NO se comprueba contra "TU_PUBLISHABLE_KEY"
+   porque la clave real ya está definida arriba.
+*/
+
+if(
+    !window.supabase ||
+    typeof window.supabase.createClient !== "function"
+){
+
+    alert(
+        "No se pudo cargar la librería de Supabase."
+    );
+
+    throw new Error(
+        "Supabase JS no está disponible."
+    );
+
+}
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1949,10 +1883,12 @@ let variants = [
 ];
 
 let sizes = [
+
     "S",
     "M",
     "L",
     "XL"
+
 ];
 
 let activeVariant = 0;
@@ -1983,34 +1919,6 @@ function escapeJS(value){
         .replace(/"/g,'\\"')
         .replace(/\n/g,"\\n")
         .replace(/\r/g,"");
-
-}
-
-
-function setSupabaseStatus(
-    type,
-    text
-){
-
-    const dot =
-        document.getElementById(
-            "supabaseDot"
-        );
-
-    const status =
-        document.getElementById(
-            "supabaseStatusText"
-        );
-
-    dot.className =
-        "supabase-dot " +
-        (
-            type ||
-            ""
-        );
-
-    status.textContent =
-        text;
 
 }
 
@@ -2047,10 +1955,8 @@ function renderVariants(){
                             <input
                                 type="color"
                                 value="${
-                                    escapeHTML(
-                                        variant.color ||
-                                        "#ffffff"
-                                    )
+                                    variant.color ||
+                                    "#ffffff"
                                 }"
                                 onchange="
                                     changeVariantColor(
@@ -2244,8 +2150,6 @@ function changeVariantColor(
     variants[index].color =
         value;
 
-    updatePreview();
-
     renderVariants();
 
 }
@@ -2280,7 +2184,36 @@ function changeVariantImage(
     variants[index].image =
         value;
 
-    updatePreview();
+    if(
+        index === activeVariant
+    ){
+
+        const image =
+            document.getElementById(
+                "previewImage"
+            );
+
+        if(value.trim()){
+
+            image.src =
+                value.trim();
+
+            image.style.display =
+                "block";
+
+        }
+        else{
+
+            image.removeAttribute(
+                "src"
+            );
+
+            image.style.display =
+                "none";
+
+        }
+
+    }
 
     renderVariants();
 
@@ -2406,25 +2339,30 @@ function updatePreview(){
         ? nameElement.value.trim()
         : "";
 
+
     const ref =
         refElement
         ? refElement.value.trim()
         : "";
+
 
     const price =
         priceElement
         ? Number(priceElement.value) || 0
         : 0;
 
+
     const description =
         descriptionElement
         ? descriptionElement.value.trim()
         : "";
 
+
     const shippingMin =
         shippingMinElement
         ? shippingMinElement.value.trim()
         : "";
+
 
     const shippingMax =
         shippingMaxElement
@@ -2499,57 +2437,48 @@ function renderPreviewVariants(){
 
     container.innerHTML =
         variants.map(
-            (variant,index) => {
+            (variant,index) => `
 
-                const color =
-                    variant.color ||
-                    "#888888";
-
-                const image =
-                    String(
-                        variant.image ||
+                <button
+                    type="button"
+                    class="preview-color ${
+                        index === activeVariant
+                        ?
+                        "active"
+                        :
                         ""
-                    ).trim();
+                    }"
+                    style="
+                        background-color:
+                        ${escapeHTML(
+                            variant.color ||
+                            "#ffffff"
+                        )};
 
-                const backgroundImage =
-                    image
-                    ?
-                    `background-image:url("${escapeHTML(
-                        image
-                    )}");`
-                    :
-                    "";
-
-                return `
-
-                    <button
-                        type="button"
-                        class="preview-color ${
-                            index === activeVariant
+                        ${
+                            variant.image
                             ?
-                            "active"
+                            `
+                            background-image:
+                            url('${escapeHTML(
+                                variant.image
+                            )}');
+                            `
                             :
                             ""
-                        }"
-                        style="
-                            background-color:${escapeHTML(
-                                color
-                            )};
-                            ${backgroundImage}
-                        "
-                        title="${escapeHTML(
-                            variant.name
-                        )}"
-                        onclick="
-                            selectPreviewVariant(
-                                ${index}
-                            )
-                        "
-                    ></button>
+                        }
+                    "
+                    title="${escapeHTML(
+                        variant.name
+                    )}"
+                    onclick="
+                        selectPreviewVariant(
+                            ${index}
+                        )
+                    "
+                ></button>
 
-                `;
-
-            }
+            `
         )
         .join("");
 
@@ -2579,21 +2508,10 @@ function renderPreviewVariants(){
         );
 
 
-    if(
-        active.image &&
-        String(
-            active.image
-        ).trim()
-    ){
+    if(active.image){
 
         image.src =
-            String(
-                active.image
-            ).trim();
-
-        image.alt =
-            active.name ||
-            "Producto";
+            active.image;
 
         image.style.display =
             "block";
@@ -2604,9 +2522,6 @@ function renderPreviewVariants(){
         image.removeAttribute(
             "src"
         );
-
-        image.alt =
-            "";
 
         image.style.display =
             "none";
@@ -2621,8 +2536,7 @@ function selectPreviewVariant(
 ){
 
     if(
-        index < 0 ||
-        index >= variants.length
+        !variants[index]
     ){
 
         return;
@@ -2647,17 +2561,13 @@ function renderPreviewSizes(){
             "previewSizes"
         );
 
-    const validSizes =
-        sizes
-            .map(
-                size =>
-                    String(size).trim()
-            )
-            .filter(Boolean);
-
 
     container.innerHTML =
-        validSizes
+        sizes
+        .filter(
+            size =>
+                String(size).trim()
+        )
         .map(
             (size,index) => `
 
@@ -2701,12 +2611,17 @@ function previewQuantity(
         previewQty = 1;
     }
 
-    const stock =
-        Number(
-            document.getElementById(
-                "productStock"
-            ).value
+
+    const stockElement =
+        document.getElementById(
+            "productStock"
         );
+
+
+    const stock =
+        stockElement
+        ? Number(stockElement.value)
+        : 0;
 
 
     if(
@@ -2794,7 +2709,7 @@ function closeZoom(event){
 
 
 /* =========================================================
-   OBTENER PRODUCTO
+   DATOS PARA SUPABASE
 ========================================================= */
 
 function getProductData(){
@@ -2804,69 +2719,63 @@ function getProductData(){
             "productName"
         ).value.trim();
 
+
     const category =
         document.getElementById(
             "productCategory"
-        ).value.trim().toLowerCase();
+        ).value.trim()
+        .toLowerCase();
+
 
     const ref =
         document.getElementById(
             "productRef"
         ).value.trim();
 
+
     const price =
         Number(
             document.getElementById(
                 "productPrice"
             ).value
-        );
+        ) || 0;
+
 
     const stock =
         Number(
             document.getElementById(
                 "productStock"
             ).value
-        );
+        ) || 0;
+
 
     const description =
         document.getElementById(
             "productDescription"
         ).value.trim();
 
+
     const whatsapp =
         document.getElementById(
             "productWhatsapp"
         ).value
-        .replace(
-            /\D/g,
-            ""
-        );
+        .replace(/\D/g,"");
+
 
     const shippingMin =
         Number(
             document.getElementById(
                 "shippingMin"
             ).value
-        );
+        ) || 0;
+
 
     const shippingMax =
         Number(
             document.getElementById(
                 "shippingMax"
             ).value
-        );
-
-
-    const allowedCategories = [
-
-        "camisetas",
-        "pantalones",
-        "conjuntos",
-        "gorras",
-        "gafas",
-        "bisuteria"
-
-    ];
+        ) || 0;
 
 
     const validVariants =
@@ -2876,20 +2785,17 @@ function getProductData(){
 
                     name:
                         String(
-                            variant.name ||
-                            ""
+                            variant.name || ""
                         ).trim(),
 
                     image:
                         String(
-                            variant.image ||
-                            ""
+                            variant.image || ""
                         ).trim(),
 
                     color:
                         String(
-                            variant.color ||
-                            ""
+                            variant.color || ""
                         ).trim()
 
                 })
@@ -2905,9 +2811,7 @@ function getProductData(){
         sizes
             .map(
                 size =>
-                    String(
-                        size
-                    ).trim()
+                    String(size).trim()
             )
             .filter(Boolean);
 
@@ -2932,14 +2836,10 @@ function getProductData(){
     }
 
 
-    if(
-        !allowedCategories.includes(
-            category
-        )
-    ){
+    if(!category){
 
         alert(
-            "Selecciona una categoría válida."
+            "Introduce la categoría del producto."
         );
 
         return null;
@@ -2947,25 +2847,12 @@ function getProductData(){
 
 
     if(
-        !Number.isFinite(price) ||
-        price < 0
-    ){
-
-        alert(
-            "El precio no es válido."
-        );
-
-        return null;
-    }
-
-
-    if(
-        !Number.isFinite(stock) ||
+        price < 0 ||
         stock < 0
     ){
 
         alert(
-            "El stock no es válido."
+            "El precio y el stock no pueden ser negativos."
         );
 
         return null;
@@ -3020,12 +2907,6 @@ function getProductData(){
 
 
     if(
-        !Number.isFinite(
-            shippingMin
-        ) ||
-        !Number.isFinite(
-            shippingMax
-        ) ||
         shippingMin < 0 ||
         shippingMax < 0 ||
         shippingMax < shippingMin
@@ -3079,52 +2960,29 @@ function getProductData(){
    COMPROBAR CONEXIÓN
 ========================================================= */
 
-async function checkSupabaseConnection(){
+async function testSupabaseConnection(){
 
     try{
-
-        setSupabaseStatus(
-            "",
-            "Comprobando conexión..."
-        );
-
 
         const {
             error
         } =
             await supabaseClient
-                .from(
-                    PRODUCTS_TABLE
-                )
-                .select(
-                    "id",
-                    {
-                        count:"exact",
-                        head:true
-                    }
-                );
+                .from("Products")
+                .select("id")
+                .limit(1);
 
 
         if(error){
 
             console.error(
-                "Supabase connection error:",
+                "Supabase connection test:",
                 error
-            );
-
-            setSupabaseStatus(
-                "error",
-                "Supabase conectado, pero Products no permite lectura"
             );
 
             return false;
         }
 
-
-        setSupabaseStatus(
-            "ok",
-            "Conectado · Products disponible"
-        );
 
         return true;
 
@@ -3133,12 +2991,8 @@ async function checkSupabaseConnection(){
     catch(error){
 
         console.error(
+            "Supabase connection test:",
             error
-        );
-
-        setSupabaseStatus(
-            "error",
-            "Error de conexión con Supabase"
         );
 
         return false;
@@ -3164,57 +3018,48 @@ async function saveProductToSupabase(){
     }
 
 
-    const button =
+    const saveButton =
         document.querySelector(
             'button[onclick="saveProductToSupabase()"]'
         );
 
 
     const originalText =
-        button
-        ?
-        button.textContent
-        :
-        "";
+        saveButton
+        ? saveButton.textContent
+        : "";
 
 
     try{
 
-        if(button){
+        if(saveButton){
 
-            button.disabled =
+            saveButton.disabled =
                 true;
 
-            button.textContent =
+            saveButton.textContent =
                 "GUARDANDO...";
         }
 
 
-        setSupabaseStatus(
-            "",
-            "Guardando producto..."
-        );
-
-
         /*
-         * INSERT DIRECTO EN PRODUCTS.
+         * IMPORTANTE:
          *
-         * No se exige una sesión de Auth aquí.
-         * Supabase RLS decidirá si el cliente tiene
-         * permiso para realizar el INSERT.
+         * No comprobamos una clave ficticia.
+         * El cliente ya está creado con la Publishable Key real.
+         *
+         * Si tu tabla Products tiene RLS y exige autenticación,
+         * la propia respuesta de Supabase indicará el problema.
          */
+
 
         const {
             data,
             error
         } =
             await supabaseClient
-                .from(
-                    PRODUCTS_TABLE
-                )
-                .insert(
-                    product
-                )
+                .from("Products")
+                .insert([product])
                 .select()
                 .single();
 
@@ -3227,23 +3072,35 @@ async function saveProductToSupabase(){
             );
 
 
-            setSupabaseStatus(
-                "error",
-                "No se pudo guardar el producto"
-            );
+            let message =
+                error.message ||
+                "Error desconocido.";
+
+
+            if(
+                error.code === "42501"
+            ){
+
+                message +=
+                    "\n\nSupabase está rechazando el INSERT por permisos/RLS. " +
+                    "Revisa las políticas de la tabla Products.";
+
+            }
+
+
+            if(
+                error.code === "23505"
+            ){
+
+                message +=
+                    "\n\nLa referencia o algún campo único ya existe.";
+
+            }
 
 
             alert(
-                "❌ No se pudo guardar el producto en Supabase.\n\n" +
-                error.message +
-                (
-                    error.details
-                    ?
-                    "\n\n" +
-                    error.details
-                    :
-                    ""
-                )
+                "❌ No se pudo guardar el producto.\n\n" +
+                message
             );
 
             return;
@@ -3253,19 +3110,12 @@ async function saveProductToSupabase(){
         generateCode();
 
 
-        setSupabaseStatus(
-            "ok",
-            "Producto guardado correctamente"
-        );
-
-
         alert(
             "✅ Producto guardado correctamente en Supabase." +
             (
                 data?.id
                 ?
-                "\nID: " +
-                data.id
+                "\nID: " + data.id
                 :
                 ""
             )
@@ -3273,7 +3123,6 @@ async function saveProductToSupabase(){
 
 
     }
-
     catch(error){
 
         console.error(
@@ -3282,30 +3131,23 @@ async function saveProductToSupabase(){
         );
 
 
-        setSupabaseStatus(
-            "error",
-            "Error al guardar"
-        );
-
-
         alert(
             "❌ Error al conectar con Supabase.\n\n" +
             (
                 error?.message ||
-                error
+                String(error)
             )
         );
 
     }
-
     finally{
 
-        if(button){
+        if(saveButton){
 
-            button.disabled =
+            saveButton.disabled =
                 false;
 
-            button.textContent =
+            saveButton.textContent =
                 originalText ||
                 "GUARDAR EN SUPABASE";
         }
@@ -3340,9 +3182,7 @@ function generateCode(){
             color: "${escapeJS(variant.color)}"
         }`
             )
-            .join(
-                ",\n"
-            );
+            .join(",\n");
 
 
     const sizeCode =
@@ -3351,18 +3191,15 @@ function generateCode(){
         product.sizes
             .map(
                 size =>
-                    `        "${escapeJS(
-                        size
-                    )}"`
+                    `        "${escapeJS(size)}"`
             )
-            .join(
-                ",\n"
-            )
+            .join(",\n")
         :
         "";
 
 
-    const code = `{
+    const code =
+`{
     name: "${escapeJS(product.name)}",
     category: "${escapeJS(product.category)}",
     ref: "${escapeJS(product.ref)}",
@@ -3417,9 +3254,27 @@ async function copyCode(){
 
     try{
 
-        await navigator.clipboard.writeText(
-            output.value
-        );
+        if(
+            navigator.clipboard &&
+            window.isSecureContext
+        ){
+
+            await navigator.clipboard.writeText(
+                output.value
+            );
+
+        }
+        else{
+
+            output.focus();
+
+            output.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+        }
 
 
         alert(
@@ -3430,12 +3285,13 @@ async function copyCode(){
 
     catch(error){
 
+        output.focus();
+
         output.select();
 
         document.execCommand(
             "copy"
         );
-
 
         alert(
             "Código copiado."
@@ -3447,7 +3303,7 @@ async function copyCode(){
 
 
 /* =========================================================
-   TECLA ESCAPE
+   ESCAPE
 ========================================================= */
 
 document.addEventListener(
@@ -3476,7 +3332,22 @@ renderSizes();
 
 updatePreview();
 
-checkSupabaseConnection();
+
+/*
+ * Dejamos constancia de que el cliente está inicializado.
+ * No hacemos una consulta automática que pueda mostrar un error
+ * de RLS nada más abrir el administrador.
+ */
+
+console.log(
+    "STRANGIS Admin conectado a Supabase:",
+    SUPABASE_URL
+);
+
+console.log(
+    "Tabla de productos:",
+    "Products"
+);
 
 </script>
 
