@@ -57,184 +57,6 @@ select{
 
 
 /* =========================================================
-   LOGIN
-========================================================= */
-
-#loginScreen{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:9999;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    padding:20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #101010,
-            #202020 45%,
-            #303030
-        );
-}
-
-.login-box{
-
-    width:min(400px,100%);
-
-    padding:30px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    border-radius:14px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    box-shadow:
-        0 25px 80px
-        rgba(0,0,0,.5);
-}
-
-.login-brand{
-
-    color:#888;
-
-    font-size:10px;
-
-    font-weight:bold;
-
-    letter-spacing:4px;
-
-    margin-bottom:10px;
-}
-
-.login-box h2{
-
-    margin-bottom:25px;
-
-    font-size:28px;
-
-    letter-spacing:-1px;
-}
-
-.login-field{
-
-    width:100%;
-
-    margin-bottom:12px;
-
-    padding:13px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
-    border-radius:6px;
-
-    outline:none;
-
-    background:#0f0f0f;
-
-    color:#fff;
-
-    transition:.2s;
-}
-
-.login-field:focus{
-
-    border-color:#fff;
-
-    background:#151515;
-}
-
-.login-field::placeholder{
-
-    color:#666;
-}
-
-.login-button{
-
-    width:100%;
-
-    min-height:46px;
-
-    margin-top:3px;
-
-    padding:13px;
-
-    border:0;
-
-    border-radius:6px;
-
-    background:#fff;
-
-    color:#111;
-
-    cursor:pointer;
-
-    font-size:10px;
-
-    font-weight:900;
-
-    letter-spacing:1px;
-
-    transition:.2s;
-}
-
-.login-button:hover{
-
-    background:#ddd;
-}
-
-.login-button:disabled{
-
-    opacity:.5;
-
-    cursor:not-allowed;
-}
-
-.login-message{
-
-    min-height:18px;
-
-    margin-top:15px;
-
-    color:#999;
-
-    font-size:11px;
-
-    line-height:1.5;
-}
-
-.login-security{
-
-    margin-top:20px;
-
-    padding-top:15px;
-
-    border-top:
-        1px solid
-        rgba(255,255,255,.08);
-
-    color:#666;
-
-    font-size:9px;
-
-    line-height:1.6;
-}
-
-
-/* =========================================================
    CABECERA
 ========================================================= */
 
@@ -276,15 +98,6 @@ header{
     letter-spacing:4px;
 }
 
-.header-right{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-}
-
 .header-status{
 
     color:#aaa;
@@ -296,40 +109,207 @@ header{
     letter-spacing:1.5px;
 
     text-transform:uppercase;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
 }
 
-.logout-button{
 
-    min-height:32px;
+/* =========================================================
+   LOGIN
+========================================================= */
 
-    padding:7px 11px;
+.login-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:10000;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(0,0,0,.92);
+
+    backdrop-filter:
+        blur(15px);
+}
+
+.login-overlay.hidden{
+
+    display:none;
+}
+
+.login-box{
+
+    width:min(420px,100%);
+
+    padding:30px;
 
     border:
         1px solid
-        rgba(255,255,255,.18);
+        rgba(255,255,255,.15);
 
-    border-radius:5px;
+    border-radius:14px;
 
-    background:#202020;
+    background:
+        #151515;
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.65);
+}
+
+.login-logo{
+
+    color:#fff;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    letter-spacing:4px;
+}
+
+.login-title{
+
+    margin-top:25px;
+
+    font-size:28px;
+
+    font-weight:900;
+}
+
+.login-description{
+
+    margin-top:10px;
+
+    color:#888;
+
+    font-size:11px;
+
+    line-height:1.6;
+}
+
+.login-field{
+
+    margin-top:18px;
+}
+
+.login-field label{
+
+    display:block;
+
+    margin-bottom:7px;
 
     color:#aaa;
-
-    cursor:pointer;
 
     font-size:9px;
 
     font-weight:bold;
 
-    letter-spacing:1px;
+    letter-spacing:1.2px;
 
-    transition:.2s;
+    text-transform:uppercase;
 }
 
-.logout-button:hover{
+.login-field input{
+
+    width:100%;
+
+    min-height:46px;
+
+    padding:12px 13px;
+
+    outline:none;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius:6px;
+
+    background:
+        rgba(0,0,0,.35);
+
+    color:#fff;
+}
+
+.login-field input:focus{
 
     border-color:#fff;
 
-    color:#fff;
+    background:
+        rgba(0,0,0,.5);
+}
+
+.login-button{
+
+    width:100%;
+
+    min-height:46px;
+
+    margin-top:22px;
+
+    border:0;
+
+    border-radius:6px;
+
+    background:#fff;
+
+    color:#111;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+}
+
+.login-button:hover{
+
+    background:#ddd;
+}
+
+.login-error{
+
+    display:none;
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border:
+        1px solid
+        rgba(255,100,100,.25);
+
+    border-radius:6px;
+
+    background:
+        rgba(255,0,0,.08);
+
+    color:#ff9a9a;
+
+    font-size:10px;
+
+    line-height:1.5;
+}
+
+.login-error.show{
+
+    display:block;
 }
 
 
@@ -1422,16 +1402,6 @@ header{
             15px;
     }
 
-    .header-right{
-
-        gap:8px;
-    }
-
-    .header-status{
-
-        display:none;
-    }
-
     .container{
 
         width:94%;
@@ -1503,51 +1473,83 @@ header{
      LOGIN ADMINISTRADOR
 ========================================================= -->
 
-<div id="loginScreen">
+<div
+    id="loginOverlay"
+    class="login-overlay"
+>
 
     <div class="login-box">
 
-        <div class="login-brand">
+        <div class="login-logo">
             STRANGIS
         </div>
 
-        <h2>
+        <div class="login-title">
             Acceso administrador
-        </h2>
-
-        <input
-            id="adminEmail"
-            class="login-field"
-            type="email"
-            autocomplete="email"
-            placeholder="Correo electrónico"
-        >
-
-        <input
-            id="adminPassword"
-            class="login-field"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Contraseña"
-        >
-
-        <button
-            id="loginButton"
-            type="button"
-            class="login-button"
-            onclick="loginAdmin()"
-        >
-            ENTRAR
-        </button>
-
-        <div
-            id="loginMessage"
-            class="login-message"
-        ></div>
-
-        <div class="login-security">
-            Acceso protegido mediante Supabase Auth.
         </div>
+
+        <div class="login-description">
+
+            Inicia sesión con el usuario creado
+            en Supabase Authentication para acceder
+            al panel de administración.
+
+        </div>
+
+
+        <form
+            onsubmit="loginAdmin(event)"
+        >
+
+            <div class="login-field">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="loginEmail"
+                    type="email"
+                    autocomplete="username"
+                    placeholder="admin@ejemplo.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="login-field">
+
+                <label>
+                    Contraseña
+                </label>
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                id="loginButton"
+                type="submit"
+                class="login-button"
+            >
+                INICIAR SESIÓN
+            </button>
+
+
+            <div
+                id="loginError"
+                class="login-error"
+            ></div>
+
+        </form>
 
     </div>
 
@@ -1560,16 +1562,18 @@ header{
         STRANGIS
     </div>
 
-    <div class="header-right">
+    <div class="header-status">
 
-        <div class="header-status">
+        <span>
             PANEL DE ADMINISTRACIÓN · SUPABASE
-        </div>
+        </span>
 
         <button
+            id="logoutButton"
             type="button"
-            class="logout-button"
+            class="btn btn-small"
             onclick="logoutAdmin()"
+            style="display:none"
         >
             CERRAR SESIÓN
         </button>
@@ -2158,25 +2162,25 @@ const supabaseClient =
 
 
 /* =========================================================
-   LOGIN ADMINISTRADOR
+   LOGIN SUPABASE
 ========================================================= */
 
-async function loginAdmin(){
+async function loginAdmin(event){
+
+    event.preventDefault();
+
 
     const email =
         document.getElementById(
-            "adminEmail"
+            "loginEmail"
         ).value.trim();
+
 
     const password =
         document.getElementById(
-            "adminPassword"
+            "loginPassword"
         ).value;
 
-    const message =
-        document.getElementById(
-            "loginMessage"
-        );
 
     const button =
         document.getElementById(
@@ -2184,23 +2188,23 @@ async function loginAdmin(){
         );
 
 
-    if(!email || !password){
-
-        message.textContent =
-            "Introduce tu correo y contraseña.";
-
-        return;
-    }
+    const errorBox =
+        document.getElementById(
+            "loginError"
+        );
 
 
-    button.disabled =
-        true;
+    errorBox.textContent = "";
+
+    errorBox.classList.remove(
+        "show"
+    );
+
+
+    button.disabled = true;
 
     button.textContent =
-        "ENTRANDO...";
-
-    message.textContent =
-        "";
+        "INICIANDO SESIÓN...";
 
 
     try{
@@ -2209,82 +2213,138 @@ async function loginAdmin(){
             data,
             error
         } =
-            await supabaseClient.auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
 
         if(error){
 
             console.error(
-                "Error de login:",
+                "Supabase LOGIN error:",
                 error
             );
 
-            message.textContent =
-                "❌ " + error.message;
+
+            errorBox.textContent =
+                error.message ||
+                "No se pudo iniciar sesión.";
+
+
+            errorBox.classList.add(
+                "show"
+            );
+
 
             return;
         }
 
 
-        if(!data.session){
+        if(
+            !data ||
+            !data.session
+        ){
 
-            message.textContent =
-                "❌ Supabase no devolvió una sesión.";
+            errorBox.textContent =
+                "Supabase no ha creado una sesión.";
+
+
+            errorBox.classList.add(
+                "show"
+            );
+
 
             return;
         }
 
 
         console.log(
-            "✅ Usuario autenticado:",
+            "✅ Administrador autenticado:",
             data.user?.email
         );
 
 
-        document.getElementById(
-            "loginScreen"
-        ).style.display =
-            "none";
-
-
-        document.getElementById(
-            "adminEmail"
-        ).value = "";
-
-        document.getElementById(
-            "adminPassword"
-        ).value = "";
+        showAdmin();
 
 
     }
     catch(error){
 
         console.error(
-            "Error de login:",
+            "Error de LOGIN:",
             error
         );
 
-        message.textContent =
-            "❌ " +
-            (
-                error?.message ||
-                String(error)
-            );
+
+        errorBox.textContent =
+            error?.message ||
+            String(error);
+
+
+        errorBox.classList.add(
+            "show"
+        );
 
     }
     finally{
 
-        button.disabled =
-            false;
+        button.disabled = false;
 
         button.textContent =
-            "ENTRAR";
+            "INICIAR SESIÓN";
 
     }
+
+}
+
+
+/* =========================================================
+   MOSTRAR ADMIN
+========================================================= */
+
+function showAdmin(){
+
+    document
+        .getElementById(
+            "loginOverlay"
+        )
+        .classList.add(
+            "hidden"
+        );
+
+
+    document
+        .getElementById(
+            "logoutButton"
+        )
+        .style.display =
+            "block";
+
+}
+
+
+/* =========================================================
+   OCULTAR ADMIN
+========================================================= */
+
+function hideAdmin(){
+
+    document
+        .getElementById(
+            "loginOverlay"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
+
+    document
+        .getElementById(
+            "logoutButton"
+        )
+        .style.display =
+            "none";
 
 }
 
@@ -2301,8 +2361,7 @@ async function checkAdminSession(){
             data,
             error
         } =
-            await supabaseClient.auth
-                .getSession();
+            await supabaseClient.auth.getSession();
 
 
         if(error){
@@ -2312,11 +2371,16 @@ async function checkAdminSession(){
                 error
             );
 
+            hideAdmin();
+
             return false;
         }
 
 
-        if(data.session){
+        if(
+            data &&
+            data.session
+        ){
 
             console.log(
                 "✅ Sesión existente:",
@@ -2324,11 +2388,7 @@ async function checkAdminSession(){
             );
 
 
-            document.getElementById(
-                "loginScreen"
-            ).style.display =
-                "none";
-
+            showAdmin();
 
             return true;
 
@@ -2336,15 +2396,11 @@ async function checkAdminSession(){
 
 
         console.log(
-            "🔐 No hay sesión iniciada."
+            "ℹ️ No existe una sesión de administrador."
         );
 
 
-        document.getElementById(
-            "loginScreen"
-        ).style.display =
-            "flex";
-
+        hideAdmin();
 
         return false;
 
@@ -2355,6 +2411,9 @@ async function checkAdminSession(){
             "Error comprobando sesión:",
             error
         );
+
+
+        hideAdmin();
 
         return false;
 
@@ -2374,8 +2433,7 @@ async function logoutAdmin(){
         const {
             error
         } =
-            await supabaseClient.auth
-                .signOut();
+            await supabaseClient.auth.signOut();
 
 
         if(error){
@@ -2385,23 +2443,27 @@ async function logoutAdmin(){
                 error
             );
 
+
             alert(
                 "No se pudo cerrar la sesión.\n\n" +
                 error.message
             );
 
+
             return;
         }
 
 
+        hideAdmin();
+
+
         document.getElementById(
-            "loginScreen"
-        ).style.display =
-            "flex";
+            "loginPassword"
+        ).value = "";
 
 
-        console.log(
-            "🔐 Sesión cerrada."
+        alert(
+            "Sesión cerrada correctamente."
         );
 
 
@@ -2416,6 +2478,34 @@ async function logoutAdmin(){
     }
 
 }
+
+
+/* =========================================================
+   ESCUCHAR CAMBIOS DE AUTH
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+    function(event, session){
+
+        console.log(
+            "Supabase Auth:",
+            event
+        );
+
+
+        if(session){
+
+            showAdmin();
+
+        }
+        else{
+
+            hideAdmin();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -3515,6 +3605,7 @@ async function testSupabaseConnection(){
     try{
 
         const {
+            data,
             error
         } =
             await supabaseClient
@@ -3558,55 +3649,6 @@ async function testSupabaseConnection(){
 
 async function saveProductToSupabase(){
 
-    /*
-     * PRIMERO comprobamos que realmente existe
-     * una sesión autenticada.
-     */
-
-    const {
-        data: sessionData,
-        error: sessionError
-    } =
-        await supabaseClient.auth.getSession();
-
-
-    if(sessionError){
-
-        console.error(
-            "Error obteniendo sesión:",
-            sessionError
-        );
-
-        alert(
-            "❌ No se pudo comprobar la sesión.\n\n" +
-            sessionError.message
-        );
-
-        return;
-    }
-
-
-    if(!sessionData.session){
-
-        alert(
-            "❌ Debes iniciar sesión como administrador antes de guardar."
-        );
-
-        document.getElementById(
-            "loginScreen"
-        ).style.display =
-            "flex";
-
-        return;
-    }
-
-
-    console.log(
-        "✅ Guardando como:",
-        sessionData.session.user.email
-    );
-
-
     const product =
         getProductData();
 
@@ -3637,9 +3679,73 @@ async function saveProductToSupabase(){
                 true;
 
             saveButton.textContent =
+                "COMPROBANDO SESIÓN...";
+        }
+
+
+        /* =====================================================
+           COMPROBAR SESIÓN ANTES DEL INSERT
+        ===================================================== */
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient.auth.getSession();
+
+
+        if(sessionError){
+
+            console.error(
+                "Supabase SESSION error:",
+                sessionError
+            );
+
+
+            alert(
+                "❌ No se pudo comprobar la sesión.\n\n" +
+                sessionError.message
+            );
+
+
+            return;
+        }
+
+
+        if(
+            !sessionData ||
+            !sessionData.session
+        ){
+
+            alert(
+                "❌ No hay una sesión de administrador.\n\n" +
+                "Inicia sesión antes de guardar el producto."
+            );
+
+
+            hideAdmin();
+
+
+            return;
+        }
+
+
+        console.log(
+            "✅ INSERT autorizado para:",
+            sessionData.session.user?.email
+        );
+
+
+        if(saveButton){
+
+            saveButton.textContent =
                 "GUARDANDO...";
         }
 
+
+        /* =====================================================
+           INSERT
+        ===================================================== */
 
         const {
             data,
@@ -3676,6 +3782,16 @@ async function saveProductToSupabase(){
 
 
             if(
+                error.code === "401"
+            ){
+
+                message +=
+                    "\n\nLa sesión de Supabase no es válida o ha expirado.";
+
+            }
+
+
+            if(
                 error.code === "23505"
             ){
 
@@ -3689,6 +3805,7 @@ async function saveProductToSupabase(){
                 "❌ No se pudo guardar el producto.\n\n" +
                 message
             );
+
 
             return;
         }
@@ -3919,12 +4036,6 @@ renderSizes();
 
 updatePreview();
 
-checkAdminSession();
-
-
-/*
- * Dejamos constancia de que el cliente está inicializado.
- */
 
 console.log(
     "STRANGIS Admin conectado a Supabase:",
@@ -3935,6 +4046,13 @@ console.log(
     "Tabla de productos:",
     "Products"
 );
+
+
+/* =========================================================
+   INICIAR COMPROBACIÓN DE SESIÓN
+========================================================= */
+
+checkAdminSession();
 
 </script>
 
