@@ -1135,13 +1135,13 @@ header{
 
         <div class="field">
 
-            <label>Envío mínimo (días)</label>
+            <label>Envío mínimo</label>
 
             <input
                 id="shippingMin"
-                type="number"
-                min="0"
+                type="text"
                 value="3"
+                placeholder="Ej: 5 mayo"
                 oninput="updatePreview()"
             >
 
@@ -1149,13 +1149,13 @@ header{
 
         <div class="field">
 
-            <label>Envío máximo (días)</label>
+            <label>Envío máximo</label>
 
             <input
                 id="shippingMax"
-                type="number"
-                min="0"
+                type="text"
                 value="9"
+                placeholder="Ej: 6 julio"
                 oninput="updatePreview()"
             >
 
@@ -1611,6 +1611,7 @@ function normalizeVariants(raw){
         if(!images.length){
 
             images = [""];
+
         }
 
         return {
@@ -2909,16 +2910,12 @@ function getProductData(){
             .replace(/\D/g,"");
 
     const shippingMin =
-        Number(
-            document.getElementById("shippingMin")
-                .value
-        ) || 0;
+        document.getElementById("shippingMin")
+            .value.trim();
 
     const shippingMax =
-        Number(
-            document.getElementById("shippingMax")
-                .value
-        ) || 0;
+        document.getElementById("shippingMax")
+            .value.trim();
 
     const validVariants =
         variants.map(variant=>({
@@ -3021,16 +3018,6 @@ function getProductData(){
             return null;
 
         }
-
-    }
-
-    if(shippingMax < shippingMin){
-
-        alert(
-            "El envío máximo no puede ser menor que el mínimo."
-        );
-
-        return null;
 
     }
 
@@ -3418,8 +3405,8 @@ ${variantCode}
     sizes: [
 ${sizeCode}
     ],
-    shipping_min: ${product.shipping_min},
-    shipping_max: ${product.shipping_max},
+    shipping_min: "${escapeJS(product.shipping_min)}",
+    shipping_max: "${escapeJS(product.shipping_max)}",
     active: true
 }`;
 
@@ -3582,4 +3569,4 @@ console.log(
 </script>
 
 </body>
-    </html>
+</html>
