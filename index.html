@@ -1,1688 +1,932 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Strangis · Administrador</title>
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
-
     min-height:100vh;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family:Arial,Helvetica,sans-serif;
     color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            #101010,
-            #202020 45%,
-            #303030
-        );
+    background:linear-gradient(135deg,#101010,#202020 45%,#303030);
 }
 
-button,
-input,
-textarea,
-select{
-    font:inherit;
-}
+button,input,textarea,select{font:inherit}
 
-
-/* =========================================================
-   CABECERA
-========================================================= */
+button{cursor:pointer}
 
 header{
-
     position:sticky;
-
     top:0;
-
     z-index:1000;
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     gap:20px;
-
     padding:18px 5%;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.12);
-
-    background:
-        rgba(15,15,15,.94);
-
-    backdrop-filter:
-        blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    background:rgba(15,15,15,.94);
+    backdrop-filter:blur(18px);
 }
 
 .logo{
-
     font-size:20px;
-
     font-weight:900;
-
     letter-spacing:4px;
 }
 
 .header-status{
-
     color:#aaa;
-
     font-size:10px;
-
     font-weight:bold;
-
     letter-spacing:1.5px;
-
     text-transform:uppercase;
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
 }
 
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
 .login-overlay{
-
     position:fixed;
-
     inset:0;
-
     z-index:10000;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     padding:20px;
-
-    background:
-        rgba(0,0,0,.92);
-
-    backdrop-filter:
-        blur(15px);
+    background:rgba(0,0,0,.92);
+    backdrop-filter:blur(15px);
 }
 
-.login-overlay.hidden{
-
-    display:none;
-}
+.login-overlay.hidden{display:none}
 
 .login-box{
-
     width:min(420px,100%);
-
     padding:30px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
+    border:1px solid rgba(255,255,255,.15);
     border-radius:14px;
-
-    background:
-        #151515;
-
-    box-shadow:
-        0 30px 100px
-        rgba(0,0,0,.65);
+    background:#151515;
+    box-shadow:0 30px 100px rgba(0,0,0,.65);
 }
 
 .login-logo{
-
     color:#fff;
-
     font-size:20px;
-
     font-weight:900;
-
     letter-spacing:4px;
 }
 
 .login-title{
-
     margin-top:25px;
-
     font-size:28px;
-
     font-weight:900;
 }
 
 .login-description{
-
     margin-top:10px;
-
     color:#888;
-
     font-size:11px;
-
     line-height:1.6;
 }
 
-.login-field{
+.login-field{margin-top:18px}
 
-    margin-top:18px;
-}
-
-.login-field label{
-
+.login-field label,
+.field label{
     display:block;
-
     margin-bottom:7px;
-
     color:#aaa;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:1.2px;
-
     text-transform:uppercase;
 }
 
 .login-field input{
-
     width:100%;
-
     min-height:46px;
-
     padding:12px 13px;
-
     outline:none;
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
+    border:1px solid rgba(255,255,255,.15);
     border-radius:6px;
-
-    background:
-        rgba(0,0,0,.35);
-
+    background:rgba(0,0,0,.35);
     color:#fff;
 }
 
 .login-button{
-
     width:100%;
-
     min-height:46px;
-
     margin-top:22px;
-
     border:0;
-
     border-radius:6px;
-
     background:#fff;
-
     color:#111;
-
     cursor:pointer;
-
     font-size:10px;
-
     font-weight:900;
-
     letter-spacing:1px;
 }
 
 .login-error{
-
     display:none;
-
     margin-top:15px;
-
     padding:12px;
-
-    border:
-        1px solid
-        rgba(255,100,100,.25);
-
+    border:1px solid rgba(255,100,100,.25);
     border-radius:6px;
-
-    background:
-        rgba(255,0,0,.08);
-
+    background:rgba(255,0,0,.08);
     color:#ff9a9a;
-
     font-size:10px;
-
     line-height:1.5;
 }
 
-.login-error.show{
-
-    display:block;
-}
-
-
-/* =========================================================
-   CONTENEDOR
-========================================================= */
+.login-error.show{display:block}
 
 .container{
-
     width:min(1450px,92%);
-
     margin:auto;
-
-    padding:
-        45px
-        0
-        100px;
+    padding:45px 0 100px;
 }
 
-
-/* =========================================================
-   TITULO
-========================================================= */
-
-.page-title{
-
-    margin-bottom:35px;
-}
+.page-title{margin-bottom:35px}
 
 .page-title small{
-
     color:#888;
-
     font-size:10px;
-
     font-weight:bold;
-
     letter-spacing:4px;
 }
 
 .page-title h1{
-
     margin-top:12px;
-
-    font-size:
-        clamp(
-            42px,
-            6vw,
-            78px
-        );
-
+    font-size:clamp(42px,6vw,78px);
     letter-spacing:-4px;
 }
 
 .page-title p{
-
     max-width:650px;
-
     margin-top:15px;
-
     color:#999;
-
     font-size:13px;
-
     line-height:1.7;
 }
 
-
-/* =========================================================
-   GRID PRINCIPAL
-========================================================= */
-
 .admin-grid{
-
     display:grid;
-
-    grid-template-columns:
-        minmax(0,1fr)
-        minmax(400px,520px);
-
+    grid-template-columns:minmax(0,1fr) minmax(400px,520px);
     gap:25px;
-
     align-items:start;
 }
 
-
-/* =========================================================
-   PANEL
-========================================================= */
-
 .panel{
-
     padding:25px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
+    border:1px solid rgba(255,255,255,.12);
     border-radius:14px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    box-shadow:
-        0 20px 60px
-        rgba(0,0,0,.20);
+    background:rgba(255,255,255,.045);
+    box-shadow:0 20px 60px rgba(0,0,0,.20);
 }
 
 .panel-title{
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     gap:15px;
-
     margin-bottom:25px;
-
     padding-bottom:15px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.10);
+    border-bottom:1px solid rgba(255,255,255,.10);
 }
 
 .panel-title h2{
-
     font-size:15px;
-
     letter-spacing:1px;
 }
 
 .panel-title span{
-
     color:#777;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:1.5px;
 }
 
-
-/* =========================================================
-   CAMPOS
-========================================================= */
-
 .form-grid{
-
     display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
+    grid-template-columns:1fr 1fr;
     gap:14px;
 }
 
-.field{
+.field{margin-bottom:14px}
 
-    margin-bottom:14px;
-}
-
-.field.full{
-
-    grid-column:
-        1 / -1;
-}
-
-.field label{
-
-    display:block;
-
-    margin-bottom:7px;
-
-    color:#aaa;
-
-    font-size:9px;
-
-    font-weight:bold;
-
-    letter-spacing:1.2px;
-
-    text-transform:uppercase;
-}
+.field.full{grid-column:1/-1}
 
 .field input,
 .field textarea,
 .field select{
-
     width:100%;
-
     min-height:46px;
-
     padding:12px 13px;
-
     outline:none;
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
+    border:1px solid rgba(255,255,255,.15);
     border-radius:6px;
-
-    background:
-        rgba(0,0,0,.35);
-
+    background:rgba(0,0,0,.35);
     color:#fff;
-
     transition:.2s;
 }
 
 .field textarea{
-
     min-height:100px;
-
     resize:vertical;
 }
 
 .field input:focus,
 .field textarea:focus,
 .field select:focus{
-
     border-color:#fff;
-
-    background:
-        rgba(0,0,0,.5);
+    background:rgba(0,0,0,.5);
 }
 
 .field input::placeholder,
 .field textarea::placeholder{
-
     color:#666;
 }
 
-
-/* =========================================================
-   BOTONES
-========================================================= */
-
 .btn{
-
     min-height:44px;
-
-    padding:
-        11px 16px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.18);
-
+    padding:11px 16px;
+    border:1px solid rgba(255,255,255,.18);
     border-radius:6px;
-
     background:#202020;
-
     color:#fff;
-
     cursor:pointer;
-
     font-size:10px;
-
     font-weight:900;
-
     letter-spacing:1px;
-
     transition:.2s;
 }
 
 .btn:hover{
-
     background:#333;
-
     border-color:#fff;
 }
 
 .btn:disabled{
-
     opacity:.5;
-
     cursor:not-allowed;
 }
 
 .btn-primary{
-
     border-color:#fff;
-
     background:#fff;
-
     color:#111;
 }
 
-.btn-primary:hover{
-
-    background:#ddd;
-}
+.btn-primary:hover{background:#ddd}
 
 .btn-danger{
-
     color:#ff9a9a;
-
-    border-color:
-        rgba(255,100,100,.25);
+    border-color:rgba(255,100,100,.25);
 }
 
 .btn-danger:hover{
-
-    background:
-        rgba(255,0,0,.12);
-
+    background:rgba(255,0,0,.12);
     border-color:#ff7777;
 }
 
 .btn-small{
-
     min-height:34px;
-
-    padding:
-        7px 11px;
-
+    padding:7px 11px;
     font-size:9px;
 }
 
+.mode-bar{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+    padding:13px 15px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:8px;
+    background:rgba(255,255,255,.06);
+}
 
-/* =========================================================
-   PRODUCTOS EXISTENTES
-========================================================= */
+.mode-bar.show{display:flex}
+
+.mode-bar strong{
+    font-size:11px;
+}
+
+.mode-bar span{
+    color:#888;
+    font-size:9px;
+}
 
 .products-list{
-
     display:flex;
-
     flex-direction:column;
-
     gap:10px;
 }
 
 .product-admin-item{
-
     display:grid;
-
-    grid-template-columns:
-        minmax(0,1fr)
-        auto;
-
+    grid-template-columns:70px minmax(0,1fr) auto;
     gap:15px;
-
     align-items:center;
-
-    padding:15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.11);
-
+    padding:12px;
+    border:1px solid rgba(255,255,255,.11);
     border-radius:9px;
+    background:rgba(0,0,0,.22);
+}
 
-    background:
-        rgba(0,0,0,.22);
+.product-admin-image{
+    width:70px;
+    height:70px;
+    overflow:hidden;
+    border-radius:7px;
+    background:#111;
+}
+
+.product-admin-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
 .product-admin-name{
-
     font-size:13px;
-
     font-weight:900;
 }
 
 .product-admin-meta{
-
     margin-top:6px;
-
     color:#888;
-
     font-size:9px;
-
     line-height:1.6;
 }
 
 .product-admin-id{
-
-    color:#666;
-
+    color:#555;
     font-size:8px;
-
     margin-top:4px;
-
     word-break:break-all;
 }
 
-.products-empty{
+.product-admin-actions{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    gap:7px;
+}
 
+.products-empty,
+.products-loading{
     padding:30px;
-
     text-align:center;
-
     color:#777;
-
     font-size:10px;
-
-    border:
-        1px dashed
-        rgba(255,255,255,.15);
-
+    border:1px dashed rgba(255,255,255,.15);
     border-radius:8px;
 }
 
-.products-loading{
-
-    padding:20px;
-
-    color:#888;
-
-    text-align:center;
-
-    font-size:10px;
-}
-
-
-/* =========================================================
-   VARIANTES
-========================================================= */
-
 .variants-list{
-
     display:flex;
-
     flex-direction:column;
-
-    gap:12px;
+    gap:15px;
 }
 
 .variant{
-
     padding:15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.11);
-
+    border:1px solid rgba(255,255,255,.11);
     border-radius:9px;
-
-    background:
-        rgba(0,0,0,.20);
+    background:rgba(0,0,0,.20);
 }
 
 .variant-top{
-
     display:grid;
-
-    grid-template-columns:
-        55px
-        1fr
-        auto;
-
+    grid-template-columns:55px 1fr auto;
     gap:12px;
-
     align-items:center;
 }
 
 .color-picker{
-
     width:48px;
-
     height:48px;
-
     padding:0;
-
-    border:
-        2px solid
-        rgba(255,255,255,.25);
-
+    border:2px solid rgba(255,255,255,.25);
     border-radius:50%;
-
     overflow:hidden;
-
     background:#fff;
-
-    cursor:pointer;
 }
 
 .color-picker input{
-
     width:100%;
-
     height:100%;
-
     padding:0;
-
     border:0;
-
     cursor:pointer;
 }
 
-.variant-name{
-
-    min-width:0;
-}
-
-.variant-image{
-
-    display:grid;
-
-    grid-template-columns:
-        1fr
-        90px;
-
+.variant-image-list{
+    display:flex;
+    flex-direction:column;
     gap:10px;
-
     margin-top:12px;
 }
 
+.variant-image-row{
+    display:grid;
+    grid-template-columns:1fr 80px auto;
+    gap:10px;
+    align-items:center;
+}
+
 .variant-preview{
-
-    width:90px;
-
-    height:90px;
-
+    width:80px;
+    height:80px;
     overflow:hidden;
-
     border-radius:7px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
+    border:1px solid rgba(255,255,255,.12);
     background:#111;
 }
 
 .variant-preview img{
-
     width:100%;
-
     height:100%;
-
     object-fit:cover;
 }
 
-
-/* =========================================================
-   TALLAS
-========================================================= */
+.add-photo{
+    margin-top:10px;
+}
 
 .sizes-list{
-
     display:flex;
-
     flex-wrap:wrap;
-
     gap:8px;
-
     margin-top:10px;
 }
 
 .size-item{
-
     display:flex;
-
     align-items:center;
-
     gap:5px;
-
-    padding:
-        7px 9px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.18);
-
+    padding:7px 9px;
+    border:1px solid rgba(255,255,255,.18);
     border-radius:5px;
-
     background:#181818;
 }
 
 .size-item input{
-
     width:70px;
-
     padding:4px;
-
     border:0;
-
     outline:0;
-
     background:transparent;
-
     color:#fff;
-
     font-size:11px;
 }
 
-.remove-size{
-
+.remove-size,
+.remove-photo{
     border:0;
-
     background:none;
-
     color:#777;
-
     cursor:pointer;
-
     font-size:14px;
 }
 
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
 .preview-wrap{
-
     position:sticky;
-
     top:90px;
 }
 
 .preview-label{
-
     margin-bottom:12px;
-
     color:#777;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:2px;
-
     text-transform:uppercase;
 }
 
 .product-card{
-
     overflow:hidden;
-
-    border:
-        1px solid
-        rgba(255,255,255,.14);
-
+    border:1px solid rgba(255,255,255,.14);
     border-radius:14px;
-
-    background:
-        rgba(255,255,255,.055);
-
-    box-shadow:
-        0 25px 80px
-        rgba(0,0,0,.3);
+    background:rgba(255,255,255,.055);
+    box-shadow:0 25px 80px rgba(0,0,0,.3);
 }
 
 .preview-image{
-
     position:relative;
-
     height:440px;
-
     overflow:hidden;
-
     background:#121212;
-
-    cursor:zoom-in;
 }
 
 .preview-image img{
-
     width:100%;
-
     height:100%;
-
     object-fit:cover;
-
-    transition:
-        transform .45s ease;
+    cursor:zoom-in;
+    transition:transform .45s ease;
 }
 
 .preview-image:hover img{
-
-    transform:scale(1.10);
+    transform:scale(1.05);
 }
 
 .zoom-hint{
-
     position:absolute;
-
     right:15px;
-
     bottom:15px;
-
-    padding:
-        8px 10px;
-
+    padding:8px 10px;
     border-radius:5px;
-
-    background:
-        rgba(0,0,0,.65);
-
+    background:rgba(0,0,0,.65);
     color:#ddd;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:1px;
+}
 
+.preview-arrows{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
     pointer-events:none;
 }
 
-.preview-content{
-
-    padding:18px;
+.preview-arrows button{
+    width:36px;
+    height:36px;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:50%;
+    background:rgba(0,0,0,.6);
+    color:#fff;
+    pointer-events:auto;
 }
 
+.photo-counter{
+    position:absolute;
+    left:50%;
+    bottom:15px;
+    transform:translateX(-50%);
+    padding:7px 10px;
+    border-radius:5px;
+    background:rgba(0,0,0,.65);
+    color:#ddd;
+    font-size:9px;
+}
+
+.preview-thumbs{
+    display:flex;
+    gap:7px;
+    padding:10px;
+    overflow-x:auto;
+    background:#0d0d0d;
+}
+
+.preview-thumb{
+    width:48px;
+    height:48px;
+    flex:0 0 48px;
+    padding:0;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:5px;
+    background:#111;
+}
+
+.preview-thumb.active{
+    border:2px solid #fff;
+}
+
+.preview-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.preview-content{padding:18px}
+
 .preview-name{
-
     font-size:17px;
-
     font-weight:900;
 }
 
 .preview-ref{
-
     margin-top:5px;
-
     color:#777;
-
     font-size:9px;
-
     letter-spacing:1px;
 }
 
 .preview-description{
-
     margin-top:12px;
-
     color:#999;
-
     font-size:11px;
-
     line-height:1.6;
 }
 
 .preview-price{
-
     margin-top:13px;
-
     font-size:18px;
-
     font-weight:900;
 }
 
 .preview-label-row{
-
     margin-top:18px;
-
     color:#aaa;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:1px;
-
     text-transform:uppercase;
 }
 
-.preview-label-row span{
-
-    color:#fff;
-}
+.preview-label-row span{color:#fff}
 
 .preview-colors{
-
     display:flex;
-
     flex-wrap:wrap;
-
     gap:9px;
-
     margin-top:10px;
 }
 
 .preview-color{
-
     width:35px;
-
     height:35px;
-
     overflow:hidden;
-
-    border:
-        2px solid
-        rgba(255,255,255,.25);
-
+    border:2px solid rgba(255,255,255,.25);
     border-radius:50%;
-
     cursor:pointer;
-
     background-size:cover;
-
     background-position:center;
-
-    transition:.2s;
 }
 
 .preview-color.active{
-
-    outline:
-        2px solid
-        #fff;
-
+    outline:2px solid #fff;
     outline-offset:3px;
 }
 
 .preview-sizes{
-
     display:flex;
-
     flex-wrap:wrap;
-
     gap:6px;
-
     margin-top:10px;
 }
 
 .preview-size{
-
-    padding:
-        8px 11px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.18);
-
+    padding:8px 11px;
+    border:1px solid rgba(255,255,255,.18);
     border-radius:5px;
-
     color:#aaa;
-
     background:transparent;
-
     font-size:9px;
-
     font-weight:bold;
-
-    cursor:pointer;
 }
 
 .preview-size.active{
-
     background:#fff;
-
     color:#111;
-
     border-color:#fff;
 }
 
 .shipping-box{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     margin-top:18px;
-
-    padding:
-        14px 15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.28);
-
+    padding:14px 15px;
+    border:1px solid rgba(255,255,255,.28);
     border-radius:8px;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.13),
-            rgba(255,255,255,.055)
-        );
+    background:linear-gradient(90deg,rgba(255,255,255,.13),rgba(255,255,255,.055));
 }
 
 .shipping-icon{
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     width:38px;
-
     height:38px;
-
     flex:0 0 38px;
-
     border-radius:7px;
-
-    background:
-        rgba(255,255,255,.14);
-
-    font-size:17px;
+    background:rgba(255,255,255,.14);
 }
 
 .shipping-text{
-
     color:#c2c2c2;
-
     font-size:9px;
-
     line-height:1.5;
-
-    letter-spacing:.5px;
 }
 
 .shipping-text strong{
-
     display:block;
-
     margin-top:2px;
-
     color:#fff;
-
     font-size:12px;
-
-    font-weight:900;
-
-    letter-spacing:.3px;
 }
 
 .preview-quantity{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     margin-top:16px;
 }
 
 .preview-quantity button{
-
     width:32px;
-
     height:32px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.18);
-
+    border:1px solid rgba(255,255,255,.18);
     border-radius:5px;
-
     background:#181818;
-
     color:#fff;
-
-    cursor:pointer;
 }
 
 .preview-quantity span{
-
     min-width:20px;
-
     text-align:center;
-
     font-size:11px;
-
     font-weight:bold;
 }
 
 .preview-buy{
-
     width:100%;
-
     margin-top:15px;
-
     padding:14px;
-
     border:0;
-
     border-radius:6px;
-
     background:#fff;
-
     color:#111;
-
     font-size:10px;
-
     font-weight:900;
-
     letter-spacing:1.5px;
 }
 
-
-/* =========================================================
-   ACCIONES
-========================================================= */
-
 .actions{
-
     display:grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
+    grid-template-columns:1fr 1fr;
     gap:10px;
-
     margin-top:20px;
 }
 
-.actions .btn{
+.actions .btn{width:100%}
 
-    width:100%;
-}
-
-
-/* =========================================================
-   CODIGO
-========================================================= */
-
-.code-panel{
-
-    margin-top:25px;
-}
+.code-panel{margin-top:25px}
 
 .code-output{
-
     width:100%;
-
-    min-height:400px;
-
+    min-height:350px;
     padding:15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
+    border:1px solid rgba(255,255,255,.12);
     border-radius:8px;
-
     outline:none;
-
     background:#080808;
-
     color:#ddd;
-
-    font-family:
-        Consolas,
-        Monaco,
-        monospace;
-
+    font-family:Consolas,Monaco,monospace;
     font-size:11px;
-
     line-height:1.6;
-
     resize:vertical;
 }
 
-
-/* =========================================================
-   MODAL CONFIRMACION ELIMINAR
-========================================================= */
-
-.delete-modal{
-
+.delete-modal,
+.zoom-modal{
     position:fixed;
-
     inset:0;
-
     z-index:15000;
-
     display:none;
-
     align-items:center;
-
     justify-content:center;
-
     padding:20px;
-
-    background:
-        rgba(0,0,0,.88);
-
-    backdrop-filter:
-        blur(12px);
+    background:rgba(0,0,0,.88);
+    backdrop-filter:blur(12px);
 }
 
-.delete-modal.show{
-
-    display:flex;
-}
+.delete-modal.show,
+.zoom-modal.show{display:flex}
 
 .delete-box{
-
     width:min(500px,100%);
-
     padding:28px;
-
-    border:
-        1px solid
-        rgba(255,100,100,.25);
-
+    border:1px solid rgba(255,100,100,.25);
     border-radius:14px;
-
     background:#151515;
-
-    box-shadow:
-        0 30px 100px
-        rgba(0,0,0,.7);
 }
 
 .delete-warning{
-
     padding:15px;
-
-    border:
-        1px solid
-        rgba(255,180,80,.25);
-
+    border:1px solid rgba(255,180,80,.25);
     border-radius:8px;
-
-    background:
-        rgba(255,150,0,.06);
-
+    background:rgba(255,150,0,.06);
     color:#ddd;
-
     font-size:11px;
-
     line-height:1.7;
 }
 
-.delete-warning strong{
-
-    color:#ffb36b;
-}
+.delete-warning strong{color:#ffb36b}
 
 .delete-product-name{
-
     margin-top:18px;
-
-    color:#fff;
-
     font-size:18px;
-
     font-weight:900;
 }
 
 .delete-actions{
-
     display:grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
+    grid-template-columns:1fr 1fr;
     gap:10px;
-
     margin-top:22px;
 }
 
-
-/* =========================================================
-   MODAL ZOOM
-========================================================= */
-
-.zoom-modal{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:5000;
-
-    display:none;
-
-    align-items:center;
-
-    justify-content:center;
-
-    padding:25px;
-
-    background:
-        rgba(0,0,0,.90);
-
-    backdrop-filter:
-        blur(10px);
-}
-
-.zoom-modal.show{
-
-    display:flex;
-}
-
 .zoom-modal img{
-
     max-width:95vw;
-
     max-height:90vh;
-
     object-fit:contain;
-
     border-radius:8px;
 }
 
 .zoom-close{
-
     position:absolute;
-
     top:20px;
-
     right:25px;
-
     width:42px;
-
     height:42px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.2);
-
+    border:1px solid rgba(255,255,255,.2);
     border-radius:6px;
-
     background:#181818;
-
     color:#fff;
-
-    cursor:pointer;
-
     font-size:20px;
 }
 
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
 @media(max-width:1000px){
-
-    .admin-grid{
-
-        grid-template-columns:1fr;
-    }
-
-    .preview-wrap{
-
-        position:static;
-    }
-
+    .admin-grid{grid-template-columns:1fr}
+    .preview-wrap{position:static}
 }
 
 @media(max-width:600px){
-
-    header{
-
-        padding:
-            15px;
-    }
-
-    .container{
-
-        width:94%;
-
-        padding-top:30px;
-    }
-
-    .panel{
-
-        padding:17px;
-    }
-
-    .form-grid{
-
-        grid-template-columns:1fr;
-    }
-
-    .field.full{
-
-        grid-column:auto;
-    }
-
-    .variant-top{
-
-        grid-template-columns:
-            48px
-            1fr;
-    }
-
-    .variant-top .btn{
-
-        grid-column:
-            1 / -1;
-    }
-
-    .variant-image{
-
-        grid-template-columns:1fr;
-    }
-
-    .variant-preview{
-
-        width:100%;
-
-        height:180px;
-    }
-
-    .preview-image{
-
-        height:360px;
-    }
-
+    header{padding:15px}
+    .header-status span{display:none}
+    .container{width:94%;padding-top:30px}
+    .panel{padding:17px}
+    .form-grid{grid-template-columns:1fr}
+    .field.full{grid-column:auto}
+    .variant-top{grid-template-columns:48px 1fr}
+    .variant-top .btn{grid-column:1/-1}
+    .variant-image-row{grid-template-columns:1fr}
+    .variant-preview{width:100%;height:180px}
+    .preview-image{height:360px}
     .actions,
-    .delete-actions{
-
-        grid-template-columns:1fr;
-    }
-
-    .product-admin-item{
-
-        grid-template-columns:1fr;
-    }
-
+    .delete-actions{grid-template-columns:1fr}
+    .product-admin-item{grid-template-columns:55px 1fr}
+    .product-admin-image{width:55px;height:55px}
+    .product-admin-actions{grid-column:1/-1;justify-content:stretch}
+    .product-admin-actions .btn{flex:1}
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
-     LOGIN
-========================================================= -->
-
-<div
-    id="loginOverlay"
-    class="login-overlay"
->
+<div id="loginOverlay" class="login-overlay">
 
     <div class="login-box">
 
-        <div class="login-logo">
-            STRANGIS
-        </div>
+        <div class="login-logo">STRANGIS</div>
 
         <div class="login-title">
             Acceso administrador
         </div>
 
         <div class="login-description">
-
-            Inicia sesión con el usuario creado
-            en Supabase Authentication para acceder
-            al panel de administración.
-
+            Inicia sesión con tu usuario de Supabase Authentication.
         </div>
 
         <form onsubmit="loginAdmin(event)">
 
             <div class="login-field">
-
                 <label>Email</label>
-
                 <input
                     id="loginEmail"
                     type="email"
                     autocomplete="username"
-                    placeholder="admin@ejemplo.com"
                     required
                 >
-
             </div>
 
             <div class="login-field">
-
                 <label>Contraseña</label>
-
                 <input
                     id="loginPassword"
                     type="password"
                     autocomplete="current-password"
-                    placeholder="••••••••"
                     required
                 >
-
             </div>
 
             <button
@@ -1693,29 +937,19 @@ header{
                 INICIAR SESIÓN
             </button>
 
-            <div
-                id="loginError"
-                class="login-error"
-            ></div>
+            <div id="loginError" class="login-error"></div>
 
         </form>
-
     </div>
-
 </div>
-
 
 <header>
 
-    <div class="logo">
-        STRANGIS
-    </div>
+    <div class="logo">STRANGIS</div>
 
     <div class="header-status">
 
-        <span>
-            PANEL DE ADMINISTRACIÓN · SUPABASE
-        </span>
+        <span>PANEL DE ADMINISTRACIÓN · SUPABASE</span>
 
         <button
             id="logoutButton"
@@ -1731,45 +965,30 @@ header{
 
 </header>
 
-
 <main class="container">
-
 
 <section class="page-title">
 
-    <small>
-        PRODUCT MANAGER
-    </small>
+    <small>PRODUCT MANAGER</small>
 
-    <h1>
-        Administrador
-    </h1>
+    <h1>Administrador</h1>
 
     <p>
-        Crea productos, guárdalos en Supabase y
-        administra los productos existentes desde este panel.
+        Crea, edita y elimina productos.
+        Cada color puede tener varias fotografías.
     </p>
 
 </section>
 
-
 <div class="admin-grid">
 
-
 <section>
-
-
-<!-- =========================================================
-     PRODUCTOS EXISTENTES
-========================================================= -->
 
 <div class="panel">
 
     <div class="panel-title">
 
-        <h2>
-            Productos existentes
-        </h2>
+        <h2>Productos existentes</h2>
 
         <button
             type="button"
@@ -1781,47 +1000,50 @@ header{
 
     </div>
 
-    <div
-        id="productsList"
-        class="products-list"
-    >
-
+    <div id="productsList" class="products-list">
         <div class="products-loading">
             Cargando productos...
         </div>
-
     </div>
 
 </div>
 
+<div
+    id="editModeBar"
+    class="mode-bar"
+>
+    <div>
+        <strong id="editModeTitle">
+            Editando producto
+        </strong>
+        <br>
+        <span id="editModeId"></span>
+    </div>
 
-<!-- =========================================================
-     INFORMACION PRODUCTO
-========================================================= -->
+    <button
+        type="button"
+        class="btn btn-small"
+        onclick="newProduct()"
+    >
+        + NUEVO PRODUCTO
+    </button>
+</div>
 
 <div class="panel" style="margin-top:25px">
 
     <div class="panel-title">
 
-        <h2>
-            Información del producto
-        </h2>
+        <h2>Información del producto</h2>
 
-        <span>
-            DATOS PRINCIPALES
-        </span>
+        <span>DATOS PRINCIPALES</span>
 
     </div>
 
-
     <div class="form-grid">
-
 
         <div class="field full">
 
-            <label>
-                Nombre del producto
-            </label>
+            <label>Nombre del producto</label>
 
             <input
                 id="productName"
@@ -1832,29 +1054,22 @@ header{
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Categoría
-            </label>
+            <label>Categoría</label>
 
             <input
                 id="productCategory"
                 type="text"
                 value="camisetas"
-                placeholder="Ej: camisetas"
                 oninput="updatePreview()"
             >
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Referencia / ID
-            </label>
+            <label>Referencia / ID</label>
 
             <input
                 id="productRef"
@@ -1865,12 +1080,9 @@ header{
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Precio €
-            </label>
+            <label>Precio €</label>
 
             <input
                 id="productPrice"
@@ -1883,12 +1095,9 @@ header{
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Stock
-            </label>
+            <label>Stock</label>
 
             <input
                 id="productStock"
@@ -1900,28 +1109,21 @@ header{
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                WhatsApp
-            </label>
+            <label>WhatsApp</label>
 
             <input
                 id="productWhatsapp"
                 type="text"
-                value="34674559614"
                 placeholder="34600000000"
             >
 
         </div>
 
-
         <div class="field full">
 
-            <label>
-                Descripción
-            </label>
+            <label>Descripción</label>
 
             <textarea
                 id="productDescription"
@@ -1931,59 +1133,43 @@ header{
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Envío mínimo (días)
-            </label>
+            <label>Envío mínimo (días)</label>
 
             <input
                 id="shippingMin"
                 type="number"
                 min="0"
-                step="1"
                 value="3"
                 oninput="updatePreview()"
             >
 
         </div>
 
-
         <div class="field">
 
-            <label>
-                Envío máximo (días)
-            </label>
+            <label>Envío máximo (días)</label>
 
             <input
                 id="shippingMax"
                 type="number"
                 min="0"
-                step="1"
                 value="9"
                 oninput="updatePreview()"
             >
 
         </div>
 
-
     </div>
 
 </div>
-
-
-<!-- =========================================================
-     TALLAS
-========================================================= -->
 
 <div class="panel" style="margin-top:25px">
 
     <div class="panel-title">
 
-        <h2>
-            Tallas
-        </h2>
+        <h2>Tallas</h2>
 
         <button
             type="button"
@@ -1995,25 +1181,15 @@ header{
 
     </div>
 
-    <div
-        id="sizesList"
-        class="sizes-list"
-    ></div>
+    <div id="sizesList" class="sizes-list"></div>
 
 </div>
-
-
-<!-- =========================================================
-     VARIANTES
-========================================================= -->
 
 <div class="panel" style="margin-top:25px">
 
     <div class="panel-title">
 
-        <h2>
-            Colores e imágenes
-        </h2>
+        <h2>Colores e imágenes</h2>
 
         <button
             type="button"
@@ -2025,44 +1201,24 @@ header{
 
     </div>
 
-    <p
-        style="
-            color:#777;
-            font-size:10px;
-            line-height:1.6;
-            margin-bottom:18px;
-        "
-    >
-        Cada color está vinculado directamente
-        con su imagen.
+    <p style="color:#777;font-size:10px;line-height:1.6;margin-bottom:18px">
+        Cada color puede tener varias fotografías.
+        Añade tantas URLs como necesites.
     </p>
 
-    <div
-        id="variantsList"
-        class="variants-list"
-    ></div>
+    <div id="variantsList" class="variants-list"></div>
 
 </div>
-
-
-<!-- =========================================================
-     CODIGO
-========================================================= -->
 
 <div class="panel code-panel">
 
     <div class="panel-title">
 
-        <h2>
-            Código generado
-        </h2>
+        <h2>Código generado</h2>
 
-        <span>
-            LISTO PARA COPIAR
-        </span>
+        <span>LISTO PARA COPIAR</span>
 
     </div>
-
 
     <textarea
         id="codeOutput"
@@ -2070,7 +1226,6 @@ header{
         readonly
         placeholder="Pulsa GENERAR CÓDIGO..."
     ></textarea>
-
 
     <div class="actions">
 
@@ -2083,6 +1238,7 @@ header{
         </button>
 
         <button
+            id="saveButton"
             type="button"
             class="btn"
             onclick="saveProductToSupabase()"
@@ -2098,17 +1254,19 @@ header{
             COPIAR CÓDIGO
         </button>
 
+        <button
+            type="button"
+            class="btn"
+            onclick="newProduct()"
+        >
+            + NUEVO PRODUCTO
+        </button>
+
     </div>
 
 </div>
 
-
 </section>
-
-
-<!-- =========================================================
-     PREVIEW
-========================================================= -->
 
 <aside class="preview-wrap">
 
@@ -2116,21 +1274,43 @@ header{
         VISTA PREVIA DEL PRODUCTO
     </div>
 
-
     <article class="product-card">
 
-
-        <div
-            class="preview-image"
-            onclick="openZoom()"
-        >
+        <div class="preview-image">
 
             <img
                 id="previewImage"
                 src=""
                 alt=""
                 style="display:none"
+                onclick="openZoom()"
             >
+
+            <div class="preview-arrows">
+
+                <button
+                    type="button"
+                    onclick="previousPreviewImage()"
+                >
+                    ‹
+                </button>
+
+                <button
+                    type="button"
+                    onclick="nextPreviewImage()"
+                >
+                    ›
+                </button>
+
+            </div>
+
+            <div
+                id="photoCounter"
+                class="photo-counter"
+                style="display:none"
+            >
+                1 / 1
+            </div>
 
             <div class="zoom-hint">
                 🔍 AMPLIAR
@@ -2138,122 +1318,72 @@ header{
 
         </div>
 
+        <div
+            id="previewThumbs"
+            class="preview-thumbs"
+        ></div>
 
         <div class="preview-content">
 
-
-            <div
-                id="previewName"
-                class="preview-name"
-            >
+            <div id="previewName" class="preview-name">
                 Nombre del producto
             </div>
 
-
-            <div
-                id="previewRef"
-                class="preview-ref"
-            >
+            <div id="previewRef" class="preview-ref">
                 REF: —
             </div>
 
-
-            <div
-                id="previewDescription"
-                class="preview-description"
-            >
+            <div id="previewDescription" class="preview-description">
                 Descripción del producto
             </div>
 
-
-            <div
-                id="previewPrice"
-                class="preview-price"
-            >
+            <div id="previewPrice" class="preview-price">
                 35,00 €
             </div>
 
-
             <div class="preview-label-row">
-
                 Color:
-
-                <span id="previewColorName">
-                    —
-                </span>
-
+                <span id="previewColorName">—</span>
             </div>
 
+            <div id="previewColors" class="preview-colors"></div>
 
-            <div
-                id="previewColors"
-                class="preview-colors"
-            ></div>
-
-
-            <div
-                id="previewSizeLabel"
-                class="preview-label-row"
-            >
+            <div class="preview-label-row">
                 Talla
             </div>
 
-
-            <div
-                id="previewSizes"
-                class="preview-sizes"
-            ></div>
-
+            <div id="previewSizes" class="preview-sizes"></div>
 
             <div class="preview-quantity">
 
-                <button
-                    type="button"
-                    onclick="previewQuantity(-1)"
-                >
+                <button onclick="previewQuantity(-1)">
                     −
                 </button>
 
-                <span id="previewQuantity">
-                    1
-                </span>
+                <span id="previewQuantity">1</span>
 
-                <button
-                    type="button"
-                    onclick="previewQuantity(1)"
-                >
+                <button onclick="previewQuantity(1)">
                     +
                 </button>
 
             </div>
 
-
             <div class="shipping-box">
 
-                <div class="shipping-icon">
-                    🚚
-                </div>
+                <div class="shipping-icon">🚚</div>
 
                 <div class="shipping-text">
-
                     ENVÍO ESTIMADO
-
                     <strong id="previewShipping">
                         —
                     </strong>
-
                 </div>
 
             </div>
 
-
-            <button
-                type="button"
-                class="preview-buy"
-            >
+            <button class="preview-buy">
                 COMPRAR
             </button>
-
 
         </div>
 
@@ -2261,46 +1391,29 @@ header{
 
 </aside>
 
-
 </div>
-
 
 </main>
 
-
-<!-- =========================================================
-     MODAL ELIMINAR
-========================================================= -->
-
-<div
-    id="deleteModal"
-    class="delete-modal"
->
+<div id="deleteModal" class="delete-modal">
 
     <div class="delete-box">
 
         <div class="panel-title">
 
-            <h2>
-                Eliminar producto
-            </h2>
+            <h2>Eliminar producto</h2>
 
-            <span>
-                ACCIÓN IRREVERSIBLE
-            </span>
+            <span>ACCIÓN IRREVERSIBLE</span>
 
         </div>
-
 
         <div class="delete-warning">
 
             <strong>⚠ ATENCIÓN:</strong>
-            eliminar un producto lo borra de la tabla
-            <strong>Products</strong> de Supabase.
-            Esta acción no se puede deshacer desde este panel.
+            eliminar este producto lo borrará de
+            <strong>Products</strong>.
 
         </div>
-
 
         <div
             id="deleteProductName"
@@ -2308,7 +1421,6 @@ header{
         >
             —
         </div>
-
 
         <div class="delete-actions">
 
@@ -2335,11 +1447,6 @@ header{
 
 </div>
 
-
-<!-- =========================================================
-     ZOOM
-========================================================= -->
-
 <div
     id="zoomModal"
     class="zoom-modal"
@@ -2354,14 +1461,9 @@ header{
         ×
     </button>
 
-    <img
-        id="zoomImage"
-        src=""
-        alt=""
-    >
+    <img id="zoomImage" src="" alt="">
 
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -2376,23 +1478,6 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_M7ETdIWvj4nCQZ55i24Vpw_5Yc5Islk";
-
-
-if(
-    !window.supabase ||
-    typeof window.supabase.createClient !== "function"
-){
-
-    alert(
-        "No se pudo cargar la librería de Supabase."
-    );
-
-    throw new Error(
-        "Supabase JS no está disponible."
-    );
-
-}
-
 
 const supabaseClient =
     window.supabase.createClient(
@@ -2409,31 +1494,20 @@ const supabaseClient =
 
 
 /* =========================================================
-   DATOS
+   ESTADO
 ========================================================= */
 
-let variants = [
+let variants = [];
 
-    {
-        name:"Azul",
-        color:"#246BCE",
-        image:""
-    }
-
-];
-
-let sizes = [
-
-    "S",
-    "M",
-    "L",
-    "XL"
-
-];
+let sizes = ["S","M","L","XL"];
 
 let activeVariant = 0;
 
+let activePhoto = 0;
+
 let previewQty = 1;
+
+let editingProductId = null;
 
 let productPendingDelete = null;
 
@@ -2453,7 +1527,6 @@ function escapeHTML(value){
 
 }
 
-
 function escapeJS(value){
 
     return String(value ?? "")
@@ -2461,6 +1534,92 @@ function escapeJS(value){
         .replace(/"/g,'\\"')
         .replace(/\n/g,"\\n")
         .replace(/\r/g,"");
+
+}
+
+
+/* =========================================================
+   NORMALIZAR IMÁGENES
+========================================================= */
+
+function normalizeVariants(raw){
+
+    if(!Array.isArray(raw) || !raw.length){
+
+        return [{
+            name:"Nuevo color",
+            color:"#888888",
+            images:[""]
+        }];
+
+    }
+
+    return raw.map((variant,index)=>{
+
+        const name =
+            String(
+                variant?.name ||
+                `Color ${index + 1}`
+            ).trim();
+
+        const color =
+            String(
+                variant?.color ||
+                "#888888"
+            ).trim();
+
+        let images = [];
+
+        /*
+         * FORMATO NUEVO:
+         *
+         * images: [...]
+         */
+
+        if(Array.isArray(variant?.images)){
+
+            images =
+                variant.images
+                    .map(image =>
+                        String(image || "").trim()
+                    );
+
+        }
+
+        /*
+         * FORMATO ANTIGUO:
+         *
+         * image: "..."
+         */
+
+        else if(
+            variant?.image !== undefined &&
+            variant?.image !== null
+        ){
+
+            const image =
+                String(
+                    variant.image
+                ).trim();
+
+            if(image){
+                images = [image];
+            }
+
+        }
+
+        if(!images.length){
+
+            images = [""];
+        }
+
+        return {
+            name,
+            color,
+            images
+        };
+
+    });
 
 }
 
@@ -2474,67 +1633,42 @@ async function loginAdmin(event){
     event.preventDefault();
 
     const email =
-        document.getElementById(
-            "loginEmail"
-        ).value.trim();
+        document.getElementById("loginEmail")
+            .value.trim();
 
     const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
+        document.getElementById("loginPassword")
+            .value;
 
     const button =
-        document.getElementById(
-            "loginButton"
-        );
+        document.getElementById("loginButton");
 
     const errorBox =
-        document.getElementById(
-            "loginError"
-        );
-
-    errorBox.textContent = "";
+        document.getElementById("loginError");
 
     errorBox.classList.remove("show");
+    errorBox.textContent = "";
 
     button.disabled = true;
-
-    button.textContent =
-        "INICIANDO SESIÓN...";
+    button.textContent = "INICIANDO SESIÓN...";
 
     try{
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
+        const {data,error} =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
 
         if(error){
-
-            errorBox.textContent =
-                error.message ||
-                "No se pudo iniciar sesión.";
-
-            errorBox.classList.add("show");
-
-            return;
+            throw error;
         }
 
-        if(
-            !data ||
-            !data.session
-        ){
-
-            errorBox.textContent =
-                "Supabase no ha creado una sesión.";
-
-            errorBox.classList.add("show");
-
-            return;
+        if(!data?.session){
+            throw new Error(
+                "Supabase no ha creado una sesión."
+            );
         }
 
         showAdmin();
@@ -2544,14 +1678,11 @@ async function loginAdmin(event){
     }
     catch(error){
 
-        console.error(
-            "Error de LOGIN:",
-            error
-        );
+        console.error(error);
 
         errorBox.textContent =
             error?.message ||
-            String(error);
+            "No se pudo iniciar sesión.";
 
         errorBox.classList.add("show");
 
@@ -2559,9 +1690,7 @@ async function loginAdmin(event){
     finally{
 
         button.disabled = false;
-
-        button.textContent =
-            "INICIAR SESIÓN";
+        button.textContent = "INICIAR SESIÓN";
 
     }
 
@@ -2569,86 +1698,53 @@ async function loginAdmin(event){
 
 
 /* =========================================================
-   MOSTRAR ADMIN
+   SESIÓN
 ========================================================= */
 
 function showAdmin(){
 
     document
-        .getElementById(
-            "loginOverlay"
-        )
+        .getElementById("loginOverlay")
         .classList.add("hidden");
 
     document
-        .getElementById(
-            "logoutButton"
-        )
-        .style.display =
-            "block";
+        .getElementById("logoutButton")
+        .style.display = "block";
 
 }
 
-
-/* =========================================================
-   OCULTAR ADMIN
-========================================================= */
 
 function hideAdmin(){
 
     document
-        .getElementById(
-            "loginOverlay"
-        )
+        .getElementById("loginOverlay")
         .classList.remove("hidden");
 
     document
-        .getElementById(
-            "logoutButton"
-        )
-        .style.display =
-            "none";
+        .getElementById("logoutButton")
+        .style.display = "none";
 
 }
 
-
-/* =========================================================
-   SESION
-========================================================= */
 
 async function checkAdminSession(){
 
     try{
 
-        const {
-            data,
-            error
-        } =
+        const {data,error} =
             await supabaseClient.auth.getSession();
 
-        if(error){
+        if(error || !data?.session){
 
             hideAdmin();
 
-            return false;
-        }
-
-        if(
-            data &&
-            data.session
-        ){
-
-            showAdmin();
-
-            await loadProducts();
-
-            return true;
+            return;
 
         }
 
-        hideAdmin();
+        showAdmin();
 
-        return false;
+        await loadProducts();
 
     }
     catch(error){
@@ -2656,49 +1752,19 @@ async function checkAdminSession(){
         console.error(error);
 
         hideAdmin();
-
-        return false;
 
     }
 
 }
 
 
-/* =========================================================
-   LOGOUT
-========================================================= */
-
 async function logoutAdmin(){
 
-    try{
+    await supabaseClient.auth.signOut();
 
-        const {
-            error
-        } =
-            await supabaseClient.auth.signOut();
+    editingProductId = null;
 
-        if(error){
-
-            alert(
-                "No se pudo cerrar la sesión.\n\n" +
-                error.message
-            );
-
-            return;
-        }
-
-        hideAdmin();
-
-        document.getElementById(
-            "loginPassword"
-        ).value = "";
-
-    }
-    catch(error){
-
-        console.error(error);
-
-    }
+    hideAdmin();
 
 }
 
@@ -2708,15 +1774,13 @@ async function logoutAdmin(){
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-    async function(event, session){
+    async (event,session)=>{
 
         if(session){
 
             showAdmin();
 
-            if(
-                event !== "INITIAL_SESSION"
-            ){
+            if(event !== "INITIAL_SESSION"){
 
                 await loadProducts();
 
@@ -2734,165 +1798,161 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* =========================================================
-   LISTAR PRODUCTOS
+   CARGAR PRODUCTOS
 ========================================================= */
 
 async function loadProducts(){
 
     const container =
-        document.getElementById(
-            "productsList"
-        );
-
-    if(!container){
-
-        return;
-    }
+        document.getElementById("productsList");
 
     container.innerHTML =
-        `
-        <div class="products-loading">
+        `<div class="products-loading">
             Cargando productos...
-        </div>
-        `;
+        </div>`;
 
     try{
 
-        const {
-            data: sessionData,
-            error: sessionError
-        } =
+        const {data:sessionData} =
             await supabaseClient.auth.getSession();
 
-        if(
-            sessionError ||
-            !sessionData?.session
-        ){
+        if(!sessionData?.session){
 
             container.innerHTML =
-                `
-                <div class="products-empty">
-                    Debes iniciar sesión para ver los productos.
-                </div>
-                `;
+                `<div class="products-empty">
+                    Debes iniciar sesión.
+                </div>`;
 
             return;
         }
 
-
-        const {
-            data,
-            error
-        } =
+        const {data,error} =
             await supabaseClient
                 .from("Products")
                 .select("*")
-                .order("id", {
-                    ascending:false
-                });
-
+                .order("id",{ascending:false});
 
         if(error){
-
-            console.error(
-                "Error cargando Products:",
-                error
-            );
-
-            container.innerHTML =
-                `
-                <div class="products-empty">
-                    ❌ No se pudieron cargar los productos.<br><br>
-                    ${escapeHTML(error.message)}
-                </div>
-                `;
-
-            return;
+            throw error;
         }
 
-
-        if(
-            !data ||
-            !data.length
-        ){
+        if(!data?.length){
 
             container.innerHTML =
-                `
-                <div class="products-empty">
+                `<div class="products-empty">
                     No hay productos guardados todavía.
-                </div>
-                `;
+                </div>`;
 
             return;
-        }
 
+        }
 
         container.innerHTML =
-            data.map(
-                product => {
+            data.map(product=>{
 
-                    const price =
-                        Number(product.price) || 0;
+                const normalized =
+                    normalizeVariants(
+                        product.images
+                    );
 
-                    return `
+                const firstImage =
+                    normalized[0]?.images?.find(Boolean) ||
+                    "";
 
-                    <div class="product-admin-item">
+                const imageHTML =
+                    firstImage
+                    ?
+                    `<img
+                        src="${escapeHTML(firstImage)}"
+                        alt="${escapeHTML(product.name)}"
+                        onerror="this.style.display='none'"
+                    >`
+                    :
+                    "";
 
-                        <div>
+                const price =
+                    Number(product.price) || 0;
 
-                            <div class="product-admin-name">
-                                ${escapeHTML(
-                                    product.name ||
-                                    "Producto sin nombre"
-                                )}
-                            </div>
+                const colors =
+                    normalized.length;
 
-                            <div class="product-admin-meta">
+                const photos =
+                    normalized.reduce(
+                        (total,v)=>
+                            total +
+                            v.images.filter(Boolean).length,
+                        0
+                    );
 
-                                REF:
-                                ${escapeHTML(
-                                    product.ref ||
-                                    "—"
-                                )}
+                return `
 
-                                ·
+                <div class="product-admin-item">
 
-                                ${price.toLocaleString(
-                                    "es-ES",
-                                    {
-                                        style:"currency",
-                                        currency:"EUR"
-                                    }
-                                )}
+                    <div class="product-admin-image">
+                        ${imageHTML}
+                    </div>
 
-                                ·
+                    <div>
 
-                                Stock:
-                                ${escapeHTML(
-                                    product.stock ??
-                                    0
-                                )}
+                        <div class="product-admin-name">
+                            ${escapeHTML(
+                                product.name ||
+                                "Producto sin nombre"
+                            )}
+                        </div>
 
-                            </div>
+                        <div class="product-admin-meta">
 
-                            <div class="product-admin-id">
+                            REF:
+                            ${escapeHTML(product.ref || "—")}
 
-                                ID:
-                                ${escapeHTML(
-                                    product.id
-                                )}
+                            ·
 
-                            </div>
+                            ${price.toLocaleString(
+                                "es-ES",
+                                {
+                                    style:"currency",
+                                    currency:"EUR"
+                                }
+                            )}
+
+                            ·
+
+                            Stock:
+                            ${escapeHTML(product.stock ?? 0)}
+
+                            ·
+
+                            ${colors} color${colors === 1 ? "" : "es"}
+
+                            ·
+
+                            ${photos} foto${photos === 1 ? "" : "s"}
 
                         </div>
 
+                        <div class="product-admin-id">
+                            ID: ${escapeHTML(product.id)}
+                        </div>
+
+                    </div>
+
+                    <div class="product-admin-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-small"
+                            onclick="editProduct('${escapeJS(product.id)}')"
+                        >
+                            ✏ EDITAR
+                        </button>
 
                         <button
                             type="button"
                             class="btn btn-small btn-danger"
                             onclick="openDeleteModal(
-                                '${escapeJS(String(product.id))}',
-                                '${escapeJS(String(product.name || "Producto sin nombre"))}'
+                                '${escapeJS(product.id)}',
+                                '${escapeJS(product.name || "Producto sin nombre")}'
                             )"
                         >
                             🗑 ELIMINAR
@@ -2900,30 +1960,22 @@ async function loadProducts(){
 
                     </div>
 
-                    `;
+                </div>
 
-                }
-            )
-            .join("");
+                `;
+
+            }).join("");
 
     }
     catch(error){
 
-        console.error(
-            "Error cargando productos:",
-            error
-        );
+        console.error(error);
 
         container.innerHTML =
-            `
-            <div class="products-empty">
-                ❌ Error inesperado:<br><br>
-                ${escapeHTML(
-                    error?.message ||
-                    String(error)
-                )}
-            </div>
-            `;
+            `<div class="products-empty">
+                ❌ No se pudieron cargar los productos.<br><br>
+                ${escapeHTML(error.message)}
+            </div>`;
 
     }
 
@@ -2931,243 +1983,161 @@ async function loadProducts(){
 
 
 /* =========================================================
-   ABRIR MODAL DELETE
+   EDITAR PRODUCTO
 ========================================================= */
 
-function openDeleteModal(
-    productId,
-    productName
-){
-
-    productPendingDelete = {
-        id:productId,
-        name:productName
-    };
-
-    document.getElementById(
-        "deleteProductName"
-    ).textContent =
-        productName;
-
-    document
-        .getElementById(
-            "deleteModal"
-        )
-        .classList.add("show");
-
-    document.body.style.overflow =
-        "hidden";
-
-}
-
-
-/* =========================================================
-   CERRAR MODAL DELETE
-========================================================= */
-
-function closeDeleteModal(){
-
-    productPendingDelete = null;
-
-    document
-        .getElementById(
-            "deleteModal"
-        )
-        .classList.remove("show");
-
-    document.body.style.overflow =
-        "";
-
-}
-
-
-/* =========================================================
-   CONFIRMAR DELETE
-========================================================= */
-
-async function confirmDeleteProduct(){
-
-    if(
-        !productPendingDelete ||
-        productPendingDelete.id === undefined ||
-        productPendingDelete.id === null
-    ){
-
-        alert(
-            "No se ha seleccionado ningún producto."
-        );
-
-        return;
-    }
-
-
-    const button =
-        document.getElementById(
-            "confirmDeleteButton"
-        );
-
-
-    const productId =
-        productPendingDelete.id;
-
-
-    const productName =
-        productPendingDelete.name;
-
+async function editProduct(productId){
 
     try{
 
-        button.disabled = true;
-
-        button.textContent =
-            "ELIMINANDO...";
-
-
-        /* =============================================
-           COMPROBAR SESIÓN
-        ============================================= */
-
-        const {
-            data: sessionData,
-            error: sessionError
-        } =
-            await supabaseClient.auth.getSession();
-
-
-        if(sessionError){
-
-            throw new Error(
-                "No se pudo comprobar la sesión: " +
-                sessionError.message
-            );
-
-        }
-
-
-        if(
-            !sessionData ||
-            !sessionData.session
-        ){
-
-            hideAdmin();
-
-            throw new Error(
-                "No existe una sesión de administrador. " +
-                "Vuelve a iniciar sesión."
-            );
-
-        }
-
-
-        /* =============================================
-           DELETE REAL
-        ============================================= */
-
-        console.log(
-            "Intentando eliminar producto:",
-            productId
-        );
-
-
-        const {
-            data,
-            error
-        } =
+        const {data,error} =
             await supabaseClient
                 .from("Products")
-                .delete()
-                .eq("id", productId)
-                .select();
-
+                .select("*")
+                .eq("id",productId)
+                .single();
 
         if(error){
-
-            console.error(
-                "Supabase DELETE error:",
-                error
-            );
-
-
-            let message =
-                error.message ||
-                "Supabase rechazó la eliminación.";
-
-
-            if(
-                error.code === "42501"
-            ){
-
-                message +=
-                    "\n\nLa política RLS de Supabase " +
-                    "no permite DELETE para el usuario autenticado.";
-
-            }
-
-
-            throw new Error(
-                message
-            );
-
+            throw error;
         }
 
-
-        /*
-         * Si usamos .select() después del DELETE,
-         * Supabase devuelve las filas eliminadas.
-         */
-
-        if(
-            !data ||
-            data.length === 0
-        ){
-
+        if(!data){
             throw new Error(
-                "Supabase no eliminó ninguna fila.\n\n" +
-                "Comprueba que el ID del producto existe " +
-                "y que la política RLS permite DELETE."
+                "No se encontró el producto."
             );
-
         }
 
+        editingProductId =
+            data.id;
 
-        closeDeleteModal();
+        document.getElementById("productName").value =
+            data.name || "";
 
+        document.getElementById("productCategory").value =
+            data.category || "camisetas";
 
-        alert(
-            "✅ Producto eliminado correctamente.\n\n" +
-            productName
-        );
+        document.getElementById("productRef").value =
+            data.ref || "";
 
+        document.getElementById("productPrice").value =
+            data.price ?? 0;
 
-        await loadProducts();
+        document.getElementById("productStock").value =
+            data.stock ?? 0;
 
+        document.getElementById("productWhatsapp").value =
+            data.whatsapp || "";
+
+        document.getElementById("productDescription").value =
+            data.description || "";
+
+        document.getElementById("shippingMin").value =
+            data.shipping_min ?? 3;
+
+        document.getElementById("shippingMax").value =
+            data.shipping_max ?? 9;
+
+        sizes =
+            Array.isArray(data.sizes)
+            ?
+            data.sizes.map(
+                size => String(size)
+            )
+            :
+            [];
+
+        variants =
+            normalizeVariants(
+                data.images
+            );
+
+        activeVariant = 0;
+        activePhoto = 0;
+
+        previewQty = 1;
+
+        renderVariants();
+        renderSizes();
+        updatePreview();
+
+        document.getElementById("editModeBar")
+            .classList.add("show");
+
+        document.getElementById("editModeTitle")
+            .textContent =
+                "Editando: " +
+                (data.name || "Producto");
+
+        document.getElementById("editModeId")
+            .textContent =
+                "ID: " + data.id;
+
+        document.getElementById("saveButton")
+            .textContent =
+                "ACTUALIZAR PRODUCTO";
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
 
     }
     catch(error){
 
-        console.error(
-            "Error eliminando producto:",
-            error
-        );
-
+        console.error(error);
 
         alert(
-            "❌ NO SE PUDO ELIMINAR EL PRODUCTO\n\n" +
-            (
-                error?.message ||
-                String(error)
-            )
+            "❌ No se pudo cargar el producto.\n\n" +
+            error.message
         );
 
     }
-    finally{
 
-        button.disabled = false;
+}
 
-        button.textContent =
-            "ELIMINAR PRODUCTO";
 
-    }
+/* =========================================================
+   NUEVO PRODUCTO
+========================================================= */
+
+function newProduct(){
+
+    editingProductId = null;
+
+    variants = [{
+        name:"Azul",
+        color:"#246BCE",
+        images:[""]
+    }];
+
+    sizes = ["S","M","L","XL"];
+
+    activeVariant = 0;
+    activePhoto = 0;
+    previewQty = 1;
+
+    document.getElementById("productName").value = "";
+    document.getElementById("productCategory").value = "camisetas";
+    document.getElementById("productRef").value = "";
+    document.getElementById("productPrice").value = "35";
+    document.getElementById("productStock").value = "999";
+    document.getElementById("productWhatsapp").value = "";
+    document.getElementById("productDescription").value = "";
+    document.getElementById("shippingMin").value = "3";
+    document.getElementById("shippingMax").value = "9";
+
+    document.getElementById("codeOutput").value = "";
+
+    document.getElementById("editModeBar")
+        .classList.remove("show");
+
+    document.getElementById("saveButton")
+        .textContent =
+            "GUARDAR EN SUPABASE";
+
+    renderVariants();
+    renderSizes();
+    updatePreview();
 
 }
 
@@ -3179,38 +2149,60 @@ async function confirmDeleteProduct(){
 function renderVariants(){
 
     const container =
-        document.getElementById(
-            "variantsList"
-        );
+        document.getElementById("variantsList");
 
     container.innerHTML =
-        variants.map(
-            (variant,index) => `
+        variants.map((variant,index)=>{
 
-                <div class="variant">
+            const images =
+                Array.isArray(variant.images)
+                ?
+                variant.images
+                :
+                [""];
 
-                    <div class="variant-top">
+            return `
 
-                        <div
-                            class="color-picker"
-                            style="
-                                background:${
-                                    escapeHTML(
-                                        variant.color ||
-                                        "#ffffff"
-                                    )
-                                };
+            <div class="variant">
+
+                <div class="variant-top">
+
+                    <div
+                        class="color-picker"
+                        style="background:${escapeHTML(
+                            variant.color || "#ffffff"
+                        )}"
+                    >
+
+                        <input
+                            type="color"
+                            value="${escapeHTML(
+                                variant.color || "#ffffff"
+                            )}"
+                            onchange="
+                                changeVariantColor(
+                                    ${index},
+                                    this.value
+                                )
                             "
                         >
 
+                    </div>
+
+                    <div class="variant-name">
+
+                        <div class="field">
+
+                            <label>Nombre del color</label>
+
                             <input
-                                type="color"
-                                value="${
-                                    variant.color ||
-                                    "#ffffff"
-                                }"
-                                onchange="
-                                    changeVariantColor(
+                                type="text"
+                                value="${escapeHTML(
+                                    variant.name
+                                )}"
+                                placeholder="Ej: Negro"
+                                oninput="
+                                    changeVariantName(
                                         ${index},
                                         this.value
                                     )
@@ -3219,24 +2211,38 @@ function renderVariants(){
 
                         </div>
 
+                    </div>
 
-                        <div class="variant-name">
+                    <button
+                        type="button"
+                        class="btn btn-small btn-danger"
+                        onclick="removeVariant(${index})"
+                    >
+                        ELIMINAR COLOR
+                    </button>
+
+                </div>
+
+                <div class="variant-image-list">
+
+                    ${images.map((image,imageIndex)=>`
+
+                        <div class="variant-image-row">
 
                             <div class="field">
 
                                 <label>
-                                    Nombre del color
+                                    Foto ${imageIndex + 1}
                                 </label>
 
                                 <input
-                                    type="text"
-                                    value="${escapeHTML(
-                                        variant.name
-                                    )}"
-                                    placeholder="Ej: Negro"
+                                    type="url"
+                                    value="${escapeHTML(image)}"
+                                    placeholder="https://..."
                                     oninput="
-                                        changeVariantName(
+                                        changeVariantImage(
                                             ${index},
+                                            ${imageIndex},
                                             this.value
                                         )
                                     "
@@ -3244,84 +2250,60 @@ function renderVariants(){
 
                             </div>
 
-                        </div>
+                            <div class="variant-preview">
 
+                                ${
+                                    image
+                                    ?
+                                    `<img
+                                        src="${escapeHTML(image)}"
+                                        alt="${escapeHTML(variant.name)}"
+                                        onerror="this.style.display='none'"
+                                    >`
+                                    :
+                                    ""
+                                }
 
-                        <button
-                            type="button"
-                            class="
-                                btn
-                                btn-small
-                                btn-danger
-                            "
-                            onclick="
-                                removeVariant(
-                                    ${index}
-                                )
-                            "
-                        >
-                            ELIMINAR
-                        </button>
-
-                    </div>
-
-
-                    <div class="variant-image">
-
-                        <div class="field">
-
-                            <label>
-                                URL de imagen
-                            </label>
-
-                            <input
-                                type="url"
-                                value="${escapeHTML(
-                                    variant.image
-                                )}"
-                                placeholder="https://..."
-                                oninput="
-                                    changeVariantImage(
-                                        ${index},
-                                        this.value
-                                    )
-                                "
-                            >
-
-                        </div>
-
-
-                        <div class="variant-preview">
+                            </div>
 
                             ${
-                                variant.image
+                                images.length > 1
                                 ?
-                                `
-                                <img
-                                    src="${escapeHTML(
-                                        variant.image
-                                    )}"
-                                    alt="${escapeHTML(
-                                        variant.name
-                                    )}"
-                                    onerror="
-                                        this.style.display='none'
+                                `<button
+                                    type="button"
+                                    class="btn btn-small btn-danger"
+                                    onclick="
+                                        removeVariantImage(
+                                            ${index},
+                                            ${imageIndex}
+                                        )
                                     "
                                 >
-                                `
+                                    ×
+                                </button>`
                                 :
-                                ""
+                                `<div></div>`
                             }
 
                         </div>
 
-                    </div>
+                    `).join("")}
 
                 </div>
 
-            `
-        )
-        .join("");
+                <button
+                    type="button"
+                    class="btn btn-small add-photo"
+                    onclick="addVariantImage(${index})"
+                >
+                    + AÑADIR FOTO
+                </button>
+
+            </div>
+
+            `;
+
+        }).join("");
 
     updatePreview();
 
@@ -3331,17 +2313,15 @@ function renderVariants(){
 function addVariant(){
 
     variants.push({
-
         name:"Nuevo color",
-
         color:"#888888",
-
-        image:""
-
+        images:[""]
     });
 
     activeVariant =
         variants.length - 1;
+
+    activePhoto = 0;
 
     renderVariants();
 
@@ -3359,29 +2339,23 @@ function removeVariant(index){
         return;
     }
 
-    variants.splice(
-        index,
-        1
-    );
+    variants.splice(index,1);
 
-    if(
-        activeVariant >=
-        variants.length
-    ){
+    if(activeVariant >= variants.length){
 
         activeVariant =
             variants.length - 1;
+
     }
+
+    activePhoto = 0;
 
     renderVariants();
 
 }
 
 
-function changeVariantColor(
-    index,
-    value
-){
+function changeVariantColor(index,value){
 
     variants[index].color =
         value;
@@ -3391,10 +2365,7 @@ function changeVariantColor(
 }
 
 
-function changeVariantName(
-    index,
-    value
-){
+function changeVariantName(index,value){
 
     variants[index].name =
         value;
@@ -3404,15 +2375,72 @@ function changeVariantName(
 }
 
 
+function addVariantImage(index){
+
+    if(!Array.isArray(variants[index].images)){
+
+        variants[index].images = [];
+
+    }
+
+    variants[index].images.push("");
+
+    activeVariant = index;
+
+    activePhoto =
+        variants[index].images.length - 1;
+
+    renderVariants();
+
+}
+
+
+function removeVariantImage(
+    variantIndex,
+    imageIndex
+){
+
+    const images =
+        variants[variantIndex].images;
+
+    if(images.length <= 1){
+
+        images[0] = "";
+
+    }
+    else{
+
+        images.splice(imageIndex,1);
+
+    }
+
+    activeVariant =
+        variantIndex;
+
+    activePhoto = 0;
+
+    renderVariants();
+
+}
+
+
 function changeVariantImage(
-    index,
+    variantIndex,
+    imageIndex,
     value
 ){
 
-    variants[index].image =
-        value;
+    variants[variantIndex]
+        .images[imageIndex] =
+            value;
 
-    renderVariants();
+    activeVariant =
+        variantIndex;
+
+    activePhoto =
+        imageIndex;
+
+    updatePreview();
 
 }
 
@@ -3424,45 +2452,33 @@ function changeVariantImage(
 function renderSizes(){
 
     const container =
-        document.getElementById(
-            "sizesList"
-        );
+        document.getElementById("sizesList");
 
     container.innerHTML =
-        sizes.map(
-            (size,index) => `
+        sizes.map((size,index)=>`
 
-                <div class="size-item">
+            <div class="size-item">
 
-                    <input
-                        type="text"
-                        value="${escapeHTML(
-                            size
-                        )}"
-                        oninput="
-                            sizes[${index}] =
-                            this.value;
-                            updatePreview();
-                        "
-                    >
+                <input
+                    type="text"
+                    value="${escapeHTML(size)}"
+                    oninput="
+                        sizes[${index}] = this.value;
+                        updatePreview();
+                    "
+                >
 
-                    <button
-                        type="button"
-                        class="remove-size"
-                        onclick="
-                            removeSize(
-                                ${index}
-                            )
-                        "
-                    >
-                        ×
-                    </button>
+                <button
+                    type="button"
+                    class="remove-size"
+                    onclick="removeSize(${index})"
+                >
+                    ×
+                </button>
 
-                </div>
+            </div>
 
-            `
-        )
-        .join("");
+        `).join("");
 
     updatePreview();
 
@@ -3471,9 +2487,7 @@ function renderSizes(){
 
 function addSize(){
 
-    sizes.push(
-        "Nueva"
-    );
+    sizes.push("Nueva");
 
     renderSizes();
 
@@ -3482,10 +2496,7 @@ function addSize(){
 
 function removeSize(index){
 
-    sizes.splice(
-        index,
-        1
-    );
+    sizes.splice(index,1);
 
     renderSizes();
 
@@ -3499,87 +2510,63 @@ function removeSize(index){
 function updatePreview(){
 
     const name =
-        document.getElementById(
-            "productName"
-        )?.value.trim() || "";
+        document.getElementById("productName")
+            ?.value.trim() || "";
 
     const ref =
-        document.getElementById(
-            "productRef"
-        )?.value.trim() || "";
+        document.getElementById("productRef")
+            ?.value.trim() || "";
 
     const price =
         Number(
-            document.getElementById(
-                "productPrice"
-            )?.value
+            document.getElementById("productPrice")
+                ?.value
         ) || 0;
 
     const description =
-        document.getElementById(
-            "productDescription"
-        )?.value.trim() || "";
+        document.getElementById("productDescription")
+            ?.value.trim() || "";
 
     const shippingMin =
-        document.getElementById(
-            "shippingMin"
-        )?.value.trim() || "";
+        document.getElementById("shippingMin")
+            ?.value.trim() || "";
 
     const shippingMax =
-        document.getElementById(
-            "shippingMax"
-        )?.value.trim() || "";
+        document.getElementById("shippingMax")
+            ?.value.trim() || "";
 
+    document.getElementById("previewName")
+        .textContent =
+            name || "Nombre del producto";
 
-    document.getElementById(
-        "previewName"
-    ).textContent =
-        name ||
-        "Nombre del producto";
+    document.getElementById("previewRef")
+        .textContent =
+            "REF: " + (ref || "—");
 
+    document.getElementById("previewDescription")
+        .textContent =
+            description ||
+            "Descripción del producto";
 
-    document.getElementById(
-        "previewRef"
-    ).textContent =
-        "REF: " +
-        (
-            ref ||
-            "—"
-        );
+    document.getElementById("previewPrice")
+        .textContent =
+            price.toLocaleString(
+                "es-ES",
+                {
+                    style:"currency",
+                    currency:"EUR"
+                }
+            );
 
-
-    document.getElementById(
-        "previewDescription"
-    ).textContent =
-        description ||
-        "Descripción del producto";
-
-
-    document.getElementById(
-        "previewPrice"
-    ).textContent =
-        price.toLocaleString(
-            "es-ES",
-            {
-                style:"currency",
-                currency:"EUR"
-            }
-        );
-
-
-    document.getElementById(
-        "previewShipping"
-    ).textContent =
-        shippingMin &&
-        shippingMax
-        ?
-        `${shippingMin} – ${shippingMax} días`
-        :
-        "Indica los días de envío";
-
+    document.getElementById("previewShipping")
+        .textContent =
+            shippingMin && shippingMax
+            ?
+            `${shippingMin} – ${shippingMax} días`
+            :
+            "Indica los días de envío";
 
     renderPreviewVariants();
-
     renderPreviewSizes();
 
 }
@@ -3588,13 +2575,16 @@ function updatePreview(){
 function renderPreviewVariants(){
 
     const container =
-        document.getElementById(
-            "previewColors"
-        );
+        document.getElementById("previewColors");
 
     container.innerHTML =
-        variants.map(
-            (variant,index) => `
+        variants.map((variant,index)=>{
+
+            const firstImage =
+                (variant.images || [])
+                    .find(Boolean);
+
+            return `
 
                 <button
                     type="button"
@@ -3606,124 +2596,225 @@ function renderPreviewVariants(){
                         ""
                     }"
                     style="
-                        background-color:
-                        ${escapeHTML(
-                            variant.color ||
-                            "#ffffff"
+                        background-color:${escapeHTML(
+                            variant.color || "#ffffff"
                         )};
 
                         ${
-                            variant.image
+                            firstImage
                             ?
                             `
-                            background-image:
-                            url('${escapeHTML(
-                                variant.image
+                            background-image:url('${escapeHTML(
+                                firstImage
                             )}');
                             `
                             :
                             ""
                         }
                     "
-                    title="${escapeHTML(
-                        variant.name
-                    )}"
+                    title="${escapeHTML(variant.name)}"
                     onclick="
-                        selectPreviewVariant(
-                            ${index}
-                        )
+                        selectPreviewVariant(${index})
                     "
                 ></button>
 
-            `
-        )
-        .join("");
+            `;
 
+        }).join("");
 
     const active =
-        variants[
-            activeVariant
-        ];
-
+        variants[activeVariant];
 
     if(!active){
 
         return;
+
     }
 
+    document.getElementById("previewColorName")
+        .textContent =
+            active.name || "—";
 
-    document.getElementById(
-        "previewColorName"
-    ).textContent =
-        active.name ||
-        "—";
+    const images =
+        (active.images || [])
+            .filter(Boolean);
 
+    if(activePhoto >= images.length){
+
+        activePhoto = 0;
+
+    }
 
     const image =
-        document.getElementById(
-            "previewImage"
-        );
+        document.getElementById("previewImage");
 
+    const counter =
+        document.getElementById("photoCounter");
 
-    if(active.image){
+    if(images.length){
 
         image.src =
-            active.image;
+            images[activePhoto];
 
         image.style.display =
             "block";
 
+        counter.style.display =
+            "block";
+
+        counter.textContent =
+            `${activePhoto + 1} / ${images.length}`;
+
     }
     else{
 
-        image.removeAttribute(
-            "src"
-        );
+        image.removeAttribute("src");
 
         image.style.display =
             "none";
 
+        counter.style.display =
+            "none";
+
     }
+
+    renderPreviewThumbs(images);
+
+}
+
+
+function renderPreviewThumbs(images){
+
+    const container =
+        document.getElementById("previewThumbs");
+
+    if(!images.length){
+
+        container.innerHTML = "";
+
+        return;
+
+    }
+
+    container.innerHTML =
+        images.map((image,index)=>`
+
+            <button
+                type="button"
+                class="preview-thumb ${
+                    index === activePhoto
+                    ?
+                    "active"
+                    :
+                    ""
+                }"
+                onclick="selectPreviewPhoto(${index})"
+            >
+                <img
+                    src="${escapeHTML(image)}"
+                    alt=""
+                    onerror="this.style.display='none'"
+                >
+            </button>
+
+        `).join("");
 
 }
 
 
 function selectPreviewVariant(index){
 
-    if(
-        !variants[index]
-    ){
+    if(!variants[index]){
 
         return;
+
     }
 
-    activeVariant =
-        index;
+    activeVariant = index;
+    activePhoto = 0;
 
     renderPreviewVariants();
 
 }
 
 
-/* =========================================================
-   PREVIEW TALLAS
-========================================================= */
+function selectPreviewPhoto(index){
+
+    const images =
+        variants[activeVariant]
+            ?.images
+            ?.filter(Boolean) || [];
+
+    if(!images[index]){
+
+        return;
+
+    }
+
+    activePhoto = index;
+
+    renderPreviewVariants();
+
+}
+
+
+function nextPreviewImage(){
+
+    const images =
+        variants[activeVariant]
+            ?.images
+            ?.filter(Boolean) || [];
+
+    if(images.length <= 1){
+
+        return;
+
+    }
+
+    activePhoto =
+        (activePhoto + 1) %
+        images.length;
+
+    renderPreviewVariants();
+
+}
+
+
+function previousPreviewImage(){
+
+    const images =
+        variants[activeVariant]
+            ?.images
+            ?.filter(Boolean) || [];
+
+    if(images.length <= 1){
+
+        return;
+
+    }
+
+    activePhoto =
+        (
+            activePhoto -
+            1 +
+            images.length
+        ) %
+        images.length;
+
+    renderPreviewVariants();
+
+}
+
 
 function renderPreviewSizes(){
 
     const container =
-        document.getElementById(
-            "previewSizes"
-        );
+        document.getElementById("previewSizes");
 
     container.innerHTML =
         sizes
-        .filter(
-            size =>
-                String(size).trim()
-        )
-        .map(
-            (size,index) => `
+            .filter(size=>String(size).trim())
+            .map((size,index)=>`
 
                 <button
                     type="button"
@@ -3735,14 +2826,11 @@ function renderPreviewSizes(){
                         ""
                     }"
                 >
-                    ${escapeHTML(
-                        size
-                    )}
+                    ${escapeHTML(size)}
                 </button>
 
-            `
-        )
-        .join("");
+            `)
+            .join("");
 
 }
 
@@ -3753,258 +2841,144 @@ function renderPreviewSizes(){
 
 function previewQuantity(change){
 
-    previewQty +=
-        change;
+    previewQty += change;
 
-    if(
-        previewQty < 1
-    ){
+    if(previewQty < 1){
 
         previewQty = 1;
 
     }
 
-
     const stock =
         Number(
-            document.getElementById(
-                "productStock"
-            )?.value
+            document.getElementById("productStock")
+                ?.value
         ) || 0;
 
+    if(stock > 0 && previewQty > stock){
 
-    if(
-        stock > 0 &&
-        previewQty > stock
-    ){
-
-        previewQty =
-            stock;
+        previewQty = stock;
 
     }
 
-
-    document.getElementById(
-        "previewQuantity"
-    ).textContent =
-        previewQty;
+    document.getElementById("previewQuantity")
+        .textContent =
+            previewQty;
 
 }
 
 
 /* =========================================================
-   ZOOM
-========================================================= */
-
-function openZoom(){
-
-    const image =
-        document.getElementById(
-            "previewImage"
-        );
-
-    if(
-        !image.src ||
-        image.style.display === "none"
-    ){
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "zoomImage"
-    ).src =
-        image.src;
-
-
-    document.getElementById(
-        "zoomModal"
-    ).classList.add("show");
-
-
-    document.body.style.overflow =
-        "hidden";
-
-}
-
-
-function closeZoom(event){
-
-    if(
-        event &&
-        event.target &&
-        event.target.id !==
-        "zoomModal"
-    ){
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "zoomModal"
-    ).classList.remove("show");
-
-
-    document.body.style.overflow =
-        "";
-
-}
-
-
-/* =========================================================
-   DATOS PRODUCTO
+   DATOS DEL PRODUCTO
 ========================================================= */
 
 function getProductData(){
 
     const name =
-        document.getElementById(
-            "productName"
-        ).value.trim();
-
+        document.getElementById("productName")
+            .value.trim();
 
     const category =
-        document.getElementById(
-            "productCategory"
-        ).value.trim()
-        .toLowerCase();
-
+        document.getElementById("productCategory")
+            .value.trim()
+            .toLowerCase();
 
     const ref =
-        document.getElementById(
-            "productRef"
-        ).value.trim();
-
+        document.getElementById("productRef")
+            .value.trim();
 
     const price =
         Number(
-            document.getElementById(
-                "productPrice"
-            ).value
+            document.getElementById("productPrice")
+                .value
         ) || 0;
-
 
     const stock =
         Number(
-            document.getElementById(
-                "productStock"
-            ).value
+            document.getElementById("productStock")
+                .value
         ) || 0;
 
-
     const description =
-        document.getElementById(
-            "productDescription"
-        ).value.trim();
-
+        document.getElementById("productDescription")
+            .value.trim();
 
     const whatsapp =
-        document.getElementById(
-            "productWhatsapp"
-        ).value
-        .replace(/\D/g,"");
-
+        document.getElementById("productWhatsapp")
+            .value
+            .replace(/\D/g,"");
 
     const shippingMin =
         Number(
-            document.getElementById(
-                "shippingMin"
-            ).value
+            document.getElementById("shippingMin")
+                .value
         ) || 0;
-
 
     const shippingMax =
         Number(
-            document.getElementById(
-                "shippingMax"
-            ).value
+            document.getElementById("shippingMax")
+                .value
         ) || 0;
 
-
     const validVariants =
-        variants
-            .map(
-                variant => ({
+        variants.map(variant=>({
 
-                    name:
-                        String(
-                            variant.name || ""
-                        ).trim(),
+            name:
+                String(
+                    variant.name || ""
+                ).trim(),
 
-                    image:
-                        String(
-                            variant.image || ""
-                        ).trim(),
+            color:
+                String(
+                    variant.color || ""
+                ).trim(),
 
-                    color:
-                        String(
-                            variant.color || ""
-                        ).trim()
+            images:
+                (Array.isArray(variant.images)
+                ?
+                variant.images
+                :
+                [])
+                .map(image =>
+                    String(image || "").trim()
+                )
+                .filter(Boolean)
 
-                })
-            )
-            .filter(
-                variant =>
-                    variant.name ||
-                    variant.image
-            );
-
-
-    const validSizes =
-        sizes
-            .map(
-                size =>
-                    String(size).trim()
-            )
-            .filter(Boolean);
-
+        }));
 
     if(!name){
 
-        alert(
-            "Introduce el nombre del producto."
-        );
+        alert("Introduce el nombre del producto.");
 
         return null;
-    }
 
+    }
 
     if(!ref){
 
-        alert(
-            "Introduce la referencia / ID."
-        );
+        alert("Introduce la referencia / ID.");
 
         return null;
-    }
 
+    }
 
     if(!category){
 
+        alert("Introduce la categoría.");
+
+        return null;
+
+    }
+
+    if(price < 0 || stock < 0){
+
         alert(
-            "Introduce la categoría del producto."
+            "Precio y stock no pueden ser negativos."
         );
 
         return null;
+
     }
-
-
-    if(
-        price < 0 ||
-        stock < 0
-    ){
-
-        alert(
-            "El precio y el stock no pueden ser negativos."
-        );
-
-        return null;
-    }
-
 
     if(!whatsapp){
 
@@ -4013,8 +2987,8 @@ function getProductData(){
         );
 
         return null;
-    }
 
+    }
 
     if(!validVariants.length){
 
@@ -4023,13 +2997,10 @@ function getProductData(){
         );
 
         return null;
+
     }
 
-
-    for(
-        const variant
-        of validVariants
-    ){
+    for(const variant of validVariants){
 
         if(!variant.name){
 
@@ -4038,56 +3009,53 @@ function getProductData(){
             );
 
             return null;
+
         }
 
-
-        if(!variant.image){
+        if(!variant.images.length){
 
             alert(
-                "Todos los colores deben tener una URL de imagen."
+                `El color "${variant.name}" necesita al menos una foto.`
             );
 
             return null;
+
         }
 
     }
 
-
-    if(
-        shippingMin < 0 ||
-        shippingMax < 0 ||
-        shippingMax < shippingMin
-    ){
+    if(shippingMax < shippingMin){
 
         alert(
-            "Revisa los días de envío."
+            "El envío máximo no puede ser menor que el mínimo."
         );
 
         return null;
-    }
 
+    }
 
     return {
 
         name,
-
         category,
-
         ref,
-
         price,
-
         stock,
-
         description,
-
         whatsapp,
+
+        /*
+         * IMPORTANTE:
+         * cada color contiene un array images[]
+         */
 
         images:
             validVariants,
 
         sizes:
-            validSizes,
+            sizes
+                .map(size=>String(size).trim())
+                .filter(Boolean),
 
         shipping_min:
             shippingMin,
@@ -4095,8 +3063,7 @@ function getProductData(){
         shipping_max:
             shippingMax,
 
-        active:
-            true
+        active:true
 
     };
 
@@ -4104,7 +3071,7 @@ function getProductData(){
 
 
 /* =========================================================
-   GUARDAR
+   GUARDAR / ACTUALIZAR
 ========================================================= */
 
 async function saveProductToSupabase(){
@@ -4112,140 +3079,155 @@ async function saveProductToSupabase(){
     const product =
         getProductData();
 
-
     if(!product){
 
         return;
 
     }
 
+    const button =
+        document.getElementById("saveButton");
 
-    const saveButton =
-        document.querySelector(
-            'button[onclick="saveProductToSupabase()"]'
-        );
+    const original =
+        button.textContent;
 
-
-    const originalText =
-        saveButton
-        ? saveButton.textContent
-        : "";
-
+    button.disabled = true;
 
     try{
 
-        if(saveButton){
-
-            saveButton.disabled =
-                true;
-
-            saveButton.textContent =
-                "COMPROBANDO SESIÓN...";
-
-        }
-
-
-        const {
-            data:sessionData,
-            error:sessionError
-        } =
+        const {data:sessionData,error:sessionError} =
             await supabaseClient.auth.getSession();
-
 
         if(sessionError){
 
-            throw new Error(
-                sessionError.message
-            );
+            throw sessionError;
 
         }
 
-
-        if(
-            !sessionData?.session
-        ){
+        if(!sessionData?.session){
 
             hideAdmin();
 
             throw new Error(
-                "No hay una sesión de administrador."
+                "No existe una sesión de administrador."
             );
 
         }
 
+        if(editingProductId !== null){
 
-        if(saveButton){
+            button.textContent =
+                "ACTUALIZANDO...";
 
-            saveButton.textContent =
+            const {data,error} =
+                await supabaseClient
+                    .from("Products")
+                    .update(product)
+                    .eq("id",editingProductId)
+                    .select()
+                    .single();
+
+            if(error){
+
+                throw error;
+
+            }
+
+            generateCode();
+
+            await loadProducts();
+
+            alert(
+                "✅ Producto actualizado correctamente."
+            );
+
+        }
+        else{
+
+            button.textContent =
                 "GUARDANDO...";
 
-        }
+            const {data,error} =
+                await supabaseClient
+                    .from("Products")
+                    .insert([product])
+                    .select()
+                    .single();
 
+            if(error){
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .from("Products")
-                .insert([product])
-                .select()
-                .single();
+                throw error;
 
+            }
 
-        if(error){
+            generateCode();
 
-            throw new Error(
-                error.message
+            await loadProducts();
+
+            alert(
+                "✅ Producto guardado correctamente." +
+                (
+                    data?.id
+                    ?
+                    "\nID: " + data.id
+                    :
+                    ""
+                )
             );
 
+            /*
+             * Después de crear volvemos a modo nuevo
+             * pero mantenemos los datos visibles.
+             */
+
+            editingProductId =
+                data?.id ?? null;
+
+            if(data?.id){
+
+                document.getElementById("editModeBar")
+                    .classList.add("show");
+
+                document.getElementById("editModeTitle")
+                    .textContent =
+                        "Producto guardado";
+
+                document.getElementById("editModeId")
+                    .textContent =
+                        "ID: " + data.id;
+
+                button.textContent =
+                    "ACTUALIZAR PRODUCTO";
+
+            }
+
         }
-
-
-        generateCode();
-
-        await loadProducts();
-
-
-        alert(
-            "✅ Producto guardado correctamente." +
-            (
-                data?.id
-                ?
-                "\nID: " + data.id
-                :
-                ""
-            )
-        );
-
 
     }
     catch(error){
 
-        console.error(
-            "Error guardando producto:",
-            error
-        );
-
+        console.error(error);
 
         alert(
             "❌ No se pudo guardar el producto.\n\n" +
-            (
-                error?.message ||
-                String(error)
-            )
+            error.message
         );
 
     }
     finally{
 
-        if(saveButton){
+        button.disabled = false;
 
-            saveButton.disabled =
-                false;
+        if(editingProductId !== null){
 
-            saveButton.textContent =
-                originalText ||
+            button.textContent =
+                "ACTUALIZAR PRODUCTO";
+
+        }
+        else{
+
+            button.textContent =
+                original ||
                 "GUARDAR EN SUPABASE";
 
         }
@@ -4256,7 +3238,129 @@ async function saveProductToSupabase(){
 
 
 /* =========================================================
-   GENERAR CODIGO
+   ELIMINAR
+========================================================= */
+
+function openDeleteModal(
+    productId,
+    productName
+){
+
+    productPendingDelete = {
+        id:productId,
+        name:productName
+    };
+
+    document.getElementById("deleteProductName")
+        .textContent =
+            productName;
+
+    document.getElementById("deleteModal")
+        .classList.add("show");
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function closeDeleteModal(){
+
+    productPendingDelete = null;
+
+    document.getElementById("deleteModal")
+        .classList.remove("show");
+
+    document.body.style.overflow = "";
+
+}
+
+
+async function confirmDeleteProduct(){
+
+    if(!productPendingDelete){
+
+        return;
+
+    }
+
+    const button =
+        document.getElementById(
+            "confirmDeleteButton"
+        );
+
+    button.disabled = true;
+    button.textContent = "ELIMINANDO...";
+
+    try{
+
+        const {data,error} =
+            await supabaseClient
+                .from("Products")
+                .delete()
+                .eq("id",productPendingDelete.id)
+                .select();
+
+        if(error){
+
+            throw error;
+
+        }
+
+        if(!data?.length){
+
+            throw new Error(
+                "No se eliminó ninguna fila. " +
+                "Comprueba las políticas RLS."
+            );
+
+        }
+
+        const deletedName =
+            productPendingDelete.name;
+
+        closeDeleteModal();
+
+        if(
+            String(editingProductId) ===
+            String(productPendingDelete?.id)
+        ){
+
+            newProduct();
+
+        }
+
+        await loadProducts();
+
+        alert(
+            "✅ Producto eliminado correctamente.\n\n" +
+            deletedName
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "❌ No se pudo eliminar el producto.\n\n" +
+            error.message
+        );
+
+    }
+    finally{
+
+        button.disabled = false;
+        button.textContent =
+            "ELIMINAR PRODUCTO";
+
+    }
+
+}
+
+
+/* =========================================================
+   GENERAR CÓDIGO
 ========================================================= */
 
 function generateCode(){
@@ -4264,38 +3368,40 @@ function generateCode(){
     const product =
         getProductData();
 
-
     if(!product){
 
         return;
 
     }
 
-
     const variantCode =
-        product.images
-            .map(
-                variant => `        {
-            name: "${escapeJS(variant.name)}",
-            image: "${escapeJS(variant.image)}",
-            color: "${escapeJS(variant.color)}"
-        }`
-            )
-            .join(",\n");
+        product.images.map(variant=>{
 
+            const photos =
+                variant.images
+                    .map(
+                        image =>
+                            `                "${escapeJS(image)}"`
+                    )
+                    .join(",\n");
+
+            return `        {
+            name: "${escapeJS(variant.name)}",
+            color: "${escapeJS(variant.color)}",
+            images: [
+${photos}
+            ]
+        }`;
+
+        }).join(",\n");
 
     const sizeCode =
-        product.sizes.length
-        ?
         product.sizes
             .map(
                 size =>
                     `        "${escapeJS(size)}"`
             )
-            .join(",\n")
-        :
-        "";
-
+            .join(",\n");
 
     const code =
 `{
@@ -4317,26 +3423,21 @@ ${sizeCode}
     active: true
 }`;
 
-
-    document.getElementById(
-        "codeOutput"
-    ).value =
-        code;
+    document.getElementById("codeOutput")
+        .value =
+            code;
 
 }
 
 
 /* =========================================================
-   COPIAR
+   COPIAR CÓDIGO
 ========================================================= */
 
 async function copyCode(){
 
     const output =
-        document.getElementById(
-            "codeOutput"
-        );
-
+        document.getElementById("codeOutput");
 
     if(!output.value.trim()){
 
@@ -4344,59 +3445,84 @@ async function copyCode(){
 
     }
 
-
     if(!output.value.trim()){
 
         return;
 
     }
 
-
     try{
 
-        if(
-            navigator.clipboard &&
-            window.isSecureContext
-        ){
-
-            await navigator.clipboard.writeText(
-                output.value
-            );
-
-        }
-        else{
-
-            output.focus();
-
-            output.select();
-
-            document.execCommand(
-                "copy"
-            );
-
-        }
-
+        await navigator.clipboard.writeText(
+            output.value
+        );
 
         alert(
             "Código copiado correctamente."
         );
 
     }
-    catch(error){
+    catch{
 
         output.focus();
-
         output.select();
 
-        document.execCommand(
-            "copy"
-        );
+        document.execCommand("copy");
 
-        alert(
-            "Código copiado."
-        );
+        alert("Código copiado.");
 
     }
+
+}
+
+
+/* =========================================================
+   ZOOM
+========================================================= */
+
+function openZoom(){
+
+    const image =
+        document.getElementById("previewImage");
+
+    if(
+        !image.src ||
+        image.style.display === "none"
+    ){
+
+        return;
+
+    }
+
+    document.getElementById("zoomImage")
+        .src =
+            image.src;
+
+    document.getElementById("zoomModal")
+        .classList.add("show");
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function closeZoom(event){
+
+    if(
+        event &&
+        event.target &&
+        event.target.id !== "zoomModal"
+    ){
+
+        return;
+
+    }
+
+    document.getElementById("zoomModal")
+        .classList.remove("show");
+
+    document.body.style.overflow = "";
 
 }
 
@@ -4407,15 +3533,32 @@ async function copyCode(){
 
 document.addEventListener(
     "keydown",
-    function(event){
+    event=>{
 
-        if(
-            event.key === "Escape"
-        ){
+        if(event.key === "Escape"){
 
             closeZoom();
-
             closeDeleteModal();
+
+        }
+
+        if(
+            event.key === "ArrowRight" &&
+            document.activeElement.tagName !== "INPUT" &&
+            document.activeElement.tagName !== "TEXTAREA"
+        ){
+
+            nextPreviewImage();
+
+        }
+
+        if(
+            event.key === "ArrowLeft" &&
+            document.activeElement.tagName !== "INPUT" &&
+            document.activeElement.tagName !== "TEXTAREA"
+        ){
+
+            previousPreviewImage();
 
         }
 
@@ -4427,27 +3570,16 @@ document.addEventListener(
    INICIO
 ========================================================= */
 
-renderVariants();
-
-renderSizes();
-
-updatePreview();
+newProduct();
 
 checkAdminSession();
-
 
 console.log(
     "STRANGIS Admin conectado a Supabase:",
     SUPABASE_URL
 );
 
-console.log(
-    "Tabla:",
-    "Products"
-);
-
 </script>
 
 </body>
-
-</html>
+    </html>
