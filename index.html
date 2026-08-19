@@ -2773,30 +2773,29 @@ function hideAdmin(){
 
 async function verifyAdmin(){
 
-const ADMIN_UID = "d37fcd4a-6549-499d-a881-020a30a5f189";
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
 
-if (data.user.id !== ADMIN_UID) {
+    if(error){
+        throw error;
+    }
 
-    await supabaseClient.auth.signOut();
+    if(!data || !data.user){
 
-    throw new Error(
-        "Este usuario no tiene permisos de administrador."
-    );
+        throw new Error(
+            "No existe una sesión."
+        );
 
-}
+    }
 
+    const ADMIN_UID =
+        "d37fcd4a-6549-499d-a881-020a30a5f189";
 
-    const appMetadata =
-        data.user.app_metadata || {};
+    if(data.user.id !== ADMIN_UID){
 
-
-    if(
-        appMetadata.is_admin !== true
-    ){
-
-        await supabaseClient
-            .auth
-            .signOut();
+        await supabaseClient.auth.signOut();
 
         throw new Error(
             "Este usuario no tiene permisos de administrador."
@@ -2804,114 +2803,7 @@ if (data.user.id !== ADMIN_UID) {
 
     }
 
-
     return data.user;
-
-}
-
-
-async function loginAdmin(event){
-
-    event.preventDefault();
-
-
-    const email =
-        document
-            .getElementById("loginEmail")
-            .value
-            .trim();
-
-
-    const password =
-        document
-            .getElementById("loginPassword")
-            .value;
-
-
-    const button =
-        document
-            .getElementById("loginButton");
-
-
-    const errorBox =
-        document
-            .getElementById("loginError");
-
-
-    errorBox.classList.remove("show");
-
-    errorBox.textContent = "";
-
-
-    button.disabled = true;
-
-    button.textContent =
-        "INICIANDO SESIÓN...";
-
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-
-        if(error){
-            throw error;
-        }
-
-
-        if(!data?.session){
-
-            throw new Error(
-                "Supabase no ha creado una sesión."
-            );
-
-        }
-
-
-        await verifyAdmin();
-
-
-        showAdmin();
-
-
-        await loadProducts();
-
-
-        showToast(
-            "Sesión de administrador iniciada."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-
-        errorBox.textContent =
-            error?.message ||
-            "No se pudo iniciar sesión.";
-
-
-        errorBox.classList.add("show");
-
-    }
-    finally{
-
-        button.disabled = false;
-
-        button.textContent =
-            "INICIAR SESIÓN";
-
-    }
 
 }
 
