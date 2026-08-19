@@ -2783,29 +2783,37 @@ function hideAdmin(){
 }
 
 
-/*
- * UUID DEL ADMINISTRADOR
- * Debe coincidir con las políticas RLS de Products.
- */
+/* =========================================
+   ADMINISTRADOR
+   ========================================= */
+
 const ADMIN_UID =
     "d37fcd4a-6549-499d-a881-020a30a5f189";
 
 
-async function verifyAdmin(){
+/* =========================================
+   COMPROBAR ADMINISTRADOR
+   ========================================= */
+
+window.verifyAdmin = async function(){
 
     const {
         data,
         error
     } = await supabaseClient.auth.getUser();
 
+
     if(error){
+
         console.error(
             "Error obteniendo usuario:",
             error
         );
 
         throw error;
+
     }
+
 
     if(!data || !data.user){
 
@@ -2815,10 +2823,12 @@ async function verifyAdmin(){
 
     }
 
+
     /*
-     * Comprobamos directamente el UUID
-     * del usuario autenticado.
+     * El usuario debe ser exactamente
+     * el administrador configurado.
      */
+
     if(data.user.id !== ADMIN_UID){
 
         console.error(
@@ -2831,7 +2841,9 @@ async function verifyAdmin(){
             ADMIN_UID
         );
 
+
         await supabaseClient.auth.signOut();
+
 
         throw new Error(
             "Este usuario no tiene permisos de administrador."
@@ -2839,19 +2851,25 @@ async function verifyAdmin(){
 
     }
 
+
     return data.user;
 
-}
+};
 
 
-async function loginAdmin(event){
+/* =========================================
+   LOGIN ADMINISTRADOR
+   ========================================= */
+
+window.loginAdmin = async function(event){
 
     event.preventDefault();
 
-    const emailElement =
+
+    const emailInput =
         document.getElementById("loginEmail");
 
-    const passwordElement =
+    const passwordInput =
         document.getElementById("loginPassword");
 
     const button =
@@ -2862,36 +2880,56 @@ async function loginAdmin(event){
 
 
     const email =
-        emailElement
-            ? emailElement.value.trim()
+        emailInput
+            ? emailInput.value.trim()
             : "";
+
 
     const password =
-        passwordElement
-            ? passwordElement.value
+        passwordInput
+            ? passwordInput.value
             : "";
 
 
+    /*
+     * Limpiar mensaje anterior.
+     */
+
     if(errorBox){
+
         errorBox.textContent = "";
+
     }
 
+
+    /*
+     * Comprobar campos.
+     */
 
     if(!email || !password){
 
         if(errorBox){
+
             errorBox.textContent =
                 "Introduce tu correo y contraseña.";
+
         }
 
         return;
+
     }
 
+
+    /*
+     * Desactivar botón mientras inicia sesión.
+     */
 
     if(button){
 
         button.disabled = true;
-        button.textContent = "Entrando...";
+
+        button.textContent =
+            "Entrando...";
 
     }
 
@@ -2899,20 +2937,26 @@ async function loginAdmin(event){
     try{
 
         /*
-         * Iniciar sesión con Supabase Auth.
+         * LOGIN SUPABASE
          */
+
         const {
             data,
             error
         } =
             await supabaseClient.auth.signInWithPassword({
+
                 email: email,
+
                 password: password
+
             });
 
 
         if(error){
+
             throw error;
+
         }
 
 
@@ -2926,23 +2970,28 @@ async function loginAdmin(event){
 
 
         /*
-         * Comprobar que el usuario es
-         * nuestro administrador.
+         * COMPROBAR ADMIN
          */
-        await verifyAdmin();
+
+        await window.verifyAdmin();
 
 
         /*
-         * Mostrar el panel.
+         * Login correcto.
          */
+
         showAdmin();
 
 
         /*
-         * Limpiar contraseña del formulario.
+         * Limpiar contraseña
+         * después de entrar.
          */
-        if(passwordElement){
-            passwordElement.value = "";
+
+        if(passwordInput){
+
+            passwordInput.value = "";
+
         }
 
 
@@ -2964,8 +3013,10 @@ async function loginAdmin(event){
 
 
         /*
-         * Si algo falla, cerrar sesión.
+         * Cerrar sesión si el usuario
+         * no es administrador o ha fallado.
          */
+
         try{
 
             await supabaseClient.auth.signOut();
@@ -2981,19 +3032,29 @@ async function loginAdmin(event){
 
     }finally{
 
+        /*
+         * Reactivar botón.
+         */
+
         if(button){
 
             button.disabled = false;
-            button.textContent = "Entrar";
+
+            button.textContent =
+                "Entrar";
 
         }
 
     }
 
-}
+};
 
 
-async function logoutAdmin(){
+/* =========================================
+   LOGOUT ADMINISTRADOR
+   ========================================= */
+
+window.logoutAdmin = async function(){
 
     try{
 
@@ -3010,20 +3071,35 @@ async function logoutAdmin(){
 
 
     /*
-     * Si esta variable existe,
-     * reiniciamos el producto en edición.
+     * Reiniciar producto en edición
+     * solamente si existe esa variable.
      */
-    if(typeof editingProductId !== "undefined"){
+
+    if(
+        typeof editingProductId !==
+        "undefined"
+    ){
 
         editingProductId = null;
 
     }
 
 
+    /*
+     * Volver a mostrar login.
+     */
+
     hideAdmin();
 
 
-    if(typeof showToast === "function"){
+    /*
+     * Mostrar aviso si existe showToast.
+     */
+
+    if(
+        typeof showToast ===
+        "function"
+    ){
 
         showToast(
             "Sesión cerrada."
@@ -3031,7 +3107,7 @@ async function logoutAdmin(){
 
     }
 
-}
+};
 
 /* =========================================================
    AUTH STATE
