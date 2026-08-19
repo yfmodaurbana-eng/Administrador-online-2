@@ -2773,27 +2773,17 @@ function hideAdmin(){
 
 async function verifyAdmin(){
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .auth
-            .getUser();
+const ADMIN_UID = "d37fcd4a-6549-499d-a881-020a30a5f189";
 
+if (data.user.id !== ADMIN_UID) {
 
-    if(error){
-        throw error;
-    }
+    await supabaseClient.auth.signOut();
 
+    throw new Error(
+        "Este usuario no tiene permisos de administrador."
+    );
 
-    if(!data?.user){
-
-        throw new Error(
-            "No existe una sesión."
-        );
-
-    }
+}
 
 
     const appMetadata =
