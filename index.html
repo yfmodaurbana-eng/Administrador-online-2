@@ -1,461 +1,842 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>Strangis · Administrador</title>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-html{scroll-behavior:smooth}
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
 
 body{
     min-height:100vh;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     color:#fff;
-    background:linear-gradient(135deg,#101010,#202020 45%,#303030);
+
+    background:
+        linear-gradient(
+            135deg,
+            #101010,
+            #202020 45%,
+            #303030
+        );
 }
 
-button,input,textarea,select{font:inherit}
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
 
-button{cursor:pointer}
+button{
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 header{
+
     position:sticky;
     top:0;
     z-index:1000;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     gap:20px;
+
     padding:18px 5%;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    background:rgba(15,15,15,.94);
-    backdrop-filter:blur(18px);
+
+    border-bottom:
+        1px solid rgba(255,255,255,.12);
+
+    background:
+        rgba(15,15,15,.94);
+
+    backdrop-filter:
+        blur(18px);
 }
 
 .logo{
+
     font-size:20px;
     font-weight:900;
+
     letter-spacing:4px;
 }
 
 .header-status{
-    color:#aaa;
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
+
     display:flex;
     align-items:center;
+
     gap:12px;
+
+    color:#aaa;
+
+    font-size:10px;
+    font-weight:bold;
+
+    letter-spacing:1.5px;
+
+    text-transform:uppercase;
 }
 
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
 .login-overlay{
+
     position:fixed;
     inset:0;
+
     z-index:10000;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     padding:20px;
-    background:rgba(0,0,0,.92);
-    backdrop-filter:blur(15px);
+
+    background:
+        rgba(0,0,0,.94);
+
+    backdrop-filter:
+        blur(15px);
 }
 
-.login-overlay.hidden{display:none}
+.login-overlay.hidden{
+    display:none;
+}
 
 .login-box{
-    width:min(420px,100%);
+
+    width:
+        min(420px,100%);
+
     padding:30px;
-    border:1px solid rgba(255,255,255,.15);
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
     border-radius:14px;
+
     background:#151515;
-    box-shadow:0 30px 100px rgba(0,0,0,.65);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.65);
 }
 
 .login-logo{
+
     color:#fff;
+
     font-size:20px;
     font-weight:900;
+
     letter-spacing:4px;
 }
 
 .login-title{
+
     margin-top:25px;
+
     font-size:28px;
     font-weight:900;
 }
 
 .login-description{
+
     margin-top:10px;
+
     color:#888;
+
     font-size:11px;
+
     line-height:1.6;
 }
 
-.login-field{margin-top:18px}
+.login-field{
+    margin-top:18px;
+}
 
 .login-field label,
 .field label{
+
     display:block;
+
     margin-bottom:7px;
+
     color:#aaa;
+
     font-size:9px;
     font-weight:bold;
+
     letter-spacing:1.2px;
+
     text-transform:uppercase;
 }
 
 .login-field input{
+
     width:100%;
+
     min-height:46px;
+
     padding:12px 13px;
+
     outline:none;
-    border:1px solid rgba(255,255,255,.15);
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
     border-radius:6px;
-    background:rgba(0,0,0,.35);
+
+    background:
+        rgba(0,0,0,.35);
+
     color:#fff;
 }
 
 .login-button{
+
     width:100%;
+
     min-height:46px;
+
     margin-top:22px;
+
     border:0;
+
     border-radius:6px;
+
     background:#fff;
+
     color:#111;
-    cursor:pointer;
+
     font-size:10px;
+
     font-weight:900;
+
     letter-spacing:1px;
 }
 
+.login-button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
 .login-error{
+
     display:none;
+
     margin-top:15px;
+
     padding:12px;
-    border:1px solid rgba(255,100,100,.25);
+
+    border:
+        1px solid rgba(255,100,100,.25);
+
     border-radius:6px;
-    background:rgba(255,0,0,.08);
+
+    background:
+        rgba(255,0,0,.08);
+
     color:#ff9a9a;
+
     font-size:10px;
+
     line-height:1.5;
 }
 
-.login-error.show{display:block}
-
-.container{
-    width:min(1450px,92%);
-    margin:auto;
-    padding:45px 0 100px;
+.login-error.show{
+    display:block;
 }
 
-.page-title{margin-bottom:35px}
+
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.container{
+
+    width:
+        min(1450px,92%);
+
+    margin:auto;
+
+    padding:
+        45px 0 100px;
+}
+
+.page-title{
+    margin-bottom:35px;
+}
 
 .page-title small{
+
     color:#888;
+
     font-size:10px;
     font-weight:bold;
+
     letter-spacing:4px;
 }
 
 .page-title h1{
+
     margin-top:12px;
-    font-size:clamp(42px,6vw,78px);
+
+    font-size:
+        clamp(42px,6vw,78px);
+
     letter-spacing:-4px;
 }
 
 .page-title p{
+
     max-width:650px;
+
     margin-top:15px;
+
     color:#999;
+
     font-size:13px;
+
     line-height:1.7;
 }
 
+
+/* =========================================================
+   GRID
+========================================================= */
+
 .admin-grid{
+
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(400px,520px);
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(400px,520px);
+
     gap:25px;
+
     align-items:start;
 }
 
+
+/* =========================================================
+   PANEL
+========================================================= */
+
 .panel{
+
     padding:25px;
-    border:1px solid rgba(255,255,255,.12);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
     border-radius:14px;
-    background:rgba(255,255,255,.045);
-    box-shadow:0 20px 60px rgba(0,0,0,.20);
+
+    background:
+        rgba(255,255,255,.045);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.20);
 }
 
 .panel-title{
+
     display:flex;
+
     align-items:center;
     justify-content:space-between;
+
     gap:15px;
+
     margin-bottom:25px;
+
     padding-bottom:15px;
-    border-bottom:1px solid rgba(255,255,255,.10);
+
+    border-bottom:
+        1px solid rgba(255,255,255,.10);
 }
 
 .panel-title h2{
+
     font-size:15px;
+
     letter-spacing:1px;
 }
 
 .panel-title span{
+
     color:#777;
+
     font-size:9px;
     font-weight:bold;
+
     letter-spacing:1.5px;
 }
 
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
 .form-grid{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:14px;
 }
 
-.field{margin-bottom:14px}
+.field{
+    margin-bottom:14px;
+}
 
-.field.full{grid-column:1/-1}
+.field.full{
+    grid-column:1/-1;
+}
 
 .field input,
 .field textarea,
 .field select{
+
     width:100%;
+
     min-height:46px;
+
     padding:12px 13px;
+
     outline:none;
-    border:1px solid rgba(255,255,255,.15);
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
     border-radius:6px;
-    background:rgba(0,0,0,.35);
+
+    background:
+        rgba(0,0,0,.35);
+
     color:#fff;
+
     transition:.2s;
 }
 
 .field textarea{
+
     min-height:100px;
+
     resize:vertical;
 }
 
 .field input:focus,
 .field textarea:focus,
 .field select:focus{
+
     border-color:#fff;
-    background:rgba(0,0,0,.5);
+
+    background:
+        rgba(0,0,0,.5);
 }
 
 .field input::placeholder,
 .field textarea::placeholder{
+
     color:#666;
 }
 
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
 .btn{
+
     min-height:44px;
-    padding:11px 16px;
-    border:1px solid rgba(255,255,255,.18);
+
+    padding:
+        11px 16px;
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:6px;
+
     background:#202020;
+
     color:#fff;
-    cursor:pointer;
+
     font-size:10px;
     font-weight:900;
+
     letter-spacing:1px;
+
     transition:.2s;
 }
 
 .btn:hover{
+
     background:#333;
+
     border-color:#fff;
 }
 
 .btn:disabled{
+
     opacity:.5;
+
     cursor:not-allowed;
 }
 
 .btn-primary{
+
     border-color:#fff;
+
     background:#fff;
+
     color:#111;
 }
 
-.btn-primary:hover{background:#ddd}
+.btn-primary:hover{
+    background:#ddd;
+}
 
 .btn-danger{
+
     color:#ff9a9a;
-    border-color:rgba(255,100,100,.25);
+
+    border-color:
+        rgba(255,100,100,.25);
 }
 
 .btn-danger:hover{
-    background:rgba(255,0,0,.12);
+
+    background:
+        rgba(255,0,0,.12);
+
     border-color:#ff7777;
 }
 
 .btn-small{
+
     min-height:34px;
-    padding:7px 11px;
+
+    padding:
+        7px 11px;
+
     font-size:9px;
 }
 
+
+/* =========================================================
+   MODO EDICIÓN
+========================================================= */
+
 .mode-bar{
+
     display:none;
+
     align-items:center;
     justify-content:space-between;
+
     gap:15px;
+
     margin-bottom:20px;
+
     padding:13px 15px;
-    border:1px solid rgba(255,255,255,.18);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:8px;
-    background:rgba(255,255,255,.06);
+
+    background:
+        rgba(255,255,255,.06);
 }
 
-.mode-bar.show{display:flex}
+.mode-bar.show{
+    display:flex;
+}
 
 .mode-bar strong{
     font-size:11px;
 }
 
 .mode-bar span{
+
     color:#888;
+
     font-size:9px;
 }
 
+
+/* =========================================================
+   LISTA PRODUCTOS
+========================================================= */
+
 .products-list{
+
     display:flex;
+
     flex-direction:column;
+
     gap:10px;
 }
 
 .product-admin-item{
+
     display:grid;
-    grid-template-columns:70px minmax(0,1fr) auto;
+
+    grid-template-columns:
+        70px
+        minmax(0,1fr)
+        auto;
+
     gap:15px;
+
     align-items:center;
+
     padding:12px;
-    border:1px solid rgba(255,255,255,.11);
+
+    border:
+        1px solid rgba(255,255,255,.11);
+
     border-radius:9px;
-    background:rgba(0,0,0,.22);
+
+    background:
+        rgba(0,0,0,.22);
 }
 
 .product-admin-image{
+
     width:70px;
     height:70px;
+
     overflow:hidden;
+
     border-radius:7px;
+
     background:#111;
 }
 
 .product-admin-image img{
+
     width:100%;
     height:100%;
+
     object-fit:cover;
 }
 
 .product-admin-name{
+
     font-size:13px;
+
     font-weight:900;
 }
 
 .product-admin-meta{
+
     margin-top:6px;
+
     color:#888;
+
     font-size:9px;
+
     line-height:1.6;
 }
 
 .product-admin-id{
-    color:#555;
-    font-size:8px;
+
     margin-top:4px;
+
+    color:#555;
+
+    font-size:8px;
+
     word-break:break-all;
 }
 
 .product-admin-actions{
+
     display:flex;
+
     flex-wrap:wrap;
+
     justify-content:flex-end;
+
     gap:7px;
 }
 
 .products-empty,
 .products-loading{
+
     padding:30px;
+
     text-align:center;
+
     color:#777;
+
     font-size:10px;
-    border:1px dashed rgba(255,255,255,.15);
+
+    border:
+        1px dashed rgba(255,255,255,.15);
+
     border-radius:8px;
 }
 
+
+/* =========================================================
+   VARIANTES
+========================================================= */
+
 .variants-list{
+
     display:flex;
+
     flex-direction:column;
+
     gap:15px;
 }
 
 .variant{
+
     padding:15px;
-    border:1px solid rgba(255,255,255,.11);
+
+    border:
+        1px solid rgba(255,255,255,.11);
+
     border-radius:9px;
-    background:rgba(0,0,0,.20);
+
+    background:
+        rgba(0,0,0,.20);
 }
 
 .variant-top{
+
     display:grid;
-    grid-template-columns:55px 1fr auto;
+
+    grid-template-columns:
+        55px
+        1fr
+        auto;
+
     gap:12px;
+
     align-items:center;
 }
 
 .color-picker{
+
     width:48px;
     height:48px;
+
     padding:0;
-    border:2px solid rgba(255,255,255,.25);
+
+    border:
+        2px solid rgba(255,255,255,.25);
+
     border-radius:50%;
+
     overflow:hidden;
+
     background:#fff;
 }
 
 .color-picker input{
+
     width:100%;
     height:100%;
+
     padding:0;
+
     border:0;
+
     cursor:pointer;
 }
 
 .variant-image-list{
+
     display:flex;
+
     flex-direction:column;
+
     gap:10px;
+
     margin-top:12px;
 }
 
 .variant-image-row{
+
     display:grid;
-    grid-template-columns:1fr 80px auto;
+
+    grid-template-columns:
+        1fr 80px auto;
+
     gap:10px;
+
     align-items:center;
 }
 
 .variant-preview{
+
     width:80px;
     height:80px;
+
     overflow:hidden;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
     border-radius:7px;
-    border:1px solid rgba(255,255,255,.12);
+
     background:#111;
 }
 
 .variant-preview img{
+
     width:100%;
     height:100%;
+
     object-fit:cover;
 }
 
@@ -463,471 +844,945 @@ header{
     margin-top:10px;
 }
 
+
+/* =========================================================
+   TALLAS
+========================================================= */
+
 .sizes-list{
+
     display:flex;
+
     flex-wrap:wrap;
+
     gap:8px;
+
     margin-top:10px;
 }
 
 .size-item{
+
     display:flex;
+
     align-items:center;
+
     gap:5px;
+
     padding:7px 9px;
-    border:1px solid rgba(255,255,255,.18);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:5px;
+
     background:#181818;
 }
 
 .size-item input{
+
     width:70px;
+
     padding:4px;
+
     border:0;
+
     outline:0;
+
     background:transparent;
+
     color:#fff;
+
     font-size:11px;
 }
 
 .remove-size,
 .remove-photo{
+
     border:0;
+
     background:none;
+
     color:#777;
+
     cursor:pointer;
+
     font-size:14px;
 }
 
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
 .preview-wrap{
+
     position:sticky;
+
     top:90px;
 }
 
 .preview-label{
+
     margin-bottom:12px;
+
     color:#777;
+
     font-size:9px;
     font-weight:bold;
+
     letter-spacing:2px;
+
     text-transform:uppercase;
 }
 
 .product-card{
+
     overflow:hidden;
-    border:1px solid rgba(255,255,255,.14);
+
+    border:
+        1px solid rgba(255,255,255,.14);
+
     border-radius:14px;
-    background:rgba(255,255,255,.055);
-    box-shadow:0 25px 80px rgba(0,0,0,.3);
+
+    background:
+        rgba(255,255,255,.055);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.3);
 }
 
 .preview-image{
+
     position:relative;
+
     height:440px;
+
     overflow:hidden;
+
     background:#121212;
 }
 
 .preview-image img{
+
     width:100%;
     height:100%;
+
     object-fit:cover;
+
     cursor:zoom-in;
-    transition:transform .45s ease;
+
+    transition:
+        transform .45s ease;
 }
 
 .preview-image:hover img{
+
     transform:scale(1.05);
 }
 
 .zoom-hint{
+
     position:absolute;
+
     right:15px;
     bottom:15px;
+
     padding:8px 10px;
+
     border-radius:5px;
-    background:rgba(0,0,0,.65);
+
+    background:
+        rgba(0,0,0,.65);
+
     color:#ddd;
+
     font-size:9px;
     font-weight:bold;
+
     letter-spacing:1px;
 }
 
 .preview-arrows{
+
     position:absolute;
+
     inset:0;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     padding:0 12px;
+
     pointer-events:none;
 }
 
 .preview-arrows button{
+
     width:36px;
     height:36px;
-    border:1px solid rgba(255,255,255,.25);
+
+    border:
+        1px solid rgba(255,255,255,.25);
+
     border-radius:50%;
-    background:rgba(0,0,0,.6);
+
+    background:
+        rgba(0,0,0,.6);
+
     color:#fff;
+
     pointer-events:auto;
 }
 
 .photo-counter{
+
     position:absolute;
+
     left:50%;
     bottom:15px;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
+
     padding:7px 10px;
+
     border-radius:5px;
-    background:rgba(0,0,0,.65);
+
+    background:
+        rgba(0,0,0,.65);
+
     color:#ddd;
+
     font-size:9px;
 }
 
 .preview-thumbs{
+
     display:flex;
+
     gap:7px;
+
     padding:10px;
+
     overflow-x:auto;
+
     background:#0d0d0d;
 }
 
 .preview-thumb{
+
     width:48px;
     height:48px;
-    flex:0 0 48px;
+
+    flex:
+        0 0 48px;
+
     padding:0;
+
     overflow:hidden;
-    border:1px solid rgba(255,255,255,.18);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:5px;
+
     background:#111;
 }
 
 .preview-thumb.active{
-    border:2px solid #fff;
+
+    border:
+        2px solid #fff;
 }
 
 .preview-thumb img{
+
     width:100%;
     height:100%;
+
     object-fit:cover;
 }
 
-.preview-content{padding:18px}
+.preview-content{
+    padding:18px;
+}
 
 .preview-name{
+
     font-size:17px;
+
     font-weight:900;
 }
 
 .preview-ref{
+
     margin-top:5px;
+
     color:#777;
+
     font-size:9px;
+
     letter-spacing:1px;
 }
 
 .preview-description{
+
     margin-top:12px;
+
     color:#999;
+
     font-size:11px;
+
     line-height:1.6;
 }
 
 .preview-price{
+
     margin-top:13px;
+
     font-size:18px;
+
     font-weight:900;
 }
 
 .preview-label-row{
+
     margin-top:18px;
+
     color:#aaa;
+
     font-size:9px;
+
     font-weight:bold;
+
     letter-spacing:1px;
+
     text-transform:uppercase;
 }
 
-.preview-label-row span{color:#fff}
+.preview-label-row span{
+    color:#fff;
+}
 
 .preview-colors{
+
     display:flex;
+
     flex-wrap:wrap;
+
     gap:9px;
+
     margin-top:10px;
 }
 
 .preview-color{
+
     width:35px;
     height:35px;
+
     overflow:hidden;
-    border:2px solid rgba(255,255,255,.25);
+
+    border:
+        2px solid rgba(255,255,255,.25);
+
     border-radius:50%;
+
     cursor:pointer;
+
     background-size:cover;
+
     background-position:center;
 }
 
 .preview-color.active{
-    outline:2px solid #fff;
+
+    outline:
+        2px solid #fff;
+
     outline-offset:3px;
 }
 
 .preview-sizes{
+
     display:flex;
+
     flex-wrap:wrap;
+
     gap:6px;
+
     margin-top:10px;
 }
 
 .preview-size{
+
     padding:8px 11px;
-    border:1px solid rgba(255,255,255,.18);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:5px;
+
     color:#aaa;
+
     background:transparent;
+
     font-size:9px;
+
     font-weight:bold;
 }
 
 .preview-size.active{
+
     background:#fff;
+
     color:#111;
+
     border-color:#fff;
 }
 
 .shipping-box{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
+
     margin-top:18px;
+
     padding:14px 15px;
-    border:1px solid rgba(255,255,255,.28);
+
+    border:
+        1px solid rgba(255,255,255,.28);
+
     border-radius:8px;
-    background:linear-gradient(90deg,rgba(255,255,255,.13),rgba(255,255,255,.055));
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.13),
+            rgba(255,255,255,.055)
+        );
 }
 
 .shipping-icon{
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     width:38px;
     height:38px;
-    flex:0 0 38px;
+
+    flex:
+        0 0 38px;
+
     border-radius:7px;
-    background:rgba(255,255,255,.14);
+
+    background:
+        rgba(255,255,255,.14);
 }
 
 .shipping-text{
+
     color:#c2c2c2;
+
     font-size:9px;
+
     line-height:1.5;
 }
 
 .shipping-text strong{
+
     display:block;
+
     margin-top:2px;
+
     color:#fff;
+
     font-size:12px;
 }
 
 .preview-quantity{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
+
     margin-top:16px;
 }
 
 .preview-quantity button{
+
     width:32px;
     height:32px;
-    border:1px solid rgba(255,255,255,.18);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
     border-radius:5px;
+
     background:#181818;
+
     color:#fff;
 }
 
 .preview-quantity span{
+
     min-width:20px;
+
     text-align:center;
+
     font-size:11px;
+
     font-weight:bold;
 }
 
 .preview-buy{
+
     width:100%;
+
     margin-top:15px;
+
     padding:14px;
+
     border:0;
+
     border-radius:6px;
+
     background:#fff;
+
     color:#111;
+
     font-size:10px;
+
     font-weight:900;
+
     letter-spacing:1.5px;
 }
 
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
 .actions{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:10px;
+
     margin-top:20px;
 }
 
-.actions .btn{width:100%}
+.actions .btn{
+    width:100%;
+}
 
-.code-panel{margin-top:25px}
+
+/* =========================================================
+   CÓDIGO
+========================================================= */
+
+.code-panel{
+    margin-top:25px;
+}
 
 .code-output{
+
     width:100%;
+
     min-height:350px;
+
     padding:15px;
-    border:1px solid rgba(255,255,255,.12);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
     border-radius:8px;
+
     outline:none;
+
     background:#080808;
+
     color:#ddd;
-    font-family:Consolas,Monaco,monospace;
+
+    font-family:
+        Consolas,
+        Monaco,
+        monospace;
+
     font-size:11px;
+
     line-height:1.6;
+
     resize:vertical;
 }
 
+
+/* =========================================================
+   MODALES
+========================================================= */
+
 .delete-modal,
 .zoom-modal{
+
     position:fixed;
+
     inset:0;
+
     z-index:15000;
+
     display:none;
+
     align-items:center;
     justify-content:center;
+
     padding:20px;
-    background:rgba(0,0,0,.88);
-    backdrop-filter:blur(12px);
+
+    background:
+        rgba(0,0,0,.88);
+
+    backdrop-filter:
+        blur(12px);
 }
 
 .delete-modal.show,
-.zoom-modal.show{display:flex}
+.zoom-modal.show{
+    display:flex;
+}
 
 .delete-box{
-    width:min(500px,100%);
+
+    width:
+        min(500px,100%);
+
     padding:28px;
-    border:1px solid rgba(255,100,100,.25);
+
+    border:
+        1px solid rgba(255,100,100,.25);
+
     border-radius:14px;
+
     background:#151515;
 }
 
 .delete-warning{
+
     padding:15px;
-    border:1px solid rgba(255,180,80,.25);
+
+    border:
+        1px solid rgba(255,180,80,.25);
+
     border-radius:8px;
-    background:rgba(255,150,0,.06);
+
+    background:
+        rgba(255,150,0,.06);
+
     color:#ddd;
+
     font-size:11px;
+
     line-height:1.7;
 }
 
-.delete-warning strong{color:#ffb36b}
+.delete-warning strong{
+    color:#ffb36b;
+}
 
 .delete-product-name{
+
     margin-top:18px;
+
     font-size:18px;
+
     font-weight:900;
 }
 
 .delete-actions{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:10px;
+
     margin-top:22px;
 }
 
 .zoom-modal img{
+
     max-width:95vw;
+
     max-height:90vh;
+
     object-fit:contain;
+
     border-radius:8px;
 }
 
 .zoom-close{
+
     position:absolute;
+
     top:20px;
     right:25px;
+
     width:42px;
     height:42px;
-    border:1px solid rgba(255,255,255,.2);
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
     border-radius:6px;
+
     background:#181818;
+
     color:#fff;
+
     font-size:20px;
 }
 
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:30000;
+
+    max-width:
+        min(420px,calc(100vw - 40px));
+
+    padding:14px 16px;
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
+    border-radius:8px;
+
+    background:#151515;
+
+    color:#fff;
+
+    font-size:11px;
+
+    box-shadow:
+        0 15px 50px
+        rgba(0,0,0,.5);
+
+    transform:
+        translateY(20px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.toast.show{
+
+    transform:
+        translateY(0);
+
+    opacity:1;
+}
+
+.toast.error{
+
+    border-color:
+        rgba(255,100,100,.3);
+
+    color:#ffaaaa;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
 @media(max-width:1000px){
-    .admin-grid{grid-template-columns:1fr}
-    .preview-wrap{position:static}
+
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .preview-wrap{
+        position:static;
+    }
 }
 
 @media(max-width:600px){
-    header{padding:15px}
-    .header-status span{display:none}
-    .container{width:94%;padding-top:30px}
-    .panel{padding:17px}
-    .form-grid{grid-template-columns:1fr}
-    .field.full{grid-column:auto}
-    .variant-top{grid-template-columns:48px 1fr}
-    .variant-top .btn{grid-column:1/-1}
-    .variant-image-row{grid-template-columns:1fr}
-    .variant-preview{width:100%;height:180px}
-    .preview-image{height:360px}
+
+    header{
+        padding:15px;
+    }
+
+    .header-status span{
+        display:none;
+    }
+
+    .container{
+
+        width:94%;
+
+        padding-top:30px;
+    }
+
+    .panel{
+        padding:17px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+        grid-column:auto;
+    }
+
+    .variant-top{
+
+        grid-template-columns:
+            48px 1fr;
+    }
+
+    .variant-top .btn{
+
+        grid-column:
+            1/-1;
+    }
+
+    .variant-image-row{
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .variant-preview{
+
+        width:100%;
+        height:180px;
+    }
+
+    .preview-image{
+        height:360px;
+    }
+
     .actions,
-    .delete-actions{grid-template-columns:1fr}
-    .product-admin-item{grid-template-columns:55px 1fr}
-    .product-admin-image{width:55px;height:55px}
-    .product-admin-actions{grid-column:1/-1;justify-content:stretch}
-    .product-admin-actions .btn{flex:1}
+    .delete-actions{
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .product-admin-item{
+
+        grid-template-columns:
+            55px 1fr;
+    }
+
+    .product-admin-image{
+
+        width:55px;
+        height:55px;
+    }
+
+    .product-admin-actions{
+
+        grid-column:
+            1/-1;
+
+        justify-content:
+            stretch;
+    }
+
+    .product-admin-actions .btn{
+        flex:1;
+    }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<div id="loginOverlay" class="login-overlay">
+
+<!-- =======================================================
+     LOGIN
+======================================================== -->
+
+<div
+    id="loginOverlay"
+    class="login-overlay"
+>
 
     <div class="login-box">
 
-        <div class="login-logo">STRANGIS</div>
+        <div class="login-logo">
+            STRANGIS
+        </div>
 
         <div class="login-title">
             Acceso administrador
         </div>
 
         <div class="login-description">
-            Inicia sesión con tu usuario de Supabase Authentication.
+            Acceso protegido mediante Supabase Authentication.
         </div>
 
-        <form onsubmit="loginAdmin(event)">
+        <form
+            id="loginForm"
+        >
 
             <div class="login-field">
+
                 <label>Email</label>
+
                 <input
                     id="loginEmail"
                     type="email"
                     autocomplete="username"
                     required
                 >
+
             </div>
 
+
             <div class="login-field">
+
                 <label>Contraseña</label>
+
                 <input
                     id="loginPassword"
                     type="password"
                     autocomplete="current-password"
                     required
                 >
+
             </div>
+
 
             <button
                 id="loginButton"
@@ -937,25 +1792,39 @@ header{
                 INICIAR SESIÓN
             </button>
 
-            <div id="loginError" class="login-error"></div>
+
+            <div
+                id="loginError"
+                class="login-error"
+            ></div>
 
         </form>
+
     </div>
+
 </div>
+
+
+<!-- =======================================================
+     HEADER
+======================================================== -->
 
 <header>
 
-    <div class="logo">STRANGIS</div>
+    <div class="logo">
+        STRANGIS
+    </div>
 
     <div class="header-status">
 
-        <span>PANEL DE ADMINISTRACIÓN · SUPABASE</span>
+        <span>
+            PANEL DE ADMINISTRACIÓN · SUPABASE
+        </span>
 
         <button
             id="logoutButton"
             type="button"
             class="btn btn-small"
-            onclick="logoutAdmin()"
             style="display:none"
         >
             CERRAR SESIÓN
@@ -965,124 +1834,181 @@ header{
 
 </header>
 
+
+<!-- =======================================================
+     CONTENIDO
+======================================================== -->
+
 <main class="container">
+
 
 <section class="page-title">
 
-    <small>PRODUCT MANAGER</small>
+    <small>
+        PRODUCT MANAGER
+    </small>
 
-    <h1>Administrador</h1>
+    <h1>
+        Administrador
+    </h1>
 
     <p>
-        Crea, edita y elimina productos.
-        Cada color puede tener varias fotografías.
+        Gestiona tus productos directamente desde Supabase.
+        Cada producto puede tener múltiples colores y
+        múltiples fotografías por color.
     </p>
 
 </section>
 
+
 <div class="admin-grid">
 
+
+<!-- =====================================================
+     COLUMNA ADMIN
+===================================================== -->
+
 <section>
+
+
+<!-- PRODUCTOS -->
 
 <div class="panel">
 
     <div class="panel-title">
 
-        <h2>Productos existentes</h2>
+        <h2>
+            Productos existentes
+        </h2>
 
         <button
+            id="refreshProductsButton"
             type="button"
             class="btn btn-small"
-            onclick="loadProducts()"
         >
             ↻ ACTUALIZAR
         </button>
 
     </div>
 
-    <div id="productsList" class="products-list">
+
+    <div
+        id="productsList"
+        class="products-list"
+    >
+
         <div class="products-loading">
             Cargando productos...
         </div>
+
     </div>
 
 </div>
+
+
+<!-- MODO EDICIÓN -->
 
 <div
     id="editModeBar"
     class="mode-bar"
 >
+
     <div>
+
         <strong id="editModeTitle">
             Editando producto
         </strong>
+
         <br>
+
         <span id="editModeId"></span>
+
     </div>
 
     <button
+        id="newFromEditButton"
         type="button"
         class="btn btn-small"
-        onclick="newProduct()"
     >
         + NUEVO PRODUCTO
     </button>
+
 </div>
 
-<div class="panel" style="margin-top:25px">
+
+<!-- DATOS PRINCIPALES -->
+
+<div
+    class="panel"
+    style="margin-top:25px"
+>
 
     <div class="panel-title">
 
-        <h2>Información del producto</h2>
+        <h2>
+            Información del producto
+        </h2>
 
-        <span>DATOS PRINCIPALES</span>
+        <span>
+            DATOS PRINCIPALES
+        </span>
 
     </div>
 
+
     <div class="form-grid">
+
 
         <div class="field full">
 
-            <label>Nombre del producto</label>
+            <label>
+                Nombre del producto
+            </label>
 
             <input
                 id="productName"
                 type="text"
                 placeholder="Ej: Camiseta Oversize Premium"
-                oninput="updatePreview()"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>Categoría</label>
+            <label>
+                Categoría
+            </label>
 
             <input
                 id="productCategory"
                 type="text"
                 value="camisetas"
-                oninput="updatePreview()"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>Referencia / ID</label>
+            <label>
+                Referencia / ID
+            </label>
 
             <input
                 id="productRef"
                 type="text"
                 placeholder="Ej: CAM-001"
-                oninput="updatePreview()"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>Precio €</label>
+            <label>
+                Precio €
+            </label>
 
             <input
                 id="productPrice"
@@ -1090,28 +2016,33 @@ header{
                 min="0"
                 step="0.01"
                 value="35"
-                oninput="updatePreview()"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>Stock</label>
+            <label>
+                Stock
+            </label>
 
             <input
                 id="productStock"
                 type="number"
                 min="0"
+                step="1"
                 value="999"
-                oninput="updatePreview()"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>WhatsApp</label>
+            <label>
+                WhatsApp
+            </label>
 
             <input
                 id="productWhatsapp"
@@ -1121,104 +2052,153 @@ header{
 
         </div>
 
+
         <div class="field full">
 
-            <label>Descripción</label>
+            <label>
+                Descripción
+            </label>
 
             <textarea
                 id="productDescription"
                 placeholder="Describe brevemente el producto..."
-                oninput="updatePreview()"
             ></textarea>
 
         </div>
 
+
         <div class="field">
 
-            <label>Envío mínimo</label>
+            <label>
+                Envío mínimo
+            </label>
 
             <input
                 id="shippingMin"
                 type="text"
                 value="3"
-                placeholder="Ej: 5 mayo"
-                oninput="updatePreview()"
+                placeholder="Ej: 3"
             >
 
         </div>
 
+
         <div class="field">
 
-            <label>Envío máximo</label>
+            <label>
+                Envío máximo
+            </label>
 
             <input
                 id="shippingMax"
                 type="text"
                 value="9"
-                placeholder="Ej: 6 julio"
-                oninput="updatePreview()"
+                placeholder="Ej: 9"
             >
 
         </div>
+
 
     </div>
 
 </div>
 
-<div class="panel" style="margin-top:25px">
+
+<!-- TALLAS -->
+
+<div
+    class="panel"
+    style="margin-top:25px"
+>
 
     <div class="panel-title">
 
-        <h2>Tallas</h2>
+        <h2>
+            Tallas
+        </h2>
 
         <button
+            id="addSizeButton"
             type="button"
             class="btn btn-small"
-            onclick="addSize()"
         >
             + AÑADIR TALLA
         </button>
 
     </div>
 
-    <div id="sizesList" class="sizes-list"></div>
+
+    <div
+        id="sizesList"
+        class="sizes-list"
+    ></div>
 
 </div>
 
-<div class="panel" style="margin-top:25px">
+
+<!-- COLORES -->
+
+<div
+    class="panel"
+    style="margin-top:25px"
+>
 
     <div class="panel-title">
 
-        <h2>Colores e imágenes</h2>
+        <h2>
+            Colores e imágenes
+        </h2>
 
         <button
+            id="addVariantButton"
             type="button"
             class="btn btn-small"
-            onclick="addVariant()"
         >
             + AÑADIR COLOR
         </button>
 
     </div>
 
-    <p style="color:#777;font-size:10px;line-height:1.6;margin-bottom:18px">
-        Cada color puede tener varias fotografías.
-        Añade tantas URLs como necesites.
+
+    <p
+        style="
+            color:#777;
+            font-size:10px;
+            line-height:1.6;
+            margin-bottom:18px
+        "
+    >
+        Cada color puede tener todas las fotografías
+        que necesites.
     </p>
 
-    <div id="variantsList" class="variants-list"></div>
+
+    <div
+        id="variantsList"
+        class="variants-list"
+    ></div>
 
 </div>
 
-<div class="panel code-panel">
+
+<!-- CÓDIGO -->
+
+<div
+    class="panel code-panel"
+>
 
     <div class="panel-title">
 
-        <h2>Código generado</h2>
+        <h2>
+            Código generado
+        </h2>
 
-        <span>LISTO PARA COPIAR</span>
+        <span>
+            LISTO PARA COPIAR
+        </span>
 
     </div>
+
 
     <textarea
         id="codeOutput"
@@ -1227,37 +2207,40 @@ header{
         placeholder="Pulsa GENERAR CÓDIGO..."
     ></textarea>
 
+
     <div class="actions">
 
         <button
+            id="generateCodeButton"
             type="button"
             class="btn btn-primary"
-            onclick="generateCode()"
         >
             GENERAR CÓDIGO
         </button>
+
 
         <button
             id="saveButton"
             type="button"
             class="btn"
-            onclick="saveProductToSupabase()"
         >
             GUARDAR EN SUPABASE
         </button>
 
+
         <button
+            id="copyCodeButton"
             type="button"
             class="btn"
-            onclick="copyCode()"
         >
             COPIAR CÓDIGO
         </button>
 
+
         <button
+            id="newProductButton"
             type="button"
             class="btn"
-            onclick="newProduct()"
         >
             + NUEVO PRODUCTO
         </button>
@@ -1266,7 +2249,13 @@ header{
 
 </div>
 
+
 </section>
+
+
+<!-- =====================================================
+     PREVIEW
+===================================================== -->
 
 <aside class="preview-wrap">
 
@@ -1274,7 +2263,9 @@ header{
         VISTA PREVIA DEL PRODUCTO
     </div>
 
+
     <article class="product-card">
+
 
         <div class="preview-image">
 
@@ -1283,26 +2274,27 @@ header{
                 src=""
                 alt=""
                 style="display:none"
-                onclick="openZoom()"
             >
+
 
             <div class="preview-arrows">
 
                 <button
+                    id="previousPhotoButton"
                     type="button"
-                    onclick="previousPreviewImage()"
                 >
                     ‹
                 </button>
 
                 <button
+                    id="nextPhotoButton"
                     type="button"
-                    onclick="nextPreviewImage()"
                 >
                     ›
                 </button>
 
             </div>
+
 
             <div
                 id="photoCounter"
@@ -1312,78 +2304,134 @@ header{
                 1 / 1
             </div>
 
+
             <div class="zoom-hint">
                 🔍 AMPLIAR
             </div>
 
         </div>
 
+
         <div
             id="previewThumbs"
             class="preview-thumbs"
         ></div>
 
+
         <div class="preview-content">
 
-            <div id="previewName" class="preview-name">
+
+            <div
+                id="previewName"
+                class="preview-name"
+            >
                 Nombre del producto
             </div>
 
-            <div id="previewRef" class="preview-ref">
+
+            <div
+                id="previewRef"
+                class="preview-ref"
+            >
                 REF: —
             </div>
 
-            <div id="previewDescription" class="preview-description">
+
+            <div
+                id="previewDescription"
+                class="preview-description"
+            >
                 Descripción del producto
             </div>
 
-            <div id="previewPrice" class="preview-price">
+
+            <div
+                id="previewPrice"
+                class="preview-price"
+            >
                 35,00 €
             </div>
 
+
             <div class="preview-label-row">
+
                 Color:
-                <span id="previewColorName">—</span>
+
+                <span id="previewColorName">
+                    —
+                </span>
+
             </div>
 
-            <div id="previewColors" class="preview-colors"></div>
+
+            <div
+                id="previewColors"
+                class="preview-colors"
+            ></div>
+
 
             <div class="preview-label-row">
                 Talla
             </div>
 
-            <div id="previewSizes" class="preview-sizes"></div>
+
+            <div
+                id="previewSizes"
+                class="preview-sizes"
+            ></div>
+
 
             <div class="preview-quantity">
 
-                <button onclick="previewQuantity(-1)">
+                <button
+                    id="quantityMinus"
+                    type="button"
+                >
                     −
                 </button>
 
-                <span id="previewQuantity">1</span>
+                <span id="previewQuantity">
+                    1
+                </span>
 
-                <button onclick="previewQuantity(1)">
+                <button
+                    id="quantityPlus"
+                    type="button"
+                >
                     +
                 </button>
 
             </div>
 
+
             <div class="shipping-box">
 
-                <div class="shipping-icon">🚚</div>
+                <div class="shipping-icon">
+                    🚚
+                </div>
 
                 <div class="shipping-text">
+
                     ENVÍO ESTIMADO
-                    <strong id="previewShipping">
+
+                    <strong
+                        id="previewShipping"
+                    >
                         —
                     </strong>
+
                 </div>
 
             </div>
 
-            <button class="preview-buy">
+
+            <button
+                type="button"
+                class="preview-buy"
+            >
                 COMPRAR
             </button>
+
 
         </div>
 
@@ -1391,29 +2439,49 @@ header{
 
 </aside>
 
+
 </div>
 
 </main>
 
-<div id="deleteModal" class="delete-modal">
+
+<!-- =======================================================
+     DELETE MODAL
+======================================================== -->
+
+<div
+    id="deleteModal"
+    class="delete-modal"
+>
 
     <div class="delete-box">
 
         <div class="panel-title">
 
-            <h2>Eliminar producto</h2>
+            <h2>
+                Eliminar producto
+            </h2>
 
-            <span>ACCIÓN IRREVERSIBLE</span>
+            <span>
+                ACCIÓN IRREVERSIBLE
+            </span>
 
         </div>
+
 
         <div class="delete-warning">
 
             <strong>⚠ ATENCIÓN:</strong>
-            eliminar este producto lo borrará de
-            <strong>Products</strong>.
+
+            esta acción eliminará el producto
+            definitivamente de
+
+            <strong>
+                Products
+            </strong>.
 
         </div>
+
 
         <div
             id="deleteProductName"
@@ -1422,21 +2490,22 @@ header{
             —
         </div>
 
+
         <div class="delete-actions">
 
             <button
+                id="cancelDeleteButton"
                 type="button"
                 class="btn"
-                onclick="closeDeleteModal()"
             >
                 CANCELAR
             </button>
+
 
             <button
                 id="confirmDeleteButton"
                 type="button"
                 class="btn btn-danger"
-                onclick="confirmDeleteProduct()"
             >
                 ELIMINAR PRODUCTO
             </button>
@@ -1447,30 +2516,46 @@ header{
 
 </div>
 
+
+<!-- =======================================================
+     ZOOM
+======================================================== -->
+
 <div
     id="zoomModal"
     class="zoom-modal"
-    onclick="closeZoom(event)"
 >
 
     <button
+        id="zoomCloseButton"
         type="button"
         class="zoom-close"
-        onclick="closeZoom()"
     >
         ×
     </button>
 
-    <img id="zoomImage" src="" alt="">
+
+    <img
+        id="zoomImage"
+        src=""
+        alt=""
+    >
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
 
 <script>
 
 /* =========================================================
-   SUPABASE
+   CONFIGURACIÓN SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -1478,6 +2563,7 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_M7ETdIWvj4nCQZ55i24Vpw_5Yc5Islk";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1499,7 +2585,7 @@ const supabaseClient =
 
 let variants = [];
 
-let sizes = ["S","M","L","XL"];
+let sizes = [];
 
 let activeVariant = 0;
 
@@ -1509,7 +2595,9 @@ let previewQty = 1;
 
 let editingProductId = null;
 
-let productPendingDelete = null;
+let pendingDelete = null;
+
+let loadingProducts = false;
 
 
 /* =========================================================
@@ -1527,179 +2615,134 @@ function escapeHTML(value){
 
 }
 
+
 function escapeJS(value){
 
     return String(value ?? "")
         .replace(/\\/g,"\\\\")
         .replace(/"/g,'\\"')
-        .replace(/\n/g,"\\n")
-        .replace(/\r/g,"");
+        .replace(/\r/g,"")
+        .replace(/\n/g,"\\n");
 
 }
 
 
-/* =========================================================
-   NORMALIZAR IMÁGENES
-========================================================= */
+function showToast(message,error=false){
 
-function normalizeVariants(raw){
+    const toast =
+        document.getElementById("toast");
 
-    if(!Array.isArray(raw) || !raw.length){
+    toast.textContent =
+        message;
+
+    toast.classList.toggle(
+        "error",
+        error
+    );
+
+    toast.classList.add("show");
+
+    clearTimeout(
+        showToast.timer
+    );
+
+    showToast.timer =
+        setTimeout(
+            ()=>{
+                toast.classList.remove("show");
+            },
+            3500
+        );
+
+}
+
+
+function normalizeImages(raw){
+
+    if(
+        !Array.isArray(raw) ||
+        raw.length === 0
+    ){
 
         return [{
-            name:"Nuevo color",
+            name:"Principal",
             color:"#888888",
             images:[""]
         }];
 
     }
 
-    return raw.map((variant,index)=>{
 
-        const name =
-            String(
-                variant?.name ||
-                `Color ${index + 1}`
-            ).trim();
+    return raw.map(
+        (item,index)=>{
 
-        const color =
-            String(
-                variant?.color ||
-                "#888888"
-            ).trim();
-
-        let images = [];
-
-        /*
-         * FORMATO NUEVO:
-         *
-         * images: [...]
-         */
-
-        if(Array.isArray(variant?.images)){
-
-            images =
-                variant.images
-                    .map(image =>
-                        String(image || "").trim()
-                    );
-
-        }
-
-        /*
-         * FORMATO ANTIGUO:
-         *
-         * image: "..."
-         */
-
-        else if(
-            variant?.image !== undefined &&
-            variant?.image !== null
-        ){
-
-            const image =
+            const name =
                 String(
-                    variant.image
+                    item?.name ||
+                    `Color ${index + 1}`
                 ).trim();
 
-            if(image){
-                images = [image];
+
+            const color =
+                String(
+                    item?.color ||
+                    "#888888"
+                ).trim();
+
+
+            let images = [];
+
+
+            if(
+                Array.isArray(
+                    item?.images
+                )
+            ){
+
+                images =
+                    item.images
+                        .map(
+                            image =>
+                                String(
+                                    image || ""
+                                ).trim()
+                        );
+
+            }
+            else if(
+                item?.image
+            ){
+
+                images = [
+                    String(
+                        item.image
+                    ).trim()
+                ];
+
             }
 
+
+            if(!images.length){
+
+                images = [""];
+
+            }
+
+
+            return {
+                name,
+                color,
+                images
+            };
+
         }
-
-        if(!images.length){
-
-            images = [""];
-
-        }
-
-        return {
-            name,
-            color,
-            images
-        };
-
-    });
+    );
 
 }
 
 
 /* =========================================================
-   LOGIN
-========================================================= */
-
-async function loginAdmin(event){
-
-    event.preventDefault();
-
-    const email =
-        document.getElementById("loginEmail")
-            .value.trim();
-
-    const password =
-        document.getElementById("loginPassword")
-            .value;
-
-    const button =
-        document.getElementById("loginButton");
-
-    const errorBox =
-        document.getElementById("loginError");
-
-    errorBox.classList.remove("show");
-    errorBox.textContent = "";
-
-    button.disabled = true;
-    button.textContent = "INICIANDO SESIÓN...";
-
-    try{
-
-        const {data,error} =
-            await supabaseClient.auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-        if(error){
-            throw error;
-        }
-
-        if(!data?.session){
-            throw new Error(
-                "Supabase no ha creado una sesión."
-            );
-        }
-
-        showAdmin();
-
-        await loadProducts();
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        errorBox.textContent =
-            error?.message ||
-            "No se pudo iniciar sesión.";
-
-        errorBox.classList.add("show");
-
-    }
-    finally{
-
-        button.disabled = false;
-        button.textContent = "INICIAR SESIÓN";
-
-    }
-
-}
-
-
-/* =========================================================
-   SESIÓN
+   AUTH
 ========================================================= */
 
 function showAdmin(){
@@ -1728,14 +2771,221 @@ function hideAdmin(){
 }
 
 
-async function checkAdminSession(){
+async function verifyAdmin(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if(error){
+        throw error;
+    }
+
+
+    if(!data?.user){
+
+        throw new Error(
+            "No existe una sesión."
+        );
+
+    }
+
+
+    const appMetadata =
+        data.user.app_metadata || {};
+
+
+    if(
+        appMetadata.is_admin !== true
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        throw new Error(
+            "Este usuario no tiene permisos de administrador."
+        );
+
+    }
+
+
+    return data.user;
+
+}
+
+
+async function loginAdmin(event){
+
+    event.preventDefault();
+
+
+    const email =
+        document
+            .getElementById("loginEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    const button =
+        document
+            .getElementById("loginButton");
+
+
+    const errorBox =
+        document
+            .getElementById("loginError");
+
+
+    errorBox.classList.remove("show");
+
+    errorBox.textContent = "";
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "INICIANDO SESIÓN...";
+
 
     try{
 
-        const {data,error} =
-            await supabaseClient.auth.getSession();
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
 
-        if(error || !data?.session){
+
+        if(error){
+            throw error;
+        }
+
+
+        if(!data?.session){
+
+            throw new Error(
+                "Supabase no ha creado una sesión."
+            );
+
+        }
+
+
+        await verifyAdmin();
+
+
+        showAdmin();
+
+
+        await loadProducts();
+
+
+        showToast(
+            "Sesión de administrador iniciada."
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+
+        errorBox.textContent =
+            error?.message ||
+            "No se pudo iniciar sesión.";
+
+
+        errorBox.classList.add("show");
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "INICIAR SESIÓN";
+
+    }
+
+}
+
+
+async function logoutAdmin(){
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    editingProductId = null;
+
+
+    hideAdmin();
+
+
+    showToast(
+        "Sesión cerrada."
+    );
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+    (event,session)=>{
+
+        if(!session){
+
+            hideAdmin();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SESIÓN INICIAL
+========================================================= */
+
+async function checkSession(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if(error){
+            throw error;
+        }
+
+
+        if(!data?.session){
 
             hideAdmin();
 
@@ -1743,7 +2993,30 @@ async function checkAdminSession(){
 
         }
 
+
+        try{
+
+            await verifyAdmin();
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            hideAdmin();
+
+            showToast(
+                error.message,
+                true
+            );
+
+            return;
+
+        }
+
+
         showAdmin();
+
 
         await loadProducts();
 
@@ -1759,337 +3032,436 @@ async function checkAdminSession(){
 }
 
 
-async function logoutAdmin(){
-
-    await supabaseClient.auth.signOut();
-
-    editingProductId = null;
-
-    hideAdmin();
-
-}
-
-
 /* =========================================================
-   AUTH LISTENER
-========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-    async (event,session)=>{
-
-        if(session){
-
-            showAdmin();
-
-            if(event !== "INITIAL_SESSION"){
-
-                await loadProducts();
-
-            }
-
-        }
-        else{
-
-            hideAdmin();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   CARGAR PRODUCTOS
+   PRODUCTOS
 ========================================================= */
 
 async function loadProducts(){
 
+    if(loadingProducts){
+        return;
+    }
+
+
+    loadingProducts = true;
+
+
     const container =
-        document.getElementById("productsList");
+        document
+            .getElementById("productsList");
+
 
     container.innerHTML =
-        `<div class="products-loading">
+        `
+        <div class="products-loading">
             Cargando productos...
-        </div>`;
+        </div>
+        `;
+
 
     try{
 
-        const {data:sessionData} =
-            await supabaseClient.auth.getSession();
+        await verifyAdmin();
 
-        if(!sessionData?.session){
 
-            container.innerHTML =
-                `<div class="products-empty">
-                    Debes iniciar sesión.
-                </div>`;
-
-            return;
-        }
-
-        const {data,error} =
+        const {
+            data,
+            error
+        } =
             await supabaseClient
                 .from("Products")
                 .select("*")
-                .order("id",{ascending:false});
+                .order(
+                    "id",
+                    {
+                        ascending:false
+                    }
+                );
+
 
         if(error){
             throw error;
         }
 
-        if(!data?.length){
+
+        if(!Array.isArray(data) || !data.length){
 
             container.innerHTML =
-                `<div class="products-empty">
+                `
+                <div class="products-empty">
                     No hay productos guardados todavía.
-                </div>`;
+                </div>
+                `;
 
             return;
 
         }
 
+
         container.innerHTML =
-            data.map(product=>{
-
-                const normalized =
-                    normalizeVariants(
-                        product.images
-                    );
-
-                const firstImage =
-                    normalized[0]?.images?.find(Boolean) ||
-                    "";
-
-                const imageHTML =
-                    firstImage
-                    ?
-                    `<img
-                        src="${escapeHTML(firstImage)}"
-                        alt="${escapeHTML(product.name)}"
-                        onerror="this.style.display='none'"
-                    >`
-                    :
-                    "";
-
-                const price =
-                    Number(product.price) || 0;
-
-                const colors =
-                    normalized.length;
-
-                const photos =
-                    normalized.reduce(
-                        (total,v)=>
-                            total +
-                            v.images.filter(Boolean).length,
-                        0
-                    );
-
-                return `
-
-                <div class="product-admin-item">
-
-                    <div class="product-admin-image">
-                        ${imageHTML}
-                    </div>
-
-                    <div>
-
-                        <div class="product-admin-name">
-                            ${escapeHTML(
-                                product.name ||
-                                "Producto sin nombre"
-                            )}
-                        </div>
-
-                        <div class="product-admin-meta">
-
-                            REF:
-                            ${escapeHTML(product.ref || "—")}
-
-                            ·
-
-                            ${price.toLocaleString(
-                                "es-ES",
-                                {
-                                    style:"currency",
-                                    currency:"EUR"
-                                }
-                            )}
-
-                            ·
-
-                            Stock:
-                            ${escapeHTML(product.stock ?? 0)}
-
-                            ·
-
-                            ${colors} color${colors === 1 ? "" : "es"}
-
-                            ·
-
-                            ${photos} foto${photos === 1 ? "" : "s"}
-
-                        </div>
-
-                        <div class="product-admin-id">
-                            ID: ${escapeHTML(product.id)}
-                        </div>
-
-                    </div>
-
-                    <div class="product-admin-actions">
-
-                        <button
-                            type="button"
-                            class="btn btn-small"
-                            onclick="editProduct('${escapeJS(product.id)}')"
-                        >
-                            ✏ EDITAR
-                        </button>
-
-                        <button
-                            type="button"
-                            class="btn btn-small btn-danger"
-                            onclick="openDeleteModal(
-                                '${escapeJS(product.id)}',
-                                '${escapeJS(product.name || "Producto sin nombre")}'
-                            )"
-                        >
-                            🗑 ELIMINAR
-                        </button>
-
-                    </div>
-
-                </div>
-
-                `;
-
-            }).join("");
+            data
+                .map(
+                    renderProductAdmin
+                )
+                .join("");
 
     }
     catch(error){
 
         console.error(error);
 
+
         container.innerHTML =
-            `<div class="products-empty">
-                ❌ No se pudieron cargar los productos.<br><br>
-                ${escapeHTML(error.message)}
-            </div>`;
+            `
+            <div class="products-empty">
+
+                ❌ No se pudieron cargar los productos.
+
+                <br><br>
+
+                ${escapeHTML(
+                    error.message
+                )}
+
+            </div>
+            `;
+
+    }
+    finally{
+
+        loadingProducts = false;
 
     }
 
 }
 
 
+function renderProductAdmin(product){
+
+    const normalized =
+        normalizeImages(
+            product.images
+        );
+
+
+    const firstImage =
+        normalized
+            .flatMap(
+                variant =>
+                    variant.images || []
+            )
+            .find(Boolean) ||
+        "";
+
+
+    const colors =
+        normalized.length;
+
+
+    const photos =
+        normalized.reduce(
+            (
+                total,
+                variant
+            ) =>
+                total +
+                (
+                    variant.images || []
+                ).filter(Boolean).length,
+            0
+        );
+
+
+    const price =
+        Number(product.price) || 0;
+
+
+    return `
+
+    <div class="product-admin-item">
+
+
+        <div class="product-admin-image">
+
+            ${
+                firstImage
+                ?
+                `
+                <img
+                    src="${escapeHTML(firstImage)}"
+                    alt="${escapeHTML(product.name)}"
+                    onerror="this.style.display='none'"
+                >
+                `
+                :
+                ""
+            }
+
+        </div>
+
+
+        <div>
+
+            <div class="product-admin-name">
+
+                ${escapeHTML(
+                    product.name ||
+                    "Producto sin nombre"
+                )}
+
+            </div>
+
+
+            <div class="product-admin-meta">
+
+                REF:
+                ${escapeHTML(
+                    product.ref || "—"
+                )}
+
+                ·
+
+                ${price.toLocaleString(
+                    "es-ES",
+                    {
+                        style:"currency",
+                        currency:"EUR"
+                    }
+                )}
+
+                ·
+
+                Stock:
+                ${escapeHTML(
+                    product.stock ?? 0
+                )}
+
+                ·
+
+                ${colors}
+                color${colors === 1 ? "" : "es"}
+
+                ·
+
+                ${photos}
+                foto${photos === 1 ? "" : "s"}
+
+            </div>
+
+
+            <div class="product-admin-id">
+
+                ID:
+                ${escapeHTML(product.id)}
+
+            </div>
+
+        </div>
+
+
+        <div class="product-admin-actions">
+
+            <button
+                type="button"
+                class="btn btn-small"
+                data-edit-id="${escapeHTML(product.id)}"
+            >
+                ✏ EDITAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-small btn-danger"
+                data-delete-id="${escapeHTML(product.id)}"
+                data-delete-name="${escapeHTML(
+                    product.name ||
+                    "Producto sin nombre"
+                )}"
+            >
+                🗑 ELIMINAR
+            </button>
+
+        </div>
+
+
+    </div>
+
+    `;
+
+}
+
+
 /* =========================================================
-   EDITAR PRODUCTO
+   EDITAR
 ========================================================= */
 
 async function editProduct(productId){
 
     try{
 
-        const {data,error} =
+        await verifyAdmin();
+
+
+        const {
+            data,
+            error
+        } =
             await supabaseClient
                 .from("Products")
                 .select("*")
                 .eq("id",productId)
                 .single();
 
+
         if(error){
             throw error;
         }
 
+
         if(!data){
+
             throw new Error(
                 "No se encontró el producto."
             );
+
         }
+
 
         editingProductId =
             data.id;
 
-        document.getElementById("productName").value =
-            data.name || "";
 
-        document.getElementById("productCategory").value =
-            data.category || "camisetas";
+        document
+            .getElementById("productName")
+            .value =
+                data.name || "";
 
-        document.getElementById("productRef").value =
-            data.ref || "";
 
-        document.getElementById("productPrice").value =
-            data.price ?? 0;
+        document
+            .getElementById("productCategory")
+            .value =
+                data.category ||
+                "camisetas";
 
-        document.getElementById("productStock").value =
-            data.stock ?? 0;
 
-        document.getElementById("productWhatsapp").value =
-            data.whatsapp || "";
+        document
+            .getElementById("productRef")
+            .value =
+                data.ref || "";
 
-        document.getElementById("productDescription").value =
-            data.description || "";
 
-        document.getElementById("shippingMin").value =
-            data.shipping_min ?? 3;
+        document
+            .getElementById("productPrice")
+            .value =
+                data.price ?? 0;
 
-        document.getElementById("shippingMax").value =
-            data.shipping_max ?? 9;
+
+        document
+            .getElementById("productStock")
+            .value =
+                data.stock ?? 0;
+
+
+        document
+            .getElementById("productWhatsapp")
+            .value =
+                data.whatsapp || "";
+
+
+        document
+            .getElementById("productDescription")
+            .value =
+                data.description || "";
+
+
+        document
+            .getElementById("shippingMin")
+            .value =
+                data.shipping_min ?? "";
+
+
+        document
+            .getElementById("shippingMax")
+            .value =
+                data.shipping_max ?? "";
+
 
         sizes =
             Array.isArray(data.sizes)
             ?
             data.sizes.map(
-                size => String(size)
+                size =>
+                    String(size)
             )
             :
             [];
 
+
         variants =
-            normalizeVariants(
+            normalizeImages(
                 data.images
             );
 
+
         activeVariant = 0;
+
         activePhoto = 0;
 
         previewQty = 1;
 
+
         renderVariants();
+
         renderSizes();
+
         updatePreview();
 
-        document.getElementById("editModeBar")
+
+        document
+            .getElementById("editModeBar")
             .classList.add("show");
 
-        document.getElementById("editModeTitle")
+
+        document
+            .getElementById("editModeTitle")
             .textContent =
                 "Editando: " +
-                (data.name || "Producto");
+                (
+                    data.name ||
+                    "Producto"
+                );
 
-        document.getElementById("editModeId")
+
+        document
+            .getElementById("editModeId")
             .textContent =
-                "ID: " + data.id;
+                "ID: " +
+                data.id;
 
-        document.getElementById("saveButton")
+
+        document
+            .getElementById("saveButton")
             .textContent =
                 "ACTUALIZAR PRODUCTO";
+
 
         window.scrollTo({
             top:0,
             behavior:"smooth"
         });
 
+
     }
     catch(error){
 
         console.error(error);
 
-        alert(
-            "❌ No se pudo cargar el producto.\n\n" +
-            error.message
+
+        showToast(
+            "No se pudo cargar el producto: " +
+            error.message,
+            true
         );
 
     }
@@ -2098,46 +3470,106 @@ async function editProduct(productId){
 
 
 /* =========================================================
-   NUEVO PRODUCTO
+   NUEVO
 ========================================================= */
 
 function newProduct(){
 
     editingProductId = null;
 
-    variants = [{
-        name:"Azul",
-        color:"#246BCE",
-        images:[""]
-    }];
 
-    sizes = ["S","M","L","XL"];
+    variants = [
+        {
+            name:"Principal",
+            color:"#888888",
+            images:[""]
+        }
+    ];
+
+
+    sizes = [
+        "S",
+        "M",
+        "L",
+        "XL"
+    ];
+
 
     activeVariant = 0;
+
     activePhoto = 0;
+
     previewQty = 1;
 
-    document.getElementById("productName").value = "";
-    document.getElementById("productCategory").value = "camisetas";
-    document.getElementById("productRef").value = "";
-    document.getElementById("productPrice").value = "35";
-    document.getElementById("productStock").value = "999";
-    document.getElementById("productWhatsapp").value = "";
-    document.getElementById("productDescription").value = "";
-    document.getElementById("shippingMin").value = "3";
-    document.getElementById("shippingMax").value = "9";
 
-    document.getElementById("codeOutput").value = "";
+    document
+        .getElementById("productName")
+        .value = "";
 
-    document.getElementById("editModeBar")
+
+    document
+        .getElementById("productCategory")
+        .value =
+            "camisetas";
+
+
+    document
+        .getElementById("productRef")
+        .value = "";
+
+
+    document
+        .getElementById("productPrice")
+        .value =
+            "35";
+
+
+    document
+        .getElementById("productStock")
+        .value =
+            "999";
+
+
+    document
+        .getElementById("productWhatsapp")
+        .value = "";
+
+
+    document
+        .getElementById("productDescription")
+        .value = "";
+
+
+    document
+        .getElementById("shippingMin")
+        .value = "3";
+
+
+    document
+        .getElementById("shippingMax")
+        .value = "9";
+
+
+    document
+        .getElementById("codeOutput")
+        .value = "";
+
+
+    document
+        .getElementById("editModeBar")
         .classList.remove("show");
 
-    document.getElementById("saveButton")
+
+    document
+        .getElementById("saveButton")
         .textContent =
             "GUARDAR EN SUPABASE";
 
+
     renderVariants();
+
     renderSizes();
+
     updatePreview();
 
 }
@@ -2150,296 +3582,186 @@ function newProduct(){
 function renderVariants(){
 
     const container =
-        document.getElementById("variantsList");
+        document
+            .getElementById("variantsList");
+
 
     container.innerHTML =
-        variants.map((variant,index)=>{
+        variants
+            .map(
+                (variant,index)=>{
 
-            const images =
-                Array.isArray(variant.images)
-                ?
-                variant.images
-                :
-                [""];
+                    const images =
+                        Array.isArray(
+                            variant.images
+                        )
+                        ?
+                        variant.images
+                        :
+                        [""];
 
-            return `
 
-            <div class="variant">
+                    return `
 
-                <div class="variant-top">
+                    <div class="variant">
 
-                    <div
-                        class="color-picker"
-                        style="background:${escapeHTML(
-                            variant.color || "#ffffff"
-                        )}"
-                    >
 
-                        <input
-                            type="color"
-                            value="${escapeHTML(
-                                variant.color || "#ffffff"
-                            )}"
-                            onchange="
-                                changeVariantColor(
-                                    ${index},
-                                    this.value
-                                )
-                            "
-                        >
+                        <div class="variant-top">
 
-                    </div>
 
-                    <div class="variant-name">
-
-                        <div class="field">
-
-                            <label>Nombre del color</label>
-
-                            <input
-                                type="text"
-                                value="${escapeHTML(
-                                    variant.name
-                                )}"
-                                placeholder="Ej: Negro"
-                                oninput="
-                                    changeVariantName(
-                                        ${index},
-                                        this.value
-                                    )
+                            <div
+                                class="color-picker"
+                                style="
+                                    background:
+                                    ${escapeHTML(
+                                        variant.color ||
+                                        "#ffffff"
+                                    )}
                                 "
                             >
 
+                                <input
+                                    type="color"
+                                    value="${escapeHTML(
+                                        variant.color ||
+                                        "#ffffff"
+                                    )}"
+                                    data-color-index="${index}"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="field">
+
+                                    <label>
+                                        Nombre del color
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        value="${escapeHTML(
+                                            variant.name
+                                        )}"
+                                        data-name-index="${index}"
+                                        placeholder="Ej: Negro"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="btn btn-small btn-danger"
+                                data-remove-variant="${index}"
+                            >
+                                ELIMINAR COLOR
+                            </button>
+
+
                         </div>
 
-                    </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-danger"
-                        onclick="removeVariant(${index})"
-                    >
-                        ELIMINAR COLOR
-                    </button>
-
-                </div>
-
-                <div class="variant-image-list">
-
-                    ${images.map((image,imageIndex)=>`
-
-                        <div class="variant-image-row">
-
-                            <div class="field">
-
-                                <label>
-                                    Foto ${imageIndex + 1}
-                                </label>
-
-                                <input
-                                    type="url"
-                                    value="${escapeHTML(image)}"
-                                    placeholder="https://..."
-                                    oninput="
-                                        changeVariantImage(
-                                            ${index},
-                                            ${imageIndex},
-                                            this.value
-                                        )
-                                    "
-                                >
-
-                            </div>
-
-                            <div class="variant-preview">
-
-                                ${
-                                    image
-                                    ?
-                                    `<img
-                                        src="${escapeHTML(image)}"
-                                        alt="${escapeHTML(variant.name)}"
-                                        onerror="this.style.display='none'"
-                                    >`
-                                    :
-                                    ""
-                                }
-
-                            </div>
+                        <div class="variant-image-list">
 
                             ${
-                                images.length > 1
-                                ?
-                                `<button
-                                    type="button"
-                                    class="btn btn-small btn-danger"
-                                    onclick="
-                                        removeVariantImage(
-                                            ${index},
-                                            ${imageIndex}
-                                        )
-                                    "
-                                >
-                                    ×
-                                </button>`
-                                :
-                                `<div></div>`
+
+                                images
+                                    .map(
+                                        (
+                                            image,
+                                            imageIndex
+                                        )=>`
+
+                                        <div
+                                            class="variant-image-row"
+                                        >
+
+                                            <div class="field">
+
+                                                <label>
+                                                    Foto ${imageIndex + 1}
+                                                </label>
+
+                                                <input
+                                                    type="url"
+                                                    value="${escapeHTML(image)}"
+                                                    data-image-variant="${index}"
+                                                    data-image-index="${imageIndex}"
+                                                    placeholder="https://..."
+                                                >
+
+                                            </div>
+
+
+                                            <div class="variant-preview">
+
+                                                ${
+                                                    image
+                                                    ?
+                                                    `
+                                                    <img
+                                                        src="${escapeHTML(image)}"
+                                                        alt=""
+                                                        onerror="this.style.display='none'"
+                                                    >
+                                                    `
+                                                    :
+                                                    ""
+                                                }
+
+                                            </div>
+
+
+                                            ${
+                                                images.length > 1
+                                                ?
+                                                `
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-small btn-danger"
+                                                    data-remove-photo-variant="${index}"
+                                                    data-remove-photo-index="${imageIndex}"
+                                                >
+                                                    ×
+                                                </button>
+                                                `
+                                                :
+                                                `<div></div>`
+                                            }
+
+                                        </div>
+
+                                        `
+                                    )
+                                    .join("")
+
                             }
 
                         </div>
 
-                    `).join("")}
 
-                </div>
-
-                <button
-                    type="button"
-                    class="btn btn-small add-photo"
-                    onclick="addVariantImage(${index})"
-                >
-                    + AÑADIR FOTO
-                </button>
-
-            </div>
-
-            `;
-
-        }).join("");
-
-    updatePreview();
-
-}
+                        <button
+                            type="button"
+                            class="btn btn-small add-photo"
+                            data-add-photo="${index}"
+                        >
+                            + AÑADIR FOTO
+                        </button>
 
 
-function addVariant(){
+                    </div>
 
-    variants.push({
-        name:"Nuevo color",
-        color:"#888888",
-        images:[""]
-    });
+                    `;
 
-    activeVariant =
-        variants.length - 1;
+                }
+            )
+            .join("");
 
-    activePhoto = 0;
-
-    renderVariants();
-
-}
-
-
-function removeVariant(index){
-
-    if(variants.length <= 1){
-
-        alert(
-            "Debe existir al menos un color."
-        );
-
-        return;
-    }
-
-    variants.splice(index,1);
-
-    if(activeVariant >= variants.length){
-
-        activeVariant =
-            variants.length - 1;
-
-    }
-
-    activePhoto = 0;
-
-    renderVariants();
-
-}
-
-
-function changeVariantColor(index,value){
-
-    variants[index].color =
-        value;
-
-    renderVariants();
-
-}
-
-
-function changeVariantName(index,value){
-
-    variants[index].name =
-        value;
-
-    updatePreview();
-
-}
-
-
-function addVariantImage(index){
-
-    if(!Array.isArray(variants[index].images)){
-
-        variants[index].images = [];
-
-    }
-
-    variants[index].images.push("");
-
-    activeVariant = index;
-
-    activePhoto =
-        variants[index].images.length - 1;
-
-    renderVariants();
-
-}
-
-
-function removeVariantImage(
-    variantIndex,
-    imageIndex
-){
-
-    const images =
-        variants[variantIndex].images;
-
-    if(images.length <= 1){
-
-        images[0] = "";
-
-    }
-    else{
-
-        images.splice(imageIndex,1);
-
-    }
-
-    activeVariant =
-        variantIndex;
-
-    activePhoto = 0;
-
-    renderVariants();
-
-}
-
-
-function changeVariantImage(
-    variantIndex,
-    imageIndex,
-    value
-){
-
-    variants[variantIndex]
-        .images[imageIndex] =
-            value;
-
-    activeVariant =
-        variantIndex;
-
-    activePhoto =
-        imageIndex;
 
     updatePreview();
 
@@ -2453,566 +3775,264 @@ function changeVariantImage(
 function renderSizes(){
 
     const container =
-        document.getElementById("sizesList");
+        document
+            .getElementById("sizesList");
+
 
     container.innerHTML =
-        sizes.map((size,index)=>`
+        sizes
+            .map(
+                (size,index)=>`
 
-            <div class="size-item">
+                <div class="size-item">
 
-                <input
-                    type="text"
-                    value="${escapeHTML(size)}"
-                    oninput="
-                        sizes[${index}] = this.value;
-                        updatePreview();
-                    "
-                >
+                    <input
+                        type="text"
+                        value="${escapeHTML(size)}"
+                        data-size-index="${index}"
+                    >
 
-                <button
-                    type="button"
-                    class="remove-size"
-                    onclick="removeSize(${index})"
-                >
-                    ×
-                </button>
+                    <button
+                        type="button"
+                        class="remove-size"
+                        data-remove-size="${index}"
+                    >
+                        ×
+                    </button>
 
-            </div>
+                </div>
 
-        `).join("");
+                `
+            )
+            .join("");
+
 
     updatePreview();
 
 }
 
 
-function addSize(){
-
-    sizes.push("Nueva");
-
-    renderSizes();
-
-}
-
-
-function removeSize(index){
-
-    sizes.splice(index,1);
-
-    renderSizes();
-
-}
-
-
 /* =========================================================
-   PREVIEW
-========================================================= */
-
-function updatePreview(){
-
-    const name =
-        document.getElementById("productName")
-            ?.value.trim() || "";
-
-    const ref =
-        document.getElementById("productRef")
-            ?.value.trim() || "";
-
-    const price =
-        Number(
-            document.getElementById("productPrice")
-                ?.value
-        ) || 0;
-
-    const description =
-        document.getElementById("productDescription")
-            ?.value.trim() || "";
-
-    const shippingMin =
-        document.getElementById("shippingMin")
-            ?.value.trim() || "";
-
-    const shippingMax =
-        document.getElementById("shippingMax")
-            ?.value.trim() || "";
-
-    document.getElementById("previewName")
-        .textContent =
-            name || "Nombre del producto";
-
-    document.getElementById("previewRef")
-        .textContent =
-            "REF: " + (ref || "—");
-
-    document.getElementById("previewDescription")
-        .textContent =
-            description ||
-            "Descripción del producto";
-
-    document.getElementById("previewPrice")
-        .textContent =
-            price.toLocaleString(
-                "es-ES",
-                {
-                    style:"currency",
-                    currency:"EUR"
-                }
-            );
-
-    document.getElementById("previewShipping")
-        .textContent =
-            shippingMin && shippingMax
-            ?
-            `${shippingMin} – ${shippingMax} días`
-            :
-            "Indica los días de envío";
-
-    renderPreviewVariants();
-    renderPreviewSizes();
-
-}
-
-
-function renderPreviewVariants(){
-
-    const container =
-        document.getElementById("previewColors");
-
-    container.innerHTML =
-        variants.map((variant,index)=>{
-
-            const firstImage =
-                (variant.images || [])
-                    .find(Boolean);
-
-            return `
-
-                <button
-                    type="button"
-                    class="preview-color ${
-                        index === activeVariant
-                        ?
-                        "active"
-                        :
-                        ""
-                    }"
-                    style="
-                        background-color:${escapeHTML(
-                            variant.color || "#ffffff"
-                        )};
-
-                        ${
-                            firstImage
-                            ?
-                            `
-                            background-image:url('${escapeHTML(
-                                firstImage
-                            )}');
-                            `
-                            :
-                            ""
-                        }
-                    "
-                    title="${escapeHTML(variant.name)}"
-                    onclick="
-                        selectPreviewVariant(${index})
-                    "
-                ></button>
-
-            `;
-
-        }).join("");
-
-    const active =
-        variants[activeVariant];
-
-    if(!active){
-
-        return;
-
-    }
-
-    document.getElementById("previewColorName")
-        .textContent =
-            active.name || "—";
-
-    const images =
-        (active.images || [])
-            .filter(Boolean);
-
-    if(activePhoto >= images.length){
-
-        activePhoto = 0;
-
-    }
-
-    const image =
-        document.getElementById("previewImage");
-
-    const counter =
-        document.getElementById("photoCounter");
-
-    if(images.length){
-
-        image.src =
-            images[activePhoto];
-
-        image.style.display =
-            "block";
-
-        counter.style.display =
-            "block";
-
-        counter.textContent =
-            `${activePhoto + 1} / ${images.length}`;
-
-    }
-    else{
-
-        image.removeAttribute("src");
-
-        image.style.display =
-            "none";
-
-        counter.style.display =
-            "none";
-
-    }
-
-    renderPreviewThumbs(images);
-
-}
-
-
-function renderPreviewThumbs(images){
-
-    const container =
-        document.getElementById("previewThumbs");
-
-    if(!images.length){
-
-        container.innerHTML = "";
-
-        return;
-
-    }
-
-    container.innerHTML =
-        images.map((image,index)=>`
-
-            <button
-                type="button"
-                class="preview-thumb ${
-                    index === activePhoto
-                    ?
-                    "active"
-                    :
-                    ""
-                }"
-                onclick="selectPreviewPhoto(${index})"
-            >
-                <img
-                    src="${escapeHTML(image)}"
-                    alt=""
-                    onerror="this.style.display='none'"
-                >
-            </button>
-
-        `).join("");
-
-}
-
-
-function selectPreviewVariant(index){
-
-    if(!variants[index]){
-
-        return;
-
-    }
-
-    activeVariant = index;
-    activePhoto = 0;
-
-    renderPreviewVariants();
-
-}
-
-
-function selectPreviewPhoto(index){
-
-    const images =
-        variants[activeVariant]
-            ?.images
-            ?.filter(Boolean) || [];
-
-    if(!images[index]){
-
-        return;
-
-    }
-
-    activePhoto = index;
-
-    renderPreviewVariants();
-
-}
-
-
-function nextPreviewImage(){
-
-    const images =
-        variants[activeVariant]
-            ?.images
-            ?.filter(Boolean) || [];
-
-    if(images.length <= 1){
-
-        return;
-
-    }
-
-    activePhoto =
-        (activePhoto + 1) %
-        images.length;
-
-    renderPreviewVariants();
-
-}
-
-
-function previousPreviewImage(){
-
-    const images =
-        variants[activeVariant]
-            ?.images
-            ?.filter(Boolean) || [];
-
-    if(images.length <= 1){
-
-        return;
-
-    }
-
-    activePhoto =
-        (
-            activePhoto -
-            1 +
-            images.length
-        ) %
-        images.length;
-
-    renderPreviewVariants();
-
-}
-
-
-function renderPreviewSizes(){
-
-    const container =
-        document.getElementById("previewSizes");
-
-    container.innerHTML =
-        sizes
-            .filter(size=>String(size).trim())
-            .map((size,index)=>`
-
-                <button
-                    type="button"
-                    class="preview-size ${
-                        index === 0
-                        ?
-                        "active"
-                        :
-                        ""
-                    }"
-                >
-                    ${escapeHTML(size)}
-                </button>
-
-            `)
-            .join("");
-
-}
-
-
-/* =========================================================
-   CANTIDAD
-========================================================= */
-
-function previewQuantity(change){
-
-    previewQty += change;
-
-    if(previewQty < 1){
-
-        previewQty = 1;
-
-    }
-
-    const stock =
-        Number(
-            document.getElementById("productStock")
-                ?.value
-        ) || 0;
-
-    if(stock > 0 && previewQty > stock){
-
-        previewQty = stock;
-
-    }
-
-    document.getElementById("previewQuantity")
-        .textContent =
-            previewQty;
-
-}
-
-
-/* =========================================================
-   DATOS DEL PRODUCTO
+   DATOS
 ========================================================= */
 
 function getProductData(){
 
     const name =
-        document.getElementById("productName")
-            .value.trim();
+        document
+            .getElementById("productName")
+            .value
+            .trim();
+
 
     const category =
-        document.getElementById("productCategory")
-            .value.trim()
+        document
+            .getElementById("productCategory")
+            .value
+            .trim()
             .toLowerCase();
 
+
     const ref =
-        document.getElementById("productRef")
-            .value.trim();
+        document
+            .getElementById("productRef")
+            .value
+            .trim();
+
 
     const price =
         Number(
-            document.getElementById("productPrice")
+            document
+                .getElementById("productPrice")
                 .value
-        ) || 0;
+        );
+
 
     const stock =
         Number(
-            document.getElementById("productStock")
+            document
+                .getElementById("productStock")
                 .value
-        ) || 0;
+        );
+
 
     const description =
-        document.getElementById("productDescription")
-            .value.trim();
+        document
+            .getElementById("productDescription")
+            .value
+            .trim();
+
 
     const whatsapp =
-        document.getElementById("productWhatsapp")
+        document
+            .getElementById("productWhatsapp")
             .value
             .replace(/\D/g,"");
 
+
     const shippingMin =
-        document.getElementById("shippingMin")
-            .value.trim();
+        document
+            .getElementById("shippingMin")
+            .value
+            .trim();
+
 
     const shippingMax =
-        document.getElementById("shippingMax")
-            .value.trim();
+        document
+            .getElementById("shippingMax")
+            .value
+            .trim();
 
-    const validVariants =
-        variants.map(variant=>({
-
-            name:
-                String(
-                    variant.name || ""
-                ).trim(),
-
-            color:
-                String(
-                    variant.color || ""
-                ).trim(),
-
-            images:
-                (Array.isArray(variant.images)
-                ?
-                variant.images
-                :
-                [])
-                .map(image =>
-                    String(image || "").trim()
-                )
-                .filter(Boolean)
-
-        }));
 
     if(!name){
 
-        alert("Introduce el nombre del producto.");
+        showToast(
+            "Introduce el nombre del producto.",
+            true
+        );
 
         return null;
 
     }
 
-    if(!ref){
-
-        alert("Introduce la referencia / ID.");
-
-        return null;
-
-    }
 
     if(!category){
 
-        alert("Introduce la categoría.");
-
-        return null;
-
-    }
-
-    if(price < 0 || stock < 0){
-
-        alert(
-            "Precio y stock no pueden ser negativos."
+        showToast(
+            "Introduce la categoría.",
+            true
         );
 
         return null;
 
     }
+
+
+    if(!ref){
+
+        showToast(
+            "Introduce la referencia / ID.",
+            true
+        );
+
+        return null;
+
+    }
+
+
+    if(
+        !Number.isFinite(price) ||
+        price < 0
+    ){
+
+        showToast(
+            "El precio no es válido.",
+            true
+        );
+
+        return null;
+
+    }
+
+
+    if(
+        !Number.isFinite(stock) ||
+        stock < 0
+    ){
+
+        showToast(
+            "El stock no es válido.",
+            true
+        );
+
+        return null;
+
+    }
+
 
     if(!whatsapp){
 
-        alert(
-            "Introduce el número de WhatsApp."
+        showToast(
+            "Introduce el número de WhatsApp.",
+            true
         );
 
         return null;
 
     }
 
-    if(!validVariants.length){
 
-        alert(
-            "Añade al menos un color."
+    const cleanVariants =
+        variants.map(
+            variant=>({
+
+                name:
+                    String(
+                        variant.name || ""
+                    ).trim(),
+
+                color:
+                    String(
+                        variant.color ||
+                        "#888888"
+                    ).trim(),
+
+                images:
+                    (
+                        Array.isArray(
+                            variant.images
+                        )
+                        ?
+                        variant.images
+                        :
+                        []
+                    )
+                    .map(
+                        image =>
+                            String(
+                                image || ""
+                            ).trim()
+                    )
+                    .filter(Boolean)
+
+            })
+        );
+
+
+    if(!cleanVariants.length){
+
+        showToast(
+            "Añade al menos un color.",
+            true
         );
 
         return null;
 
     }
 
-    for(const variant of validVariants){
+
+    for(
+        const variant
+        of cleanVariants
+    ){
 
         if(!variant.name){
 
-            alert(
-                "Todos los colores deben tener nombre."
+            showToast(
+                "Todos los colores necesitan un nombre.",
+                true
             );
 
             return null;
 
         }
 
+
         if(!variant.images.length){
 
-            alert(
-                `El color "${variant.name}" necesita al menos una foto.`
+            showToast(
+                `El color "${variant.name}" necesita al menos una foto.`,
+                true
             );
 
             return null;
@@ -3020,28 +4040,33 @@ function getProductData(){
         }
 
     }
+
 
     return {
 
         name,
+
         category,
+
         ref,
+
         price,
+
         stock,
+
         description,
+
         whatsapp,
 
-        /*
-         * IMPORTANTE:
-         * cada color contiene un array images[]
-         */
-
         images:
-            validVariants,
+            cleanVariants,
 
         sizes:
             sizes
-                .map(size=>String(size).trim())
+                .map(
+                    size =>
+                        String(size).trim()
+                )
                 .filter(Boolean),
 
         shipping_min:
@@ -3058,7 +4083,7 @@ function getProductData(){
 
 
 /* =========================================================
-   GUARDAR / ACTUALIZAR
+   GUARDAR
 ========================================================= */
 
 async function saveProductToSupabase(){
@@ -3066,127 +4091,150 @@ async function saveProductToSupabase(){
     const product =
         getProductData();
 
+
     if(!product){
-
         return;
-
     }
 
-    const button =
-        document.getElementById("saveButton");
 
-    const original =
-        button.textContent;
+    const button =
+        document
+            .getElementById("saveButton");
+
+
+    const wasEditing =
+        editingProductId !== null;
+
 
     button.disabled = true;
 
+
+    button.textContent =
+        wasEditing
+        ?
+        "ACTUALIZANDO..."
+        :
+        "GUARDANDO...";
+
+
     try{
 
-        const {data:sessionData,error:sessionError} =
-            await supabaseClient.auth.getSession();
+        await verifyAdmin();
 
-        if(sessionError){
 
-            throw sessionError;
+        if(wasEditing){
 
-        }
-
-        if(!sessionData?.session){
-
-            hideAdmin();
-
-            throw new Error(
-                "No existe una sesión de administrador."
-            );
-
-        }
-
-        if(editingProductId !== null){
-
-            button.textContent =
-                "ACTUALIZANDO...";
-
-            const {data,error} =
+            const {
+                data,
+                error
+            } =
                 await supabaseClient
                     .from("Products")
                     .update(product)
-                    .eq("id",editingProductId)
+                    .eq(
+                        "id",
+                        editingProductId
+                    )
                     .select()
                     .single();
 
-            if(error){
 
+            if(error){
                 throw error;
+            }
+
+
+            if(!data){
+
+                throw new Error(
+                    "No se actualizó ningún producto."
+                );
 
             }
+
 
             generateCode();
 
             await loadProducts();
 
-            alert(
-                "✅ Producto actualizado correctamente."
+
+            document
+                .getElementById("editModeTitle")
+                .textContent =
+                    "Editando: " +
+                    (
+                        data.name ||
+                        "Producto"
+                    );
+
+
+            showToast(
+                "Producto actualizado correctamente."
             );
 
         }
         else{
 
-            button.textContent =
-                "GUARDANDO...";
-
-            const {data,error} =
+            const {
+                data,
+                error
+            } =
                 await supabaseClient
                     .from("Products")
-                    .insert([product])
+                    .insert(product)
                     .select()
                     .single();
 
-            if(error){
 
+            if(error){
                 throw error;
+            }
+
+
+            if(!data){
+
+                throw new Error(
+                    "Supabase no devolvió el producto creado."
+                );
 
             }
+
+
+            editingProductId =
+                data.id;
+
 
             generateCode();
 
+
+            document
+                .getElementById("editModeBar")
+                .classList.add("show");
+
+
+            document
+                .getElementById("editModeTitle")
+                .textContent =
+                    "Editando: " +
+                    (
+                        data.name ||
+                        "Producto"
+                    );
+
+
+            document
+                .getElementById("editModeId")
+                .textContent =
+                    "ID: " +
+                    data.id;
+
+
             await loadProducts();
 
-            alert(
-                "✅ Producto guardado correctamente." +
-                (
-                    data?.id
-                    ?
-                    "\nID: " + data.id
-                    :
-                    ""
-                )
+
+            showToast(
+                "Producto creado correctamente."
             );
-
-            /*
-             * Después de crear volvemos a modo nuevo
-             * pero mantenemos los datos visibles.
-             */
-
-            editingProductId =
-                data?.id ?? null;
-
-            if(data?.id){
-
-                document.getElementById("editModeBar")
-                    .classList.add("show");
-
-                document.getElementById("editModeTitle")
-                    .textContent =
-                        "Producto guardado";
-
-                document.getElementById("editModeId")
-                    .textContent =
-                        "ID: " + data.id;
-
-                button.textContent =
-                    "ACTUALIZAR PRODUCTO";
-
-            }
 
         }
 
@@ -3195,9 +4243,11 @@ async function saveProductToSupabase(){
 
         console.error(error);
 
-        alert(
-            "❌ No se pudo guardar el producto.\n\n" +
-            error.message
+
+        showToast(
+            "No se pudo guardar: " +
+            error.message,
+            true
         );
 
     }
@@ -3205,19 +4255,13 @@ async function saveProductToSupabase(){
 
         button.disabled = false;
 
-        if(editingProductId !== null){
 
-            button.textContent =
-                "ACTUALIZAR PRODUCTO";
-
-        }
-        else{
-
-            button.textContent =
-                original ||
-                "GUARDAR EN SUPABASE";
-
-        }
+        button.textContent =
+            editingProductId !== null
+            ?
+            "ACTUALIZAR PRODUCTO"
+            :
+            "GUARDAR EN SUPABASE";
 
     }
 
@@ -3229,21 +4273,26 @@ async function saveProductToSupabase(){
 ========================================================= */
 
 function openDeleteModal(
-    productId,
-    productName
+    id,
+    name
 ){
 
-    productPendingDelete = {
-        id:productId,
-        name:productName
+    pendingDelete = {
+        id,
+        name
     };
 
-    document.getElementById("deleteProductName")
-        .textContent =
-            productName;
 
-    document.getElementById("deleteModal")
+    document
+        .getElementById("deleteProductName")
+        .textContent =
+            name;
+
+
+    document
+        .getElementById("deleteModal")
         .classList.add("show");
+
 
     document.body.style.overflow =
         "hidden";
@@ -3253,10 +4302,13 @@ function openDeleteModal(
 
 function closeDeleteModal(){
 
-    productPendingDelete = null;
+    pendingDelete = null;
 
-    document.getElementById("deleteModal")
+
+    document
+        .getElementById("deleteModal")
         .classList.remove("show");
+
 
     document.body.style.overflow = "";
 
@@ -3265,63 +4317,83 @@ function closeDeleteModal(){
 
 async function confirmDeleteProduct(){
 
-    if(!productPendingDelete){
-
+    if(!pendingDelete){
         return;
-
     }
 
+
+    const item =
+        pendingDelete;
+
+
     const button =
-        document.getElementById(
-            "confirmDeleteButton"
-        );
+        document
+            .getElementById(
+                "confirmDeleteButton"
+            );
+
 
     button.disabled = true;
-    button.textContent = "ELIMINANDO...";
+
+    button.textContent =
+        "ELIMINANDO...";
+
 
     try{
 
-        const {data,error} =
+        await verifyAdmin();
+
+
+        const {
+            data,
+            error
+        } =
             await supabaseClient
                 .from("Products")
                 .delete()
-                .eq("id",productPendingDelete.id)
+                .eq(
+                    "id",
+                    item.id
+                )
                 .select();
 
+
         if(error){
-
             throw error;
-
         }
 
-        if(!data?.length){
+
+        if(
+            !Array.isArray(data) ||
+            data.length === 0
+        ){
 
             throw new Error(
-                "No se eliminó ninguna fila. " +
-                "Comprueba las políticas RLS."
+                "No se eliminó ninguna fila. Comprueba las políticas RLS y el ID del producto."
             );
 
         }
 
-        const deletedName =
-            productPendingDelete.name;
-
-        closeDeleteModal();
 
         if(
+            editingProductId !== null &&
             String(editingProductId) ===
-            String(productPendingDelete?.id)
+            String(item.id)
         ){
 
             newProduct();
 
         }
 
+
+        closeDeleteModal();
+
+
         await loadProducts();
 
-        alert(
-            "✅ Producto eliminado correctamente.\n\n" +
-            deletedName
+
+        showToast(
+            "Producto eliminado correctamente."
         );
 
     }
@@ -3329,19 +4401,552 @@ async function confirmDeleteProduct(){
 
         console.error(error);
 
-        alert(
-            "❌ No se pudo eliminar el producto.\n\n" +
-            error.message
+
+        showToast(
+            "No se pudo eliminar: " +
+            error.message,
+            true
         );
 
     }
     finally{
 
         button.disabled = false;
+
         button.textContent =
             "ELIMINAR PRODUCTO";
 
     }
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function updatePreview(){
+
+    const name =
+        document
+            .getElementById("productName")
+            ?.value
+            .trim() || "";
+
+
+    const ref =
+        document
+            .getElementById("productRef")
+            ?.value
+            .trim() || "";
+
+
+    const price =
+        Number(
+            document
+                .getElementById("productPrice")
+                ?.value
+        ) || 0;
+
+
+    const description =
+        document
+            .getElementById("productDescription")
+            ?.value
+            .trim() || "";
+
+
+    const shippingMin =
+        document
+            .getElementById("shippingMin")
+            ?.value
+            .trim() || "";
+
+
+    const shippingMax =
+        document
+            .getElementById("shippingMax")
+            ?.value
+            .trim() || "";
+
+
+    document
+        .getElementById("previewName")
+        .textContent =
+            name ||
+            "Nombre del producto";
+
+
+    document
+        .getElementById("previewRef")
+        .textContent =
+            "REF: " +
+            (
+                ref ||
+                "—"
+            );
+
+
+    document
+        .getElementById("previewDescription")
+        .textContent =
+            description ||
+            "Descripción del producto";
+
+
+    document
+        .getElementById("previewPrice")
+        .textContent =
+            price.toLocaleString(
+                "es-ES",
+                {
+                    style:"currency",
+                    currency:"EUR"
+                }
+            );
+
+
+    document
+        .getElementById("previewShipping")
+        .textContent =
+            shippingMin &&
+            shippingMax
+            ?
+            `${shippingMin} – ${shippingMax} días`
+            :
+            "Indica los días de envío";
+
+
+    renderPreviewVariants();
+
+    renderPreviewSizes();
+
+}
+
+
+function renderPreviewVariants(){
+
+    const container =
+        document
+            .getElementById(
+                "previewColors"
+            );
+
+
+    if(!variants.length){
+
+        container.innerHTML = "";
+
+        return;
+
+    }
+
+
+    if(
+        activeVariant >=
+        variants.length
+    ){
+
+        activeVariant =
+            variants.length - 1;
+
+    }
+
+
+    const active =
+        variants[activeVariant];
+
+
+    container.innerHTML =
+        variants
+            .map(
+                (variant,index)=>{
+
+                    const firstImage =
+                        (
+                            variant.images ||
+                            []
+                        )
+                        .find(Boolean);
+
+
+                    const styleParts = [
+                        `background-color:${escapeHTML(
+                            variant.color ||
+                            "#ffffff"
+                        )}`
+                    ];
+
+
+                    if(firstImage){
+
+                        styleParts.push(
+                            `background-image:url("${escapeHTML(
+                                firstImage
+                            )}")`
+                        );
+
+                    }
+
+
+                    return `
+
+                    <button
+                        type="button"
+                        class="
+                            preview-color
+                            ${
+                                index ===
+                                activeVariant
+                                ?
+                                "active"
+                                :
+                                ""
+                            }
+                        "
+                        style="${styleParts.join(";")}"
+                        data-preview-variant="${index}"
+                        title="${escapeHTML(
+                            variant.name
+                        )}"
+                    ></button>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    document
+        .getElementById(
+            "previewColorName"
+        )
+        .textContent =
+            active?.name ||
+            "—";
+
+
+    const images =
+        (
+            active?.images ||
+            []
+        )
+        .filter(Boolean);
+
+
+    if(
+        activePhoto >=
+        images.length
+    ){
+
+        activePhoto = 0;
+
+    }
+
+
+    const image =
+        document
+            .getElementById(
+                "previewImage"
+            );
+
+
+    const counter =
+        document
+            .getElementById(
+                "photoCounter"
+            );
+
+
+    if(images.length){
+
+        image.src =
+            images[activePhoto];
+
+
+        image.alt =
+            active.name || "";
+
+
+        image.style.display =
+            "block";
+
+
+        counter.style.display =
+            "block";
+
+
+        counter.textContent =
+            `${activePhoto + 1} / ${images.length}`;
+
+    }
+    else{
+
+        image.removeAttribute(
+            "src"
+        );
+
+
+        image.style.display =
+            "none";
+
+
+        counter.style.display =
+            "none";
+
+    }
+
+
+    renderPreviewThumbs(
+        images
+    );
+
+}
+
+
+function renderPreviewThumbs(
+    images
+){
+
+    const container =
+        document
+            .getElementById(
+                "previewThumbs"
+            );
+
+
+    if(!images.length){
+
+        container.innerHTML = "";
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        images
+            .map(
+                (image,index)=>`
+
+                <button
+                    type="button"
+                    class="
+                        preview-thumb
+                        ${
+                            index ===
+                            activePhoto
+                            ?
+                            "active"
+                            :
+                            ""
+                        }
+                    "
+                    data-preview-photo="${index}"
+                >
+
+                    <img
+                        src="${escapeHTML(image)}"
+                        alt=""
+                        onerror="this.style.display='none'"
+                    >
+
+                </button>
+
+                `
+            )
+            .join("");
+
+}
+
+
+function selectPreviewVariant(
+    index
+){
+
+    if(!variants[index]){
+        return;
+    }
+
+
+    activeVariant = index;
+
+    activePhoto = 0;
+
+
+    renderPreviewVariants();
+
+}
+
+
+function selectPreviewPhoto(
+    index
+){
+
+    const images =
+        (
+            variants[activeVariant]
+                ?.images ||
+            []
+        )
+        .filter(Boolean);
+
+
+    if(!images[index]){
+        return;
+    }
+
+
+    activePhoto = index;
+
+
+    renderPreviewVariants();
+
+}
+
+
+function nextPreviewImage(){
+
+    const images =
+        (
+            variants[activeVariant]
+                ?.images ||
+            []
+        )
+        .filter(Boolean);
+
+
+    if(images.length <= 1){
+        return;
+    }
+
+
+    activePhoto =
+        (
+            activePhoto + 1
+        ) %
+        images.length;
+
+
+    renderPreviewVariants();
+
+}
+
+
+function previousPreviewImage(){
+
+    const images =
+        (
+            variants[activeVariant]
+                ?.images ||
+            []
+        )
+        .filter(Boolean);
+
+
+    if(images.length <= 1){
+        return;
+    }
+
+
+    activePhoto =
+        (
+            activePhoto -
+            1 +
+            images.length
+        ) %
+        images.length;
+
+
+    renderPreviewVariants();
+
+}
+
+
+function renderPreviewSizes(){
+
+    const container =
+        document
+            .getElementById(
+                "previewSizes"
+            );
+
+
+    container.innerHTML =
+        sizes
+            .filter(
+                size =>
+                    String(size).trim()
+            )
+            .map(
+                (size,index)=>`
+
+                <button
+                    type="button"
+                    class="
+                        preview-size
+                        ${
+                            index === 0
+                            ?
+                            "active"
+                            :
+                            ""
+                        }
+                    "
+                >
+                    ${escapeHTML(size)}
+                </button>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   CANTIDAD
+========================================================= */
+
+function previewQuantity(
+    change
+){
+
+    previewQty += change;
+
+
+    if(previewQty < 1){
+        previewQty = 1;
+    }
+
+
+    const stock =
+        Number(
+            document
+                .getElementById(
+                    "productStock"
+                )
+                ?.value
+        ) || 0;
+
+
+    if(
+        stock > 0 &&
+        previewQty > stock
+    ){
+
+        previewQty = stock;
+
+    }
+
+
+    document
+        .getElementById(
+            "previewQuantity"
+        )
+        .textContent =
+            previewQty;
 
 }
 
@@ -3355,24 +4960,27 @@ function generateCode(){
     const product =
         getProductData();
 
+
     if(!product){
-
         return;
-
     }
 
+
     const variantCode =
-        product.images.map(variant=>{
+        product.images
+            .map(
+                variant=>{
 
-            const photos =
-                variant.images
-                    .map(
-                        image =>
-                            `                "${escapeJS(image)}"`
-                    )
-                    .join(",\n");
+                    const photos =
+                        variant.images
+                            .map(
+                                image =>
+                                    `                "${escapeJS(image)}"`
+                            )
+                            .join(",\n");
 
-            return `        {
+
+                    return `        {
             name: "${escapeJS(variant.name)}",
             color: "${escapeJS(variant.color)}",
             images: [
@@ -3380,7 +4988,10 @@ ${photos}
             ]
         }`;
 
-        }).join(",\n");
+                }
+            )
+            .join(",\n");
+
 
     const sizeCode =
         product.sizes
@@ -3389,6 +5000,7 @@ ${photos}
                     `        "${escapeJS(size)}"`
             )
             .join(",\n");
+
 
     const code =
 `{
@@ -3410,7 +5022,11 @@ ${sizeCode}
     active: true
 }`;
 
-    document.getElementById("codeOutput")
+
+    document
+        .getElementById(
+            "codeOutput"
+        )
         .value =
             code;
 
@@ -3418,13 +5034,17 @@ ${sizeCode}
 
 
 /* =========================================================
-   COPIAR CÓDIGO
+   COPIAR
 ========================================================= */
 
 async function copyCode(){
 
     const output =
-        document.getElementById("codeOutput");
+        document
+            .getElementById(
+                "codeOutput"
+            );
+
 
     if(!output.value.trim()){
 
@@ -3432,11 +5052,11 @@ async function copyCode(){
 
     }
 
+
     if(!output.value.trim()){
-
         return;
-
     }
+
 
     try{
 
@@ -3444,19 +5064,26 @@ async function copyCode(){
             output.value
         );
 
-        alert(
+
+        showToast(
             "Código copiado correctamente."
         );
 
     }
-    catch{
+    catch(error){
 
         output.focus();
+
         output.select();
 
-        document.execCommand("copy");
+        document.execCommand(
+            "copy"
+        );
 
-        alert("Código copiado.");
+
+        showToast(
+            "Código copiado."
+        );
 
     }
 
@@ -3470,7 +5097,11 @@ async function copyCode(){
 function openZoom(){
 
     const image =
-        document.getElementById("previewImage");
+        document
+            .getElementById(
+                "previewImage"
+            );
+
 
     if(
         !image.src ||
@@ -3481,12 +5112,21 @@ function openZoom(){
 
     }
 
-    document.getElementById("zoomImage")
+
+    document
+        .getElementById(
+            "zoomImage"
+        )
         .src =
             image.src;
 
-    document.getElementById("zoomModal")
+
+    document
+        .getElementById(
+            "zoomModal"
+        )
         .classList.add("show");
+
 
     document.body.style.overflow =
         "hidden";
@@ -3494,24 +5134,697 @@ function openZoom(){
 }
 
 
-function closeZoom(event){
+function closeZoom(){
 
-    if(
-        event &&
-        event.target &&
-        event.target.id !== "zoomModal"
-    ){
-
-        return;
-
-    }
-
-    document.getElementById("zoomModal")
+    document
+        .getElementById(
+            "zoomModal"
+        )
         .classList.remove("show");
 
-    document.body.style.overflow = "";
+
+    document.body.style.overflow =
+        "";
 
 }
+
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        loginAdmin
+    );
+
+
+document
+    .getElementById("logoutButton")
+    .addEventListener(
+        "click",
+        logoutAdmin
+    );
+
+
+document
+    .getElementById("refreshProductsButton")
+    .addEventListener(
+        "click",
+        loadProducts
+    );
+
+
+document
+    .getElementById("newProductButton")
+    .addEventListener(
+        "click",
+        newProduct
+    );
+
+
+document
+    .getElementById("newFromEditButton")
+    .addEventListener(
+        "click",
+        newProduct
+    );
+
+
+document
+    .getElementById("addVariantButton")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            variants.push({
+
+                name:
+                    "Nuevo color",
+
+                color:
+                    "#888888",
+
+                images:
+                    [""]
+
+            });
+
+
+            activeVariant =
+                variants.length - 1;
+
+
+            activePhoto = 0;
+
+
+            renderVariants();
+
+        }
+    );
+
+
+document
+    .getElementById("addSizeButton")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            sizes.push(
+                "Nueva"
+            );
+
+            renderSizes();
+
+        }
+    );
+
+
+document
+    .getElementById("saveButton")
+    .addEventListener(
+        "click",
+        saveProductToSupabase
+    );
+
+
+document
+    .getElementById("generateCodeButton")
+    .addEventListener(
+        "click",
+        generateCode
+    );
+
+
+document
+    .getElementById("copyCodeButton")
+    .addEventListener(
+        "click",
+        copyCode
+    );
+
+
+document
+    .getElementById("previousPhotoButton")
+    .addEventListener(
+        "click",
+        previousPreviewImage
+    );
+
+
+document
+    .getElementById("nextPhotoButton")
+    .addEventListener(
+        "click",
+        nextPreviewImage
+    );
+
+
+document
+    .getElementById("quantityMinus")
+    .addEventListener(
+        "click",
+        ()=>{
+            previewQuantity(-1);
+        }
+    );
+
+
+document
+    .getElementById("quantityPlus")
+    .addEventListener(
+        "click",
+        ()=>{
+            previewQuantity(1);
+        }
+    );
+
+
+document
+    .getElementById("previewImage")
+    .addEventListener(
+        "click",
+        openZoom
+    );
+
+
+document
+    .getElementById("zoomCloseButton")
+    .addEventListener(
+        "click",
+        closeZoom
+    );
+
+
+document
+    .getElementById("cancelDeleteButton")
+    .addEventListener(
+        "click",
+        closeDeleteModal
+    );
+
+
+document
+    .getElementById("confirmDeleteButton")
+    .addEventListener(
+        "click",
+        confirmDeleteProduct
+    );
+
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        const target =
+            event.target;
+
+
+        if(
+            target.id ===
+            "productName" ||
+            target.id ===
+            "productCategory" ||
+            target.id ===
+            "productRef" ||
+            target.id ===
+            "productPrice" ||
+            target.id ===
+            "productStock" ||
+            target.id ===
+            "productWhatsapp" ||
+            target.id ===
+            "productDescription" ||
+            target.id ===
+            "shippingMin" ||
+            target.id ===
+            "shippingMax"
+        ){
+
+            updatePreview();
+
+        }
+
+
+        if(
+            target.dataset
+                .nameIndex !== undefined
+        ){
+
+            const index =
+                Number(
+                    target.dataset.nameIndex
+                );
+
+
+            if(variants[index]){
+
+                variants[index].name =
+                    target.value;
+
+                updatePreview();
+
+            }
+
+        }
+
+
+        if(
+            target.dataset
+                .imageVariant !== undefined
+        ){
+
+            const variantIndex =
+                Number(
+                    target.dataset.imageVariant
+                );
+
+
+            const imageIndex =
+                Number(
+                    target.dataset.imageIndex
+                );
+
+
+            if(
+                variants[variantIndex] &&
+                variants[variantIndex].images
+            ){
+
+                variants[variantIndex]
+                    .images[imageIndex] =
+                        target.value;
+
+
+                activeVariant =
+                    variantIndex;
+
+
+                activePhoto =
+                    imageIndex;
+
+
+                updatePreview();
+
+            }
+
+        }
+
+
+        if(
+            target.dataset
+                .sizeIndex !== undefined
+        ){
+
+            const index =
+                Number(
+                    target.dataset.sizeIndex
+                );
+
+
+            sizes[index] =
+                target.value;
+
+
+            renderPreviewSizes();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CHANGE
+========================================================= */
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        const target =
+            event.target;
+
+
+        if(
+            target.dataset
+                .colorIndex !== undefined
+        ){
+
+            const index =
+                Number(
+                    target.dataset.colorIndex
+                );
+
+
+            if(variants[index]){
+
+                variants[index].color =
+                    target.value;
+
+                renderVariants();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CLICK DELEGADO
+========================================================= */
+
+document.addEventListener(
+    "click",
+    event=>{
+
+        const target =
+            event.target;
+
+
+        const editButton =
+            target.closest(
+                "[data-edit-id]"
+            );
+
+
+        if(editButton){
+
+            editProduct(
+                editButton.dataset.editId
+            );
+
+            return;
+
+        }
+
+
+        const deleteButton =
+            target.closest(
+                "[data-delete-id]"
+            );
+
+
+        if(deleteButton){
+
+            openDeleteModal(
+                deleteButton.dataset.deleteId,
+                deleteButton.dataset.deleteName
+            );
+
+            return;
+
+        }
+
+
+        const removeVariant =
+            target.closest(
+                "[data-remove-variant]"
+            );
+
+
+        if(removeVariant){
+
+            const index =
+                Number(
+                    removeVariant
+                        .dataset
+                        .removeVariant
+                );
+
+
+            if(variants.length <= 1){
+
+                showToast(
+                    "Debe existir al menos un color.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            variants.splice(
+                index,
+                1
+            );
+
+
+            if(
+                activeVariant >=
+                variants.length
+            ){
+
+                activeVariant =
+                    variants.length - 1;
+
+            }
+
+
+            activePhoto = 0;
+
+
+            renderVariants();
+
+            return;
+
+        }
+
+
+        const addPhoto =
+            target.closest(
+                "[data-add-photo]"
+            );
+
+
+        if(addPhoto){
+
+            const index =
+                Number(
+                    addPhoto
+                        .dataset
+                        .addPhoto
+                );
+
+
+            if(
+                !Array.isArray(
+                    variants[index].images
+                )
+            ){
+
+                variants[index].images = [];
+
+            }
+
+
+            variants[index]
+                .images
+                .push("");
+
+
+            activeVariant =
+                index;
+
+
+            activePhoto =
+                variants[index]
+                    .images.length - 1;
+
+
+            renderVariants();
+
+            return;
+
+        }
+
+
+        const removePhoto =
+            target.closest(
+                "[data-remove-photo-variant]"
+            );
+
+
+        if(removePhoto){
+
+            const variantIndex =
+                Number(
+                    removePhoto
+                        .dataset
+                        .removePhotoVariant
+                );
+
+
+            const imageIndex =
+                Number(
+                    removePhoto
+                        .dataset
+                        .removePhotoIndex
+                );
+
+
+            const images =
+                variants[variantIndex]
+                    ?.images;
+
+
+            if(!images){
+                return;
+            }
+
+
+            if(images.length <= 1){
+
+                images[0] = "";
+
+            }
+            else{
+
+                images.splice(
+                    imageIndex,
+                    1
+                );
+
+            }
+
+
+            activeVariant =
+                variantIndex;
+
+
+            activePhoto = 0;
+
+
+            renderVariants();
+
+            return;
+
+        }
+
+
+        const removeSize =
+            target.closest(
+                "[data-remove-size]"
+            );
+
+
+        if(removeSize){
+
+            const index =
+                Number(
+                    removeSize
+                        .dataset
+                        .removeSize
+                );
+
+
+            sizes.splice(
+                index,
+                1
+            );
+
+
+            renderSizes();
+
+            return;
+
+        }
+
+
+        const previewVariant =
+            target.closest(
+                "[data-preview-variant]"
+            );
+
+
+        if(previewVariant){
+
+            selectPreviewVariant(
+                Number(
+                    previewVariant
+                        .dataset
+                        .previewVariant
+                )
+            );
+
+            return;
+
+        }
+
+
+        const previewPhoto =
+            target.closest(
+                "[data-preview-photo]"
+            );
+
+
+        if(previewPhoto){
+
+            selectPreviewPhoto(
+                Number(
+                    previewPhoto
+                        .dataset
+                        .previewPhoto
+                )
+            );
+
+            return;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CLICS MODAL
+========================================================= */
+
+document
+    .getElementById("zoomModal")
+    .addEventListener(
+        "click",
+        event=>{
+
+            if(
+                event.target.id ===
+                "zoomModal"
+            ){
+
+                closeZoom();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("deleteModal")
+    .addEventListener(
+        "click",
+        event=>{
+
+            if(
+                event.target.id ===
+                "deleteModal"
+            ){
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
 
 
 /* =========================================================
@@ -3522,27 +5835,47 @@ document.addEventListener(
     "keydown",
     event=>{
 
-        if(event.key === "Escape"){
+        if(
+            event.key ===
+            "Escape"
+        ){
 
             closeZoom();
+
             closeDeleteModal();
 
         }
 
+
+        const tag =
+            document
+                .activeElement
+                ?.tagName;
+
+
         if(
-            event.key === "ArrowRight" &&
-            document.activeElement.tagName !== "INPUT" &&
-            document.activeElement.tagName !== "TEXTAREA"
+            tag === "INPUT" ||
+            tag === "TEXTAREA"
+        ){
+
+            return;
+
+        }
+
+
+        if(
+            event.key ===
+            "ArrowRight"
         ){
 
             nextPreviewImage();
 
         }
 
+
         if(
-            event.key === "ArrowLeft" &&
-            document.activeElement.tagName !== "INPUT" &&
-            document.activeElement.tagName !== "TEXTAREA"
+            event.key ===
+            "ArrowLeft"
         ){
 
             previousPreviewImage();
@@ -3559,10 +5892,11 @@ document.addEventListener(
 
 newProduct();
 
-checkAdminSession();
+checkSession();
+
 
 console.log(
-    "STRANGIS Admin conectado a Supabase:",
+    "STRANGIS ADMIN · Supabase conectado:",
     SUPABASE_URL
 );
 
