@@ -2747,26 +2747,99 @@ function normalizeImages(raw){
 
 function showAdmin(){
 
-    document
-        .getElementById("loginOverlay")
-        .classList.add("hidden");
+    const loginOverlay =
+        document.getElementById("loginOverlay");
 
-    document
-        .getElementById("logoutButton")
-        .style.display = "block";
+    if(loginOverlay){
+        loginOverlay.classList.add("hidden");
+    }
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    if(logoutButton){
+        logoutButton.style.display = "block";
+    }
 
 }
 
 
 function hideAdmin(){
 
-    document
-        .getElementById("loginOverlay")
-        .classList.remove("hidden");
+    const loginOverlay =
+        document.getElementById("loginOverlay");
 
-    document
-        .getElementById("logoutButton")
-        .style.display = "none";
+    if(loginOverlay){
+        loginOverlay.classList.remove("hidden");
+    }
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    if(logoutButton){
+        logoutButton.style.display = "none";
+    }
+
+}
+
+
+/*
+ * UUID DEL ADMINISTRADOR
+ * Debe coincidir con las políticas RLS de Products.
+ */
+const ADMIN_UID =
+    "d37fcd4a-6549-499d-a881-020a30a5f189";
+
+
+async function verifyAdmin(){
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
+
+    if(error){
+        console.error(
+            "Error obteniendo usuario:",
+            error
+        );
+
+        throw error;
+    }
+
+    if(!data || !data.user){
+
+        throw new Error(
+            "No existe una sesión."
+        );
+
+    }
+
+    /*
+     * Comprobamos directamente el UUID
+     * del usuario autenticado.
+     */
+    if(data.user.id !== ADMIN_UID){
+
+        console.error(
+            "Usuario conectado:",
+            data.user.id
+        );
+
+        console.error(
+            "Administrador esperado:",
+            ADMIN_UID
+        );
+
+        await supabaseClient.auth.signOut();
+
+        throw new Error(
+            "Este usuario no tiene permisos de administrador."
+        );
+
+    }
+
+    return data.user;
 
 }
 
@@ -2775,73 +2848,111 @@ async function loginAdmin(event){
 
     event.preventDefault();
 
-    const email =
-        document
-            .getElementById("loginEmail")
-            .value
-            .trim();
+    const emailElement =
+        document.getElementById("loginEmail");
 
-    const password =
-        document
-            .getElementById("loginPassword")
-            .value;
+    const passwordElement =
+        document.getElementById("loginPassword");
 
     const button =
-        document
-            .getElementById("loginButton");
+        document.getElementById("loginButton");
 
     const errorBox =
-        document
-            .getElementById("loginError");
+        document.getElementById("loginError");
+
+
+    const email =
+        emailElement
+            ? emailElement.value.trim()
+            : "";
+
+    const password =
+        passwordElement
+            ? passwordElement.value
+            : "";
+
 
     if(errorBox){
         errorBox.textContent = "";
     }
 
+
+    if(!email || !password){
+
+        if(errorBox){
+            errorBox.textContent =
+                "Introduce tu correo y contraseña.";
+        }
+
+        return;
+    }
+
+
     if(button){
+
         button.disabled = true;
         button.textContent = "Entrando...";
+
     }
+
 
     try{
 
+        /*
+         * Iniciar sesión con Supabase Auth.
+         */
         const {
             data,
             error
-        } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+        } =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
 
         if(error){
             throw error;
         }
 
+
         if(!data || !data.user){
+
             throw new Error(
                 "No se ha podido iniciar sesión."
             );
+
         }
 
+
+        /*
+         * Comprobar que el usuario es
+         * nuestro administrador.
+         */
         await verifyAdmin();
 
-        const loginOverlay =
-            document.getElementById("loginOverlay");
 
-        if(loginOverlay){
-            loginOverlay.classList.add("hidden");
+        /*
+         * Mostrar el panel.
+         */
+        showAdmin();
+
+
+        /*
+         * Limpiar contraseña del formulario.
+         */
+        if(passwordElement){
+            passwordElement.value = "";
         }
 
-        const logoutButton =
-            document.getElementById("logoutButton");
-
-        if(logoutButton){
-            logoutButton.style.display = "";
-        }
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Error en login:",
+            error
+        );
+
 
         if(errorBox){
 
@@ -2851,7 +2962,22 @@ async function loginAdmin(event){
 
         }
 
-        await supabaseClient.auth.signOut();
+
+        /*
+         * Si algo falla, cerrar sesión.
+         */
+        try{
+
+            await supabaseClient.auth.signOut();
+
+        }catch(signOutError){
+
+            console.error(
+                "Error cerrando sesión:",
+                signOutError
+            );
+
+        }
 
     }finally{
 
@@ -2869,39 +2995,43 @@ async function loginAdmin(event){
 
 async function logoutAdmin(){
 
-    await supabaseClient
-        .auth
-        .signOut();
+    try{
 
-    editingProductId = null;
+        await supabaseClient.auth.signOut();
+
+    }catch(error){
+
+        console.error(
+            "Error cerrando sesión:",
+            error
+        );
+
+    }
+
+
+    /*
+     * Si esta variable existe,
+     * reiniciamos el producto en edición.
+     */
+    if(typeof editingProductId !== "undefined"){
+
+        editingProductId = null;
+
+    }
+
 
     hideAdmin();
 
-    showToast(
-        "Sesión cerrada."
-    );
+
+    if(typeof showToast === "function"){
+
+        showToast(
+            "Sesión cerrada."
+        );
+
+    }
 
 }
-
-async function logoutAdmin(){
-
-    await supabaseClient
-        .auth
-        .signOut();
-
-
-    editingProductId = null;
-
-
-    hideAdmin();
-
-
-    showToast(
-        "Sesión cerrada."
-    );
-
-}
-
 
 /* =========================================================
    AUTH STATE
