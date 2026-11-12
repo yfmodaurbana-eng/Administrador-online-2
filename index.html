@@ -6,73 +6,90 @@
 <title>STRANGIS · ADMIN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;font-size:13px;background:#f2f2f2;color:#111}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;font-size:13px;background:#0a0a12;color:#fff;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(600px 300px at 10% -10%,rgba(140,90,255,.35),transparent 60%),radial-gradient(600px 300px at 90% 0%,rgba(0,220,255,.25),transparent 60%),radial-gradient(800px 400px at 50% 110%,rgba(255,0,150,.15),transparent 60%);z-index:0}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
-header{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#111;color:#fff}
-.logo{font-size:22px;font-weight:900;letter-spacing:4px}
-.header-right{display:flex;align-items:center;gap:12px;font-size:10px;color:#aaa}
-.btn-salir{background:#fff;color:#111;border:0;border-radius:8px;padding:10px 14px;font-weight:900}
-.container{max-width:1200px;margin:0 auto;padding:18px 14px 110px}
-.tabs{position:sticky;top:58px;z-index:150;display:flex;gap:8px;padding:10px;background:#f2f2f2}
-.tab{flex:1;padding:14px;border:1px solid #ddd;border-radius:12px;background:#fff;font-weight:900;font-size:12px}
-.tab.active{background:#111;color:#fff;border-color:#111}
+header{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:rgba(10,10,18,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.12)}
+.logo{font-size:21px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#fff,#b8a6ff,#6ee7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo small{display:block;font-size:9px;letter-spacing:3px;color:#888;-webkit-text-fill-color:#888;background:none}
+.btn-salir{background:#fff;color:#111;border:0;border-radius:999px;padding:9px 15px;font-weight:900;font-size:11px}
+.container{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:14px 12px 110px}
+.tabs{display:flex;gap:8px;padding:8px 0;position:sticky;top:57px;z-index:150;background:#0a0a12}
+.tab{flex:1;padding:12px;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.06);color:#aaa;font-weight:900;font-size:12px;backdrop-filter:blur(10px)}
+.tab.active{background:#fff;color:#111;border-color:#fff;box-shadow:0 0 20px rgba(255,255,255,.25)}
 .tab small{display:block;font-weight:400;font-size:10px;opacity:.7;margin-top:2px}
-.top-card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 8px 25px rgba(0,0,0,.08);margin-bottom:16px}
-.top-card h1{margin:0;font-size:26px;letter-spacing:-1px}
-.top-card p{margin:8px 0 0;color:#666;line-height:1.6}
-.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 8px 25px rgba(0,0,0,.06);margin-bottom:16px}
-.panel h2{margin:0 0 14px;font-size:13px;text-transform:uppercase;letter-spacing:.6px}
-.field{margin-bottom:14px}.field label{display:block;margin-bottom:6px;font-size:10px;font-weight:800;text-transform:uppercase;color:#555}
-.field input,.field textarea,.field select{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;background:#fafafa;outline:none}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:#111;background:#fff}
-.field textarea{min-height:90px;resize:vertical}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn{padding:13px 16px;border:1px solid #ccc;border-radius:10px;background:#fff;font-weight:800;font-size:11px}
-.btn-black{background:#111;color:#fff;border-color:#111}
-.btn-red{color:#a00020;border-color:#e5b8be;background:#fff}
+.top-card{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:14px;backdrop-filter:blur(14px)}
+.top-card h1{margin:0;font-size:22px;letter-spacing:-.5px}
+.top-card p{margin:6px 0 0;color:#aaa;line-height:1.5;font-size:12px}
+.panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px;margin-top:12px;backdrop-filter:blur(12px)}
+.panel h2{margin:0 0 12px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#cbbcff}
+.field{margin-bottom:12px}.field label{display:block;margin-bottom:5px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#999}
+.field input,.field textarea,.field select{width:100%;padding:11px 12px;border:1px solid rgba(255,255,255,.18);border-radius:11px;background:#14141f;color:#fff;outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#a78bfa;box-shadow:0 0 0 3px rgba(167,139,250,.25)}
+.field textarea{min-height:70px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{padding:11px 13px;border:1px solid rgba(255,255,255,.2);border-radius:11px;background:rgba(255,255,255,.08);color:#fff;font-weight:800;font-size:11px}
+.btn-black{background:#fff;color:#111;border-color:#fff;font-weight:900}
+.btn-red{color:#ff9aa8;border-color:rgba(255,100,120,.4);background:rgba(255,0,60,.08)}
 .btn-full{width:100%}
-.sizes{display:flex;flex-wrap:wrap;gap:8px}.size{display:flex;gap:5px}.size input{width:70px;padding:10px;border:1px solid #ccc;border-radius:8px}
-.variant{border:1px solid #ddd;border-radius:14px;padding:14px;margin-bottom:14px;background:#fafafa}
-.variant-top{display:flex;gap:10px;align-items:end}.variant-top .field{flex:1;margin:0}
-.color-box{width:48px;height:48px;border:1px solid #ccc;border-radius:10px;overflow:hidden;flex-shrink:0}.color-box input{width:100%;height:100%;border:0;padding:0;cursor:pointer}
-.photo{border:1px solid #e0e0e0;border-radius:12px;padding:12px;margin-top:12px;background:#fff}
-.photo img{width:100%;max-height:320px;object-fit:contain;background:#f5f5f5;border-radius:10px;display:block}
-.ref-row{display:flex;gap:8px;align-items:end}.ref-row .field{flex:1;margin:0}.ref-badge{font-size:10px;color:#777;margin-top:6px}.ref-badge b{color:#111}
-.search-box{position:relative;margin-bottom:12px}.search-box input{padding-left:38px}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.chip{padding:8px 12px;border:1px solid #ddd;border-radius:999px;background:#fff;font-size:11px;font-weight:700}.chip.active{background:#111;color:#fff;border-color:#111}
-.products-list{display:flex;flex-direction:column;gap:10px}
-.prod{display:flex;gap:12px;align-items:center;border:1px solid #e5e5e5;border-radius:12px;padding:10px;background:#fafafa}
-.prod img{width:64px;height:70px;object-fit:cover;border-radius:8px;background:#ddd;flex-shrink:0}
-.prod b{display:block}.prod small{color:#777}
+.sizes{display:flex;flex-wrap:wrap;gap:6px}.size{display:flex;gap:5px}.size input{width:62px;padding:9px;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:#14141f;color:#fff}
+.variant{background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:10px;margin-bottom:10px}
+.variant-top{display:flex;gap:8px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#22d3ee);box-shadow:0 0 10px #a78bfa;flex-shrink:0}
+.variant-top input{flex:1;padding:11px 12px;border:1px solid rgba(255,255,255,.18);border-radius:11px;background:#0f0f18;color:#fff;font-size:14px;font-weight:700;outline:none}
+.variant-top input:focus{border-color:#a78bfa;box-shadow:0 0 0 3px rgba(167,139,250,.25)}
+.btn-x{width:34px;height:34px;flex-shrink:0;border:1px solid rgba(255,100,120,.4);border-radius:50%;background:rgba(255,0,60,.12);color:#ff9aa8;font-size:16px;line-height:1}
+.photos{display:flex;gap:7px;overflow-x:auto;padding:9px 2px 2px;scrollbar-width:none;align-items:center}
+.photos::-webkit-scrollbar{display:none}
+.ph{position:relative;flex:0 0 56px;width:56px;height:68px;border-radius:10px;overflow:hidden;background:#111;border:2px solid transparent;cursor:pointer}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph.sel{border-color:#a78bfa;box-shadow:0 0 12px rgba(167,139,250,.6)}
+.ph .del{position:absolute;top:2px;right:2px;width:19px;height:19px;border:0;border-radius:50%;background:rgba(0,0,0,.8);color:#fff;font-size:12px;line-height:1}
+.ph.uploading{opacity:.5;pointer-events:none}
+.btn-photo{flex:0 0 56px;width:56px;height:68px;border:1.5px dashed rgba(255,255,255,.35);border-radius:10px;background:rgba(255,255,255,.04);color:#fff;font-size:11px;font-weight:900;line-height:1.2}
+.btn-file{flex:0 0 auto;padding:10px 12px;border-radius:10px;border:1px solid rgba(34,211,238,.5);background:rgba(34,211,238,.12);color:#a5f3fc;font-size:11px;font-weight:900;white-space:nowrap}
+.meta{font-size:10px;color:#888;margin-top:6px}
+.photo-edit{margin-top:8px;padding:10px;border:1px solid rgba(167,139,250,.35);border-radius:12px;background:rgba(167,139,250,.08)}
+.photo-edit input{width:100%;padding:10px;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:#0f0f18;color:#fff;font-size:12px;margin-bottom:6px}
+.upload-bar{height:4px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin:6px 0 0;display:none}
+.upload-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#22d3ee,#a78bfa);transition:width .3s}
+.search-box{position:relative;margin-bottom:10px}.search-box input{padding-left:38px}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chip{padding:8px 12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.06);color:#ddd;font-size:11px;font-weight:700}.chip.active{background:#fff;color:#111;border-color:#fff}
+.products-list{display:flex;flex-direction:column;gap:8px}
+.prod{display:flex;gap:12px;align-items:center;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;background:rgba(255,255,255,.05)}
+.prod img{width:56px;height:62px;object-fit:cover;border-radius:10px;background:#222;flex-shrink:0}
+.prod b{display:block;font-size:13px}.prod small{color:#999;font-size:11px}
 .prod-actions{margin-left:auto;display:flex;gap:6px}
-.bottom-bar{position:fixed;left:0;right:0;bottom:0;z-index:200;background:#fff;border-top:1px solid #ddd;padding:10px 14px;display:flex;gap:8px;box-shadow:0 -5px 20px rgba(0,0,0,.08)}
-.bottom-bar .btn{flex:1}
+.bottom-bar{position:fixed;left:0;right:0;bottom:0;z-index:200;background:rgba(10,10,18,.92);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.12);padding:10px 12px;display:flex;gap:8px}
+.bottom-bar .btn{flex:1;padding:14px}
+.btn-save{background:linear-gradient(90deg,#22d3ee,#a78bfa);color:#fff;border:0;font-weight:900;box-shadow:0 8px 25px rgba(167,139,250,.45)}
 .hidden{display:none!important}
-.toast{position:fixed;left:14px;right:14px;bottom:70px;z-index:999;background:#111;color:#fff;padding:14px;border-radius:12px;text-align:center;display:none;font-weight:700}
-.toast.show{display:block}.toast.error{background:#a00020}
-.login-overlay{position:fixed;inset:0;z-index:9999;background:#111;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-overlay.hidden{display:none}.login-box{background:#fff;width:100%;max-width:420px;padding:26px;border-radius:18px}
-.login-box h1{margin:0;letter-spacing:4px}.login-box p{color:#777;font-size:11px}
-@media(max-width:600px){.grid2{grid-template-columns:1fr}.prod-actions{flex-direction:column}.variant-top{flex-direction:column;align-items:stretch}.color-box{width:100%;height:44px}}
+.toast{position:fixed;left:14px;right:14px;bottom:76px;z-index:999;background:#fff;color:#111;padding:14px;border-radius:14px;text-align:center;display:none;font-weight:800}
+.toast.show{display:block}.toast.error{background:#ff2d55;color:#fff}
+.login-overlay{position:fixed;inset:0;z-index:9999;background:#0a0a12;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-overlay.hidden{display:none}.login-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);width:100%;max-width:420px;padding:26px;border-radius:20px;backdrop-filter:blur(16px)}
+.login-box h1{margin:0;letter-spacing:4px}.login-box p{color:#999;font-size:11px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.prod-actions{flex-direction:column}}
 </style>
 </head>
 <body>
-<div id="loginOverlay" class="login-overlay"><form id="loginForm" class="login-box"><h1>STRANGIS</h1><p>ADMIN · SUPABASE</p><div class="field"><label>Correo</label><input id="loginEmail" type="email" required></div><div class="field"><label>Contraseña</label><input id="loginPassword" type="password" required></div><div id="loginError" style="color:#a00020;font-size:12px;min-height:18px"></div><button class="btn btn-black btn-full" type="submit">ENTRAR</button></form></div>
-<header><div class="logo">STRANGIS</div><div class="header-right"><span>ADMIN · SUPABASE</span><button id="logoutBtn" class="btn-salir" type="button">SALIR</button></div></header>
+<div id="loginOverlay" class="login-overlay"><form id="loginForm" class="login-box"><h1>STRANGIS</h1><p>✦ ADMIN · SUPABASE</p><div class="field"><label>Correo</label><input id="loginEmail" type="email" required></div><div class="field"><label>Contraseña</label><input id="loginPassword" type="password" required></div><div id="loginError" style="color:#ff9aa8;font-size:12px;min-height:18px"></div><button class="btn btn-black btn-full" type="submit">ENTRAR →</button></form></div>
+<header><div class="logo">STRANGIS<small>ADMIN · SUPABASE</small></div><button id="logoutBtn" class="btn-salir" type="button">SALIR</button></header>
 <main class="container">
 <div class="tabs">
 <button id="tabProducts" class="tab active" type="button">PRODUCTOS<small id="tabProductsSub">Ver todos</small></button>
 <button id="tabEdit" class="tab" type="button">EDITAR PRODUCTO<small id="tabEditSub">Nuevo producto</small></button>
 </div>
 <div id="viewProducts">
-<div class="top-card"><h1>Productos</h1><p>Busca y edita sin bajar. Pulsa EDITAR y te lleva directo al formulario.</p></div>
+<div class="top-card"><h1>Productos ✦</h1><p>Busca y edita sin bajar. Pulsa EDITAR y te lleva directo al formulario.</p></div>
 <div class="panel">
 <h2>Productos publicados (<span id="count">0</span>)</h2>
 <div class="search-box"><span class="search-icon">🔍</span><input id="searchInput" type="text" placeholder="Buscar por nombre... Ej: Prada, pedreria, zapatillas..."></div>
 <div id="chips" class="chips"></div>
-<div style="display:flex;gap:8px;margin-bottom:12px"><button id="refreshBtn" class="btn" type="button">↻ ACTUALIZAR LISTA</button><button class="btn btn-black" type="button" onclick="goNew()">+ NUEVO PRODUCTO</button></div>
+<div style="display:flex;gap:8px;margin-bottom:12px"><button id="refreshBtn" class="btn" type="button">↻ ACTUALIZAR</button><button class="btn btn-black" type="button" onclick="goNew()">+ NUEVO PRODUCTO</button></div>
 <div id="productsList" class="products-list">Cargando...</div>
-<div id="noResults" class="hidden" style="text-align:center;color:#777;padding:20px">No hay productos con ese filtro.<br><button class="btn" type="button" onclick="clearFilters()">Ver todos</button></div>
+<div id="noResults" class="hidden" style="text-align:center;color:#999;padding:20px">No hay productos con ese filtro.<br><button class="btn" type="button" onclick="clearFilters()">Ver todos</button></div>
 </div>
 </div>
 <div id="viewEdit" class="hidden">
@@ -85,11 +102,12 @@ header{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify
 <div class="grid2"><div class="field"><label>Envío mínimo (días)</label><input id="shippingMin" type="number" value="3"></div><div class="field"><label>Envío máximo (días)</label><input id="shippingMax" type="number" value="9"></div></div>
 </div>
 <div class="panel"><h2>Tallas</h2><div id="sizesList" class="sizes"></div><button id="addSizeBtn" class="btn" type="button" style="margin-top:10px">+ AÑADIR TALLA</button></div>
-<div class="panel"><h2>Colores y fotos</h2><p style="color:#666;font-size:12px;margin-top:-6px">Cada color con sus fotos. La REF se genera automáticamente.</p><div id="variantsList"></div><button id="addVariantBtn" class="btn" type="button">+ AÑADIR COLOR</button></div>
+<div class="panel"><h2>✦ Colores y fotos</h2><p style="color:#999;font-size:12px;margin-top:-6px">Pega URL o sube archivo desde tu móvil. Toca una foto para editar su URL / REF. La REF se genera sola.</p><div id="variantsList"></div><button id="addVariantBtn" class="btn" type="button">+ AÑADIR COLOR</button></div>
 </div>
 </main>
-<div class="bottom-bar"><button id="newBtn" class="btn" type="button">+ NUEVO</button><button id="saveBtn" class="btn btn-black" type="button">GUARDAR EN SUPABASE</button></div>
+<div class="bottom-bar"><button id="newBtn" class="btn" type="button">+ NUEVO</button><button id="saveBtn" class="btn btn-save" type="button">GUARDAR EN SUPABASE</button></div>
 <div id="toast" class="toast"></div>
+<input type="file" id="filePicker" accept="image/*" multiple hidden>
 <script>
 "use strict";
 const SUPABASE_URL="https://xbbjfatmdbxbuoqdrgoj.supabase.co";
@@ -101,6 +119,8 @@ const CATEGORIES=[
   {value:"camisetas",label:"Camisetas"},{value:"pantalones",label:"Pantalones"},{value:"conjuntos",label:"Conjuntos"},{value:"gorras",label:"Gorras"},{value:"gafas",label:"Gafas"},{value:"bisuteria",label:"Bisutería"},{value:"pedreria",label:"Pedrería"},{value:"zapatillas",label:"Zapatillas"},
 ];
 let variants=[],sizes=[],editingId=null,allProducts=[],searchTerm="",activeCat="todos";
+let selectedPhoto={vi:-1,ii:-1};
+let fileTarget={vi:-1,ii:-1}; // ii=-1 => añadir nuevas, ii>=0 => reemplazar esa foto
 const $=id=>document.getElementById(id);
 const str=v=>String(v??"").trim();
 const esc=v=>str(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -117,7 +137,6 @@ function showTab(which){
 function goNew(){newProduct();showTab("edit");}
 $("tabProducts").addEventListener("click",()=>showTab("products"));
 $("tabEdit").addEventListener("click",()=>showTab("edit"));
-/* REF AUTOMATICA */
 function randomToken(){if(window.crypto?.randomUUID)return window.crypto.randomUUID().replace(/-/g,"").slice(0,8).toUpperCase();return Math.random().toString(36).slice(2,10).toUpperCase();}
 function generateRef(){return "IMG-"+Date.now().toString(36).toUpperCase()+"-"+randomToken();}
 function generateUniqueRef(used){let r;do{r=generateRef();}while(used.has(r.toLowerCase()));used.add(r.toLowerCase());return r;}
@@ -129,7 +148,6 @@ function ensureRefs(){
     else{const low=str(im.ref).toLowerCase();if(seen.has(low)){im.ref=generateUniqueRef(seen);}else seen.add(low);}
   }));
 }
-/* ===== ARREGLO FOTOS: BUSCA EN TODOS LOS FORMATOS ===== */
 function parseJSONDeep(v,depth=0){
   if(depth>3)return v;
   if(typeof v==="string"){
@@ -146,21 +164,13 @@ function extractUrls(node, out=[]){
   if(typeof node==="string"){
     const t=node.trim();
     if(t.startsWith("http")) out.push(t);
-    else{
-      const p=parseJSONDeep(t);
-      if(p!==t) extractUrls(p,out);
-    }
+    else{const p=parseJSONDeep(t);if(p!==t) extractUrls(p,out);}
     return out;
   }
   if(Array.isArray(node)){node.forEach(n=>extractUrls(n,out));return out;}
   if(typeof node==="object"){
-    // campos posibles de imagen, en orden
-    ["image","url","src","image_url","imageUrl","photo","photo_url","photoUrl","href","link"].forEach(k=>{
-      if(node[k]) extractUrls(node[k],out);
-    });
-    // si tiene images anidado
+    ["image","url","src","image_url","imageUrl","photo","photo_url","photoUrl","href","link"].forEach(k=>{if(node[k]) extractUrls(node[k],out);});
     if(node.images) extractUrls(node.images,out);
-    // si tiene fotos, etc
     if(node.photos) extractUrls(node.photos,out);
     return out;
   }
@@ -168,13 +178,10 @@ function extractUrls(node, out=[]){
 }
 function getAllProductImages(p){
   let urls=[];
-  // 1. campo images principal
   urls=urls.concat(extractUrls(parseJSONDeep(p?.images)));
-  // 2. campos sueltos por si el producto viejo los usaba
   urls=urls.concat(extractUrls(p?.image));
   urls=urls.concat(extractUrls(p?.photo));
   urls=urls.concat(extractUrls(p?.image_url));
-  // quita duplicados y vacios, solo http
   const seen=new Set(); const clean=[];
   urls.forEach(u=>{const t=str(u); if(t.startsWith("http")&&!seen.has(t)){seen.add(t);clean.push(t);}});
   return clean;
@@ -189,36 +196,95 @@ function normalizeImage(item){
 function normalizeVariants(raw){
   const p=parseJSONDeep(raw);
   if(!Array.isArray(p)||!p.length){
-    // si raw era una sola URL suelta
     const one=normalizeImage(raw);
     if(one) return [{name:"Principal",color:"#888888",images:[one]}];
     return [{name:"Principal",color:"#888888",images:[{url:"",ref:""}]}];
   }
   if(p.some(x=>x&&typeof x==="object"&&(Array.isArray(x.images)||x.color||x.name))){
-    return p.map((v,i)=>({name:str(v?.name)||`Variante ${i+1}`,color:str(v?.color)||"#888888",images:(Array.isArray(v?.images)?v.images.map(normalizeImage).filter(Boolean):(normalizeImage(v)?[normalizeImage(v)]:[]))}));
+    return p.map((v,i)=>({name:str(v?.name)||`Variante ${i+1}`,color:"#888888",images:(Array.isArray(v?.images)?v.images.map(normalizeImage).filter(Boolean):(normalizeImage(v)?[normalizeImage(v)]:[]))}));
   }
   return [{name:"Principal",color:"#888888",images:p.map(normalizeImage).filter(Boolean)}];
 }
 function buildImagesForSave(){
   ensureRefs();
-  return variants.filter(v=>v&&Array.isArray(v.images)&&v.images.some(im=>str(im.url))).map(v=>({name:str(v.name)||"Principal",color:str(v.color)||"#888888",images:v.images.filter(im=>str(im.url)).map(im=>({image:str(im.url),ref:str(im.ref)}))}));
+  return variants.filter(v=>v&&Array.isArray(v.images)&&v.images.some(im=>str(im.url))).map(v=>({name:str(v.name)||"Principal",color:"#888888",images:v.images.filter(im=>str(im.url)).map(im=>({image:str(im.url),ref:str(im.ref)}))}));
 }
+/* ===== SUBIDA DE ARCHIVOS ===== */
+function pickFiles(vi,ii=-1){
+  fileTarget={vi,ii};
+  const fp=$("filePicker");
+  fp.multiple = ii===-1; // si es reemplazar, solo 1 archivo
+  fp.click();
+}
+async function compressImage(file,maxW=1200,quality=0.82){
+  if(!file.type.startsWith("image/")) return file;
+  try{
+    const bmp=await createImageBitmap(file);
+    if(bmp.width<=maxW) return file;
+    const canvas=document.createElement("canvas");
+    const ratio=bmp.height/bmp.width;
+    canvas.width=maxW; canvas.height=Math.round(maxW*ratio);
+    const ctx=canvas.getContext("2d"); ctx.drawImage(bmp,0,0,canvas.width,canvas.height);
+    const blob=await new Promise(r=>canvas.toBlob(r,"image/jpeg",quality));
+    return new File([blob], file.name.replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"});
+  }catch{return file}
+}
+async function uploadOneFile(file){
+  const cleanName=file.name.replace(/[^a-zA-Z0-9.\-_]/g,"-");
+  const path=Date.now()+"-"+Math.random().toString(36).slice(2,8)+"-"+cleanName;
+  // Intenta subir a bucket "images" (debe ser público)
+  const {data,error}=await sb.storage.from("images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+  if(error) throw error;
+  const {data:pub}=sb.storage.from("images").getPublicUrl(path);
+  return pub.publicUrl;
+}
+$("filePicker").addEventListener("change", async e=>{
+  const files=[...e.target.files]; e.target.value="";
+  if(!files.length || fileTarget.vi<0) return;
+  const vi=fileTarget.vi, ii=fileTarget.ii;
+  toast("⏳ Subiendo "+files.length+" foto"+(files.length>1?"s":"")+"...");
+  for(const rawFile of files){
+    try{
+      const file=await compressImage(rawFile);
+      const url=await uploadOneFile(file);
+      if(ii>=0){
+        // reemplazar foto seleccionada
+        if(!variants[vi].images[ii]) variants[vi].images[ii]={url:"",ref:generateRef()};
+        variants[vi].images[ii].url=url;
+        if(!variants[vi].images[ii].ref) variants[vi].images[ii].ref=generateRef();
+        selectedPhoto={vi,ii};
+        break; // solo 1 si es reemplazar
+      }else{
+        variants[vi].images.push({url,ref:generateRef()});
+        selectedPhoto={vi,ii:variants[vi].images.length-1};
+      }
+    }catch(err){
+      console.error(err);
+      toast("Error al subir: "+err.message+". Crea el bucket 'images' público en Supabase > Storage.",true);
+      break;
+    }
+  }
+  renderVariants();
+  toast("✅ Foto subida");
+});
 function renderCategories(selected="camisetas"){$("productCategory").innerHTML=CATEGORIES.map(c=>`<option value="${c.value}">${c.label}</option>`).join("");$("productCategory").value=CATEGORIES.some(c=>c.value===selected)?selected:"camisetas";}
 function renderSizes(){$("sizesList").innerHTML=sizes.map((s,i)=>`<div class="size"><input value="${esc(s)}" onchange="sizes[${i}]=this.value"><button class="btn" type="button" onclick="sizes.splice(${i},1);renderSizes()">×</button></div>`).join("");}
+function selectPhoto(vi,ii){selectedPhoto={vi,ii};renderVariants();}
 function renderVariants(){
   ensureRefs();
   $("variantsList").innerHTML=variants.map((v,vi)=>{
     const imgs=Array.isArray(v.images)?v.images:[];
-    return `<div class="variant"><div class="variant-top"><div class="color-box"><input type="color" value="${esc(v.color||"#888888")}" onchange="variants[${vi}].color=this.value"></div><div class="field"><label>Nombre del color</label><input value="${esc(v.name||"")}" placeholder="Ej: Negro" onchange="variants[${vi}].name=this.value"></div></div>
-    <button class="btn btn-red btn-full" type="button" style="margin-top:10px" onclick="variants.splice(${vi},1);renderVariants()">ELIMINAR COLOR</button>
-    ${imgs.map((im,ii)=>`<div class="photo"><div class="field"><label>Foto ${ii+1}</label><input value="${esc(im.url||"")}" placeholder="https://..." onchange="variants[${vi}].images[${ii}].url=this.value;renderVariants()"></div>
-    <div class="ref-row"><div class="field"><label>REF Foto ${ii+1} · automática</label><input value="${esc(im.ref||"")}" readonly style="background:#f0f0f0;color:#555"></div><button class="btn" type="button" onclick="variants[${vi}].images.splice(${ii},1);renderVariants()">×</button></div>
-    <div class="ref-badge">REF: <b>${esc(im.ref||"Se generará al guardar")}</b></div>${im.url?`<img src="${esc(im.url)}" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:""}</div>`).join("")}
-    <button class="btn btn-full" type="button" style="margin-top:12px" onclick="variants[${vi}].images.push({url:'',ref:generateRef()});renderVariants()">+ AÑADIR FOTO</button></div>`;
+    const sel = selectedPhoto.vi===vi ? variants[vi].images[selectedPhoto.ii] : null;
+    return `<div class="variant">
+      <div class="variant-top"><span class="dot"></span><input value="${esc(v.name||"")}" placeholder="Nombre del color · Ej: Negro" onchange="variants[${vi}].name=this.value"><button class="btn-x" type="button" title="Eliminar color" onclick="if(confirm('¿Eliminar este color?')){variants.splice(${vi},1);selectedPhoto={vi:-1,ii:-1};renderVariants()}">×</button></div>
+      <div class="photos">${imgs.map((im,ii)=>`<div class="ph ${selectedPhoto.vi===vi&&selectedPhoto.ii===ii?"sel":""}" onclick="selectPhoto(${vi},${ii})">${im.url?`<img src="${esc(im.url)}" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">🖼️</div>`}<button class="del" type="button" onclick="event.stopPropagation();variants[${vi}].images.splice(${ii},1);selectedPhoto={vi:-1,ii:-1};renderVariants()">×</button></div>`).join("")}<button class="btn-photo" type="button" onclick="variants[${vi}].images.push({url:'',ref:generateRef()});selectedPhoto={vi:${vi},ii:${imgs.length}};renderVariants()">+<br>URL</button><button class="btn-file" type="button" onclick="pickFiles(${vi},-1)">📁 ARCHIVO</button></div>
+      <div class="meta">📷 ${imgs.length} foto${imgs.length===1?"":"s"} ${sel?`· REF: <b style="color:#fff">${esc(sel.ref||"")}</b>`:"· Toca una foto para editar · +URL = pegar link · 📁 = subir de tu móvil"}</div>
+      ${sel?`<div class="photo-edit"><input value="${esc(sel.url||"")}" placeholder="https://... pega aquí la URL de la foto" onchange="variants[${vi}].images[${selectedPhoto.ii}].url=this.value;renderVariants()"><input value="${esc(sel.ref||"")}" placeholder="REF · automática" onchange="variants[${vi}].images[${selectedPhoto.ii}].ref=this.value"><button class="btn btn-full" type="button" onclick="pickFiles(${vi},${selectedPhoto.ii})">📁 SUBIR ARCHIVO PARA ESTA FOTO</button></div>`:""}
+    </div>`;
   }).join("");
 }
 function newProduct(){
-  editingId=null;variants=[{name:"Principal",color:"#888888",images:[{url:"",ref:generateRef()}]}];sizes=["S","M","L","XL"];
+  editingId=null;selectedPhoto={vi:-1,ii:-1};variants=[{name:"Principal",color:"#888888",images:[{url:"",ref:generateRef()}]}];sizes=["S","M","L","XL"];
   $("productName").value="";renderCategories("camisetas");$("productPrice").value="35";$("productStock").value="999";$("productWhatsapp").value="";$("productDescription").value="";$("shippingMin").value="3";$("shippingMax").value="9";
   $("saveBtn").textContent="GUARDAR EN SUPABASE";$("editTitle").textContent="Nuevo producto";$("editInfo").textContent="Crea un producto nuevo. La REF se crea sola.";$("tabEditSub").textContent="Nuevo producto";
   renderSizes();renderVariants();
@@ -249,9 +315,8 @@ function renderList(){
     const first=allImgs[0]||"";
     const second=allImgs[1]||"";
     const cat=CATEGORIES.find(c=>c.value===str(p.category))?.label||str(p.category)||"—";
-    // Si la primera foto falla, prueba con la segunda automáticamente
     const onErr=second?`this.onerror=null;this.src='${esc(second)}';`:`this.style.display='none';this.parentElement.querySelector('.no-img').style.display='flex';`;
-    return `<div class="prod"><div style="position:relative;width:64px;height:70px;flex-shrink:0">${first?`<img src="${esc(first)}" referrerpolicy="no-referrer" loading="lazy" onerror="${onErr}">`:""}<div class="no-img" style="display:${first?"none":"flex"};position:absolute;inset:0;background:#ddd;border-radius:8px;align-items:center;justify-content:center;font-size:20px">🖼️</div></div><div style="min-width:0"><b>${esc(p.name||"Sin nombre")}</b><small>${Number(p.price||0).toLocaleString("es-ES",{style:"currency",currency:"EUR"})} · Stock: ${esc(p.stock??0)} · ${esc(cat)} · ${allImgs.length} fotos</small></div><div class="prod-actions"><button class="btn" type="button" onclick="editProduct('${esc(p.id)}')">EDITAR</button><button class="btn btn-red" type="button" onclick="deleteProduct('${esc(p.id)}','${esc(p.name||"")}')">ELIMINAR</button></div></div>`;
+    return `<div class="prod"><div style="position:relative;width:56px;height:62px;flex-shrink:0">${first?`<img src="${esc(first)}" referrerpolicy="no-referrer" loading="lazy" onerror="${onErr}">`:""}<div class="no-img" style="display:${first?"none":"flex"};position:absolute;inset:0;background:#222;border-radius:10px;align-items:center;justify-content:center;font-size:20px">🖼️</div></div><div style="min-width:0"><b>${esc(p.name||"Sin nombre")}</b><small>${Number(p.price||0).toLocaleString("es-ES",{style:"currency",currency:"EUR"})} · Stock: ${esc(p.stock??0)} · ${esc(cat)} · ${allImgs.length} fotos</small></div><div class="prod-actions"><button class="btn" type="button" onclick="editProduct('${esc(p.id)}')">EDITAR</button><button class="btn btn-red" type="button" onclick="deleteProduct('${esc(p.id)}','${esc(p.name||"")}')">ELIMINAR</button></div></div>`;
   }).join("");
 }
 async function verifyAdmin(){const {data,error}=await sb.auth.getUser();if(error)throw error;if(!data?.user)throw new Error("Sin sesión");if(data.user.id!==ADMIN_UID){await sb.auth.signOut();throw new Error("Sin permisos");}return data.user;}
@@ -267,12 +332,11 @@ async function editProduct(id){
   try{
     await verifyAdmin();
     const {data,error}=await sb.from(TABLE).select("*").eq("id",id).single();
-    if(error)throw error;editingId=data.id;
+    if(error)throw error;editingId=data.id;selectedPhoto={vi:-1,ii:-1};
     $("productName").value=data.name||"";renderCategories(str(data.category)||"camisetas");
     $("productPrice").value=data.price??0;$("productStock").value=data.stock??0;$("productWhatsapp").value=data.whatsapp||"";$("productDescription").value=data.description||"";$("shippingMin").value=data.shipping_min??3;$("shippingMax").value=data.shipping_max??9;
     const rs=parseJSONDeep(data.sizes);sizes=Array.isArray(rs)?rs.map(str).filter(Boolean):[];
     variants=normalizeVariants(data.images);
-    // Si el producto tenia fotos pero normalize no las cogio, las recuperamos todas
     if(!variants.some(v=>v.images.length)){
       const all=getAllProductImages(data);
       if(all.length) variants=[{name:"Principal",color:"#888888",images:all.map(u=>({url:u,ref:""}))}];
@@ -289,7 +353,7 @@ async function deleteProduct(id,name){
 async function saveProduct(){
   const name=str($("productName").value);if(!name){toast("Escribe el nombre del producto.",true);showTab("edit");return;}
   ensureRefs();const images=buildImagesForSave();
-  if(!images.length){toast("Añade al menos una foto con URL.",true);showTab("edit");return;}
+  if(!images.length){toast("Añade al menos una foto con URL o archivo.",true);showTab("edit");return;}
   const payload={name,category:str($("productCategory").value),price:Number($("productPrice").value)||0,stock:Number($("productStock").value)||0,whatsapp:str($("productWhatsapp").value),description:str($("productDescription").value),shipping_min:Number($("shippingMin").value)||3,shipping_max:Number($("shippingMax").value)||9,sizes:sizes.map(str).filter(Boolean),images,active:true};
   const btn=$("saveBtn");btn.disabled=true;btn.textContent="GUARDANDO...";
   try{
@@ -319,7 +383,7 @@ $("saveBtn").addEventListener("click",saveProduct);
 $("addSizeBtn").addEventListener("click",()=>{sizes.push("");renderSizes();});
 $("addVariantBtn").addEventListener("click",()=>{variants.push({name:`Variante ${variants.length+1}`,color:"#888888",images:[{url:"",ref:generateRef()}]});renderVariants();});
 $("searchInput").addEventListener("input",e=>{searchTerm=e.target.value;renderList();});
-window.editProduct=editProduct;window.deleteProduct=deleteProduct;window.setCat=setCat;window.clearFilters=clearFilters;window.goNew=goNew;
+window.editProduct=editProduct;window.deleteProduct=deleteProduct;window.setCat=setCat;window.clearFilters=clearFilters;window.goNew=goNew;window.selectPhoto=selectPhoto;window.pickFiles=pickFiles;
 newProduct();showTab("products");checkSession();
 </script>
 </body>
